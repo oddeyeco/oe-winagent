@@ -11,8 +11,22 @@ MetricDataList CPdhMetricsChecker::CheckMetrics()
     for( SingleMetricCheckerSPtr pCurrentSingleChecker : m_lstSingleMetricCheckers )
     {
         Q_ASSERT(pCurrentSingleChecker);
-        auto pMetricData = pCurrentSingleChecker->CheckMetric();
-        lstMetrics.append(pMetricData);
+        if( !pCurrentSingleChecker )
+            continue;
+
+        try
+        {
+            auto pMetricData = pCurrentSingleChecker->CheckMetric();
+            lstMetrics.append(pMetricData);
+        }
+        catch( std::exception const& oErr )
+        {
+            LOG_ERROR( QString("Excpetion: Metric %1 %2%3 check failed: ")
+                       .arg( pCurrentSingleChecker->GetMetricName() )
+                       .arg( pCurrentSingleChecker->GetInstanceType() )
+                       .arg( pCurrentSingleChecker->GetInstanceType() )
+                       .toStdString() + oErr.what())
+        }
     }
 
     return lstMetrics;

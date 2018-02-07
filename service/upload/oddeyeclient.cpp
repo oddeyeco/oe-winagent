@@ -33,9 +33,11 @@ QJsonDocument COddEyeClient::ConvertMetricsToJSON(const MetricDataList &lstMetri
          if( pCurrentMetric->GetDataSeverity() != EMetricDataSeverity::Normal )
          {
              // setnd error message
-             QString sErrorMsg = QString("ERROR: %1 value is %2: %3").arg(pCurrentMetric->GetName(),
+             QString sErrorMsg = QString("%4: %1 value is %2: %3").arg(pCurrentMetric->GetName(),
                                                                           ToString( pCurrentMetric->GetDataSeverity() ).toLower(),
-                                                                          pCurrentMetric->GetValue().toString());
+                                                                          pCurrentMetric->GetValue().toString(),
+                                                                          pCurrentMetric->GetDataSeverity() == EMetricDataSeverity::High? "WARNING" : "ERROR"
+                                                                       );
              oRootArray.append( Base::CreateErrorMessageJson( sErrorMsg, pCurrentMetric ) );
          }
     }
@@ -47,7 +49,7 @@ QJsonDocument COddEyeClient::ConvertMetricsToJSON(const MetricDataList &lstMetri
 
 void COddEyeClient::HandleSendSuccedded(QNetworkReply *pReply, const QJsonDocument &oJsonData)
 {
-    LOG_INFO( "Metric send succedded: " + pReply->readAll() );
+    LOG_INFO( "Metrics successfully sent: " + pReply->readAll() );
 }
 
 void COddEyeClient::HandleSendError(QNetworkReply *pReply, const QJsonDocument &oJsonData)

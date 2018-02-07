@@ -22,6 +22,10 @@ public:
 public:
     MetricDataSPtr CheckMetric() const;
 
+    inline QString GetMetricName() const;
+    inline QString GetInstanceType() const;
+    inline QString GetInstanceName() const;
+
 private:
     // Content
     HCOUNTER                        m_hCounter;
@@ -36,6 +40,14 @@ private:
     QString                         m_sInstanceType;
     QString                         m_sInstanceName;
 };
+
+
+//
+//  Inline implementations
+//
+QString CSingleMetricChecker::GetMetricName()   const { return m_sMetricName; }
+QString CSingleMetricChecker::GetInstanceType() const { return m_sInstanceType; }
+QString CSingleMetricChecker::GetInstanceName() const { return m_sInstanceName; }
 
 using SingleMetricCheckerSPtr = std::shared_ptr<CSingleMetricChecker>;
 

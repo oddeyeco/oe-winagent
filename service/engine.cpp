@@ -87,7 +87,7 @@ void CEngine::CollectMetrics()
     emit sigMetricsCollected( lstAllCollectedMetrics );
 
     for( MetricDataSPtr& pMetr : lstAllCollectedMetrics)
-        qDebug() << pMetr->GetName() + ": " + pMetr->GetValue().toString();
+        qDebug() << pMetr->GetName() +  " " + pMetr->GetInstanceType() + pMetr->GetInstanceName() + " : " + pMetr->GetValue().toString();
 }
 
 

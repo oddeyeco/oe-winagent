@@ -34,7 +34,8 @@ SOURCES += main.cpp \
     logger.cpp \
     upload/basicoddeyeclient.cpp \
     upload/oddeyecacheuploader.cpp \
-    pinger.cpp
+    pinger.cpp \
+    application.cpp
 
 include(../3rdparty/qtservice/src/qtservice.pri)
 
@@ -59,4 +60,5 @@ HEADERS += \
     upload/basicoddeyeclient.h \
     upload/oddeyecacheuploader.h \
     pinger.h \
-    winpdhexception.h
+    winpdhexception.h \
+    application.h

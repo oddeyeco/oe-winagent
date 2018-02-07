@@ -145,7 +145,16 @@ QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(const QString &sMessage, 
     oMetricJson["metric"] = pRelatedMetric->GetName();
     oMetricJson["reaction"] = pRelatedMetric->GetReaction();
     oMetricJson["timestamp"] = QString::number( pRelatedMetric->GetTime().toTime_t() );
-    oMetricJson["value"] = pRelatedMetric->GetValue().toString();
+
+    QVariant vtValue;
+    if( pRelatedMetric->GetDataSeverity() == EMetricDataSeverity::Normal)
+        vtValue = pRelatedMetric->GetValue();
+    else if( pRelatedMetric->GetDataSeverity() == EMetricDataSeverity::High )
+        vtValue = 8;
+    else
+        vtValue = 16;
+
+    oMetricJson["value"] = vtValue.toString();
 
     QJsonObject oTagsJson;
     oTagsJson["cluster"] = m_sClusterName;
