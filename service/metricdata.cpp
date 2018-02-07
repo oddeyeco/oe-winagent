@@ -10,7 +10,9 @@ CMetricData::CMetricData(const QString &sName,
                          QDateTime oTimestamp,
                          const QString &sMetricType,
                          int nReaction,
-                         EMetricDataSeverity eSeverity)
+                         EMetricDataSeverity eSeverity,
+                         QString const& sInstanceType,
+                         QString const& sInstanceName )
     : m_nReaction{0}
 {
     SetName(sName);
@@ -20,6 +22,8 @@ CMetricData::CMetricData(const QString &sName,
     SetType( sMetricType );
     SetReaction(nReaction);
     SetDataSeverity( eSeverity );
+    SetInstanceType(sInstanceType);
+    SetInstanceType(sInstanceName);
 }
 
 QString ToString( EMetricDataType eType )

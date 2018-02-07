@@ -132,19 +132,21 @@ QString CWinPerformanceDataProvider::GetErrorDescription(PDH_STATUS nStatusCode)
     return  sMsg;
 }
 
-QStringList CWinPerformanceDataProvider::ExpandCounterPath(wchar_t *pCounterPathWildcard)
+QStringList CWinPerformanceDataProvider::ExpandCounterPath(QString const& sCounterPathWildcard)
 {
+    auto pCounterPathWildcard = ToWCharArray( sCounterPathWildcard );
+
     PDH_STATUS Status;
     PWSTR EndOfPaths;
     PWSTR Paths = NULL;
     DWORD BufferSize = 0;
 
-    Status = PdhExpandCounterPath(pCounterPathWildcard, Paths, &BufferSize);
+    Status = PdhExpandCounterPath(pCounterPathWildcard.get(), Paths, &BufferSize);
 
     while (Status == PDH_MORE_DATA)
     {
         Paths = (PWSTR)malloc(BufferSize * sizeof(WCHAR));
-        Status = PdhExpandCounterPath(pCounterPathWildcard, Paths, &BufferSize);
+        Status = PdhExpandCounterPath(pCounterPathWildcard.get(), Paths, &BufferSize);
     }
 
     if (Status != ERROR_SUCCESS)
@@ -176,7 +178,107 @@ QStringList CWinPerformanceDataProvider::ExpandCounterPath(wchar_t *pCounterPath
     return lstExpandedPaths;
 }
 
-QStringList CWinPerformanceDataProvider::FetchMissingCounterPathValues(wchar_t *pCounterPathWildcard)
+
+
+QStringList CWinPerformanceDataProvider::GetObjectInstanceNames(const QString &sObjectName)
 {
-    return QStringList();
+#define _THROW_FETCH_INSTANCE_FAILED(_msg_, _status_)                                  \
+    if (pwsCounterListBuffer != NULL)                                                  \
+        free(pwsCounterListBuffer);                                                    \
+    if (pwsInstanceListBuffer != NULL)                                                 \
+        free(pwsInstanceListBuffer);                                                   \
+    throw CWinPDHException( _msg_, _status_);
+
+
+    auto pObjectName = ToWCharArray( sObjectName );
+
+    PDH_STATUS status = ERROR_SUCCESS;
+    LPWSTR pwsCounterListBuffer = NULL;
+    DWORD dwCounterListSize = 0;
+    LPWSTR pwsInstanceListBuffer = NULL;
+    DWORD dwInstanceListSize = 0;
+    LPWSTR pTemp = NULL;
+
+    QStringList lstInstanceNames;
+
+    // Determine the required buffer size for the data.
+    status = PdhEnumObjectItems(
+        NULL,                   // real-time source
+        NULL,                   // local machine
+        pObjectName.get(),         // object to enumerate
+        pwsCounterListBuffer,   // pass NULL and 0
+        &dwCounterListSize,     // to get required buffer size
+        pwsInstanceListBuffer,
+        &dwInstanceListSize,
+        PERF_DETAIL_WIZARD,     // counter detail level
+        0);
+
+    if (status == PDH_MORE_DATA)
+    {
+        // Allocate the buffers and try the call again.
+        pwsCounterListBuffer = (LPWSTR)malloc(dwCounterListSize * sizeof(WCHAR));
+        pwsInstanceListBuffer = (LPWSTR)malloc(dwInstanceListSize * sizeof(WCHAR));
+
+        if (NULL != pwsCounterListBuffer && NULL != pwsInstanceListBuffer)
+        {
+            status = PdhEnumObjectItems(
+                NULL,                   // real-time source
+                NULL,                   // local machine
+                pObjectName.get(),         // object to enumerate
+                pwsCounterListBuffer,
+                &dwCounterListSize,
+                pwsInstanceListBuffer,
+                &dwInstanceListSize,
+                PERF_DETAIL_WIZARD,     // counter detail level
+                0);
+
+            if (status == ERROR_SUCCESS)
+            {
+                // Walk the counters list. The list can contain one
+                // or more null-terminated strings. The list is terminated
+                // using two null-terminator characters.
+//                for (pTemp = pwsCounterListBuffer; *pTemp != 0; pTemp += wcslen(pTemp) + 1)
+//                {
+//                    wprintf(L"%s\n", pTemp);
+//                }
+
+                // Walk the instance list. The list can contain one
+                // or more null-terminated strings. The list is terminated
+                // using two null-terminator characters.
+                for (pTemp = pwsInstanceListBuffer; *pTemp != 0; pTemp += wcslen(pTemp) + 1)
+                {
+                    lstInstanceNames.append( QString::fromWCharArray(pTemp) );
+                }
+            }
+            else
+            {
+                _THROW_FETCH_INSTANCE_FAILED( QString("Failed to retrieve second instance names for %1 object").arg(sObjectName), status);
+            }
+        }
+        else
+        {
+            _THROW_FETCH_INSTANCE_FAILED( QString("Failed to retrieve instance names for %1 object").arg(sObjectName), ERROR_OUTOFMEMORY);
+        }
+    }
+    else
+    {
+        _THROW_FETCH_INSTANCE_FAILED( QString("Failed to retrieve instance names for %1 object").arg(sObjectName), status);
+    }
+
+    if (pwsCounterListBuffer != NULL)
+        free(pwsCounterListBuffer);
+
+    if (pwsInstanceListBuffer != NULL)
+        free(pwsInstanceListBuffer);
+
+    return lstInstanceNames;
+}
+
+std::unique_ptr<wchar_t[]> CWinPerformanceDataProvider::ToWCharArray(const QString &sText)
+{
+    std::unique_ptr<wchar_t[]> pWcharArray( new wchar_t[sText.length() + 1] );
+    sText.toWCharArray(pWcharArray.get());
+    pWcharArray[sText.length()] = 0;
+
+    return pWcharArray;
 }

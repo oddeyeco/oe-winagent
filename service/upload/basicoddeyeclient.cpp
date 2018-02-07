@@ -122,25 +122,14 @@ QJsonObject CBasicOddEyeClient::CreateMetricJson(MetricDataSPtr pSingleMetric)
     oTagsJson["cluster"] = m_sClusterName;
     oTagsJson["group"] = m_sGroupName;
     oTagsJson["host"] = m_sHostName;
-    oTagsJson["type"] = "SYSTEM";
+    oTagsJson["type"] = pSingleMetric->GetType();
+    if( !pSingleMetric->GetInstanceType().isEmpty() && !pSingleMetric->GetInstanceName().isEmpty() )
+        oTagsJson[pSingleMetric->GetInstanceType()] = pSingleMetric->GetInstanceName();
 
     // add tags
     oMetricJson["tags"] = oTagsJson;
 
     oMetricJson["type"] = ToString( pSingleMetric->GetDataType() );
-
-//    if( pSingleMetric->GetDataSeverity() != EMetricDataSeverity::Normal)
-//    {
-//        oMetricJson["type"] = "Special";
-//        oMetricJson["status"] = "ERROR";
-//        oMetricJson["message"] = QString("ERROR: %1 value is %2: %3").arg(pSingleMetric->GetName(),
-//                                                                          ToString( pSingleMetric->GetDataSeverity() ).toLower(),
-//                                                                          pSingleMetric->GetValue().toString());
-//    }
-//    else
-//    {
-//        oMetricJson["type"] = ToString( pSingleMetric->GetDataType() );
-//    }
 
     return oMetricJson;
 }
@@ -162,6 +151,8 @@ QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(const QString &sMessage, 
     oTagsJson["cluster"] = m_sClusterName;
     oTagsJson["group"] = m_sGroupName;
     oTagsJson["host"] = m_sHostName;
+    if( !pRelatedMetric->GetInstanceType().isEmpty() && !pRelatedMetric->GetInstanceName().isEmpty() )
+        oTagsJson[pRelatedMetric->GetInstanceType()] = pRelatedMetric->GetInstanceName();
 
     // add tags
     oMetricJson["tags"] = oTagsJson;

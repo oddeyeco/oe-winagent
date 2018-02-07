@@ -19,9 +19,4 @@ static _registrar_##_checker_class_ _obj##_checker_class_;      \
 #define DECLARE_MERTIC_CHECKER( _class_ ) \
     public: DUMMY_COPY_CTOR(_class_) private:
 
-
-
-#define ADD_METRIC_CHECKER( _name_, _counter_name_, _metric_data_type_, _metric_type_, _reaction_, _high_value_, _severe_value_ )      \
-    AddSingleMetricChecker( std::make_shared<CSingleMetricChecker>( _name_, _counter_name_, _metric_data_type_, _metric_type_, PerfDataProvider(), _reaction_, _high_value_, _severe_value_) );                                            \
-
 #endif // MACROS_H

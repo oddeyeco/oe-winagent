@@ -38,7 +38,10 @@ public:
                 QDateTime oTimestamp,
                 QString const& sMetricType,
                 int nReaction = 0,
-                EMetricDataSeverity eSeverity = EMetricDataSeverity::Normal);
+                EMetricDataSeverity eSeverity = EMetricDataSeverity::Normal,
+                QString const& sInstanceType = QString(),
+                QString const& sInstanceName = QString()
+                );
 
 public:
     inline void SetName(QString const& sName);
@@ -62,6 +65,15 @@ public:
     inline void SetType(QString const& sType);
     inline QString GetType() const;
 
+    // metric instance info like core name, disk name, etc..
+    inline void SetInstanceType(QString const& sType);
+    inline QString GetInstanceType() const;
+
+    inline void SetInstanceName(QString const& sInstanceName);
+    inline QString GetInstanceName() const;
+
+
+
     inline bool IsNull() const;
 
 private:
@@ -73,6 +85,8 @@ private:
     QString         m_sType;
     int             m_nReaction;
     EMetricDataSeverity m_eSeverity;
+    QString         m_sInstanceType;
+    QString         m_sInstanceName;
 };
 
 using MetricDataSPtr = std::shared_ptr<CMetricData>;
@@ -99,8 +113,13 @@ inline int CMetricData::GetReaction() const { return m_nReaction; }
 inline void CMetricData::SetDataSeverity(EMetricDataSeverity eSeverity) { m_eSeverity = eSeverity; }
 inline EMetricDataSeverity CMetricData::GetDataSeverity() const { return m_eSeverity; }
 
-void CMetricData::SetType(const QString &sType) { Q_ASSERT(!sType.isEmpty()); m_sType = sType; }
-QString CMetricData::GetType() const { return m_sType; }
+inline void CMetricData::SetType(const QString &sType) { Q_ASSERT(!sType.isEmpty()); m_sType = sType; }
+inline QString CMetricData::GetType() const { return m_sType; }
+
+inline void CMetricData::SetInstanceType(const QString &sType) {  m_sInstanceType = sType; }
+inline QString CMetricData::GetInstanceType() const { return m_sInstanceType; }
+inline void CMetricData::SetInstanceName(const QString &sInstanceName) { m_sInstanceName = sInstanceName; }
+inline QString CMetricData::GetInstanceName() const { return m_sInstanceName; }
 
 bool CMetricData::IsNull()          const { return m_sName.isNull(); }
 

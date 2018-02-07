@@ -16,6 +16,16 @@ public:
 
 protected:
     void AddSingleMetricChecker( SingleMetricCheckerSPtr pCounterChecker );
+    void AddCounterMetricChecker(QString const& sMetricName,
+                                  QString const& sCounterPathOrWildcard,
+                                  EMetricDataType eMetricDataType,
+                                  const QString &sMetricType,
+                                  int     nReaction = 0,
+                                  double  dHighValue = -1,
+                                  double  dSevereValue = -1,
+                                  bool    bCreateMultipleCheckersByInstanceNames = false,
+                                  QString const& sInstanceObjectName = QString(),
+                                  QString const& sInstanceType = QString() );
 
 private:
     // Content

@@ -7,14 +7,16 @@
 class CSingleMetricChecker
 {
 public:
-    CSingleMetricChecker(QString const& sMetricName,
-                          wchar_t const* psCounterPath,
+    CSingleMetricChecker( QString const& sMetricName,
+                          QString const& sCounterPath,
                           EMetricDataType eMetricDataType,
                           const QString &sMetricType,
                           WinPerformanceDataProviderSPtr pDataProvider,
                           int     nReaction = 0,
                           double  dHighValue = -1,
-                          double  dSevereValue = -1
+                          double  dSevereValue = -1,
+                          QString const& sInstanceType = QString(),
+                          QString const& sInstanceName = QString()
                           );
 
 public:
@@ -31,6 +33,8 @@ private:
     WinPerformanceDataProviderSPtr  m_pDataProvider;
     double                          m_dHighValue;
     double                          m_dSevereValue;
+    QString                         m_sInstanceType;
+    QString                         m_sInstanceName;
 };
 
 using SingleMetricCheckerSPtr = std::shared_ptr<CSingleMetricChecker>;

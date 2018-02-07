@@ -30,8 +30,10 @@ public:
     void UpdateCounters();
 
     static QString GetErrorDescription( PDH_STATUS nStatusCode );
-    static QStringList ExpandCounterPath( wchar_t* pCounterPathWildcard );
-    static QStringList FetchMissingCounterPathValues( wchar_t* pCounterPathWildcard );
+    static QStringList ExpandCounterPath( QString const& sCounterPathWildcard );
+    static QStringList GetObjectInstanceNames(QString const& sObjectName );
+
+    static std::unique_ptr<wchar_t[]> ToWCharArray( QString const& sText );
 
 private:
     //

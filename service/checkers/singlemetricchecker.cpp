@@ -2,36 +2,37 @@
 
 
 CSingleMetricChecker::CSingleMetricChecker(QString const& sMetricName,
-                                           const wchar_t *psCounterPath,
+                                           const QString & sCounterPath,
                                            EMetricDataType eMetricDataType,
                                            QString const& sMetricType,
                                            WinPerformanceDataProviderSPtr pDataProvider,
                                            int nReaction,
                                            double dHighValue,
-                                           double dSevereValue)
+                                           double dSevereValue,
+                                           const QString &sInstanceType,
+                                           const QString &sInstanceName)
     : m_hCounter(NULL),
       m_sMetricName(sMetricName),
-      m_sCounterPath(QString::fromWCharArray( psCounterPath )),
+      m_sCounterPath( sCounterPath ),
       m_eMetricDataType(eMetricDataType),
       m_sMetricType( sMetricType ),
       m_pDataProvider(pDataProvider),
       m_nReaction( nReaction ),
       m_dHighValue( dHighValue ),
-      m_dSevereValue( dSevereValue )
+      m_dSevereValue( dSevereValue ),
+      m_sInstanceType( sInstanceType ),
+      m_sInstanceName( sInstanceName )
 {    
     Q_ASSERT( !sMetricName.isEmpty() );
-    Q_ASSERT( psCounterPath );
+    Q_ASSERT( !sCounterPath.isEmpty() );
     Q_ASSERT( pDataProvider );
     Q_ASSERT( nReaction >= -3 && nReaction <=0);
 
     Q_ASSERT(  dHighValue == -1 || dSevereValue == -1 || dHighValue < dSevereValue );
     // TODO: Handle the case when dHighValue >= dSevereValue
 
-//    std::unique_ptr<wchar_t[]> pCounterPath( new wchar_t[psCounterPath.length() + 1] );
-//    psCounterPath.toWCharArray(pCounterPath.get());
-//    pCounterPath[psCounterPath.length()] = 0;
-
-    m_hCounter = m_pDataProvider->AddCounter( psCounterPath );
+    // convert qstring to wchar_t
+    m_hCounter = m_pDataProvider->AddCounter( CWinPerformanceDataProvider::ToWCharArray( sCounterPath ).get() );
 }
 
 MetricDataSPtr CSingleMetricChecker::CheckMetric() const
@@ -50,6 +51,12 @@ MetricDataSPtr CSingleMetricChecker::CheckMetric() const
     pMetric->SetDataType(m_eMetricDataType);
     pMetric->SetType(m_sMetricType);
     pMetric->SetReaction(m_nReaction);
+
+    if( !m_sInstanceType.isEmpty() && !m_sInstanceName.isEmpty() )
+    {
+        pMetric->SetInstanceType( m_sInstanceType );
+        pMetric->SetInstanceName( m_sInstanceName );
+    }
 
     // Set data severity
     EMetricDataSeverity eSeverity = EMetricDataSeverity::Normal;
