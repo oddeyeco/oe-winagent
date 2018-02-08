@@ -27,53 +27,43 @@ void SystemDiskStatsChecker::Initialize()
                              "SYSTEM", 0,
                              dConfHighVal,
                              dConfSevereVal,
-                             bPerCoreEnabled,
-                             "Disk",
+                             bPerDiskEnabled,
                              "LogicalDisk",
-                             [](auto pMetric){ pMetric->SetValue( 100.0 - pMetric->GetValue().toDouble() )});
+                             "Disk",
+                             [](auto pMetric){ pMetric->SetValue( 100.0 - pMetric->GetValue().toDouble() ); });
 
     AddCounterMetricChecker( "disk_free_bytes",
                              "\\LogicalDisk%1\\Free Megabytes",
                              EMetricDataType::Counter,
                              "SYSTEM", 0, -1, -1,
                              bPerDiskEnabled,
-                             "Disk",
                              "LogicalDisk",
-                             [](auto pMetric){ pMetric->SetValue( MBSize * pMetric->GetValue().toInt() )  });
-
-    AddCounterMetricChecker( "disk_total_bytes",
-                             "\\LogicalDisk%1\\Total Megabytes",
-                             EMetricDataType::Counter,
-                             "SYSTEM", 0, -1, -1,
-                             bPerDiskEnabled,
                              "Disk",
-                             "LogicalDisk",
-                             [](auto pMetric){ pMetric->SetValue( MBSize * pMetric->GetValue().toInt() )  });
+                             [](auto pMetric){ pMetric->SetValue( MBSize * pMetric->GetValue().toInt() );  });
 
 
-    AddCounterMetricChecker( "disk_Idle Time", "\\LogicalDisk%1\\% Idle Time", EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerDiskEnabled, "Disk", "LogicalDisk");
-    AddCounterMetricChecker( "Disk Reads/sec", "\\LogicalDisk%1\\Disk Reads/sec", EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerDiskEnabled, "Disk", "LogicalDisk");
-    AddCounterMetricChecker( "Disk Transfers/sec", "\\LogicalDisk%1\\Disk Transfers/sec", EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerDiskEnabled, "Disk", "LogicalDisk");
-    AddCounterMetricChecker( "Disk Writes/sec", "\\LogicalDisk%1\\Disk Writes/sec", EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerDiskEnabled, "Disk", "LogicalDisk");
-
-    AddCounterMetricChecker( "Disk Bytes/sec", "\\LogicalDisk%1\\Disk Bytes/sec", EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerDiskEnabled, "Disk", "LogicalDisk");
-    AddCounterMetricChecker( "Disk Read Bytes/sec", "\\LogicalDisk%1\\Disk Read Bytes/sec", EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerDiskEnabled, "Disk", "LogicalDisk");
-    AddCounterMetricChecker( "Disk Write Bytes/sec", "\\LogicalDisk%1\\Disk Write Bytes/sec", EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerDiskEnabled, "Disk", "LogicalDisk");
-
+    AddCounterMetricChecker( "disk_idle_time",       "\\LogicalDisk%1\\% Idle Time",          EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerDiskEnabled, "LogicalDisk", "Disk");
+    AddCounterMetricChecker( "disk_reads/sec",       "\\LogicalDisk%1\\Disk Reads/sec",       EMetricDataType::Rate,    "SYSTEM", 0, -1, -1, bPerDiskEnabled, "LogicalDisk", "Disk");
+    AddCounterMetricChecker( "disk_transfers/sec",   "\\LogicalDisk%1\\Disk Transfers/sec",   EMetricDataType::Rate,    "SYSTEM", 0, -1, -1, bPerDiskEnabled, "LogicalDisk", "Disk");
+    AddCounterMetricChecker( "disk_writes/sec",      "\\LogicalDisk%1\\Disk Writes/sec",      EMetricDataType::Rate,    "SYSTEM", 0, -1, -1, bPerDiskEnabled, "LogicalDisk", "Disk");
+    AddCounterMetricChecker( "disk_bytes/sec",       "\\LogicalDisk%1\\Disk Bytes/sec",       EMetricDataType::Rate,    "SYSTEM", 0, -1, -1, bPerDiskEnabled, "LogicalDisk", "Disk");
+    AddCounterMetricChecker( "disk_read_bytes/sec",  "\\LogicalDisk%1\\Disk Read Bytes/sec",  EMetricDataType::Rate,    "SYSTEM", 0, -1, -1, bPerDiskEnabled, "LogicalDisk", "Disk");
+    AddCounterMetricChecker( "disk_write_bytes/sec", "\\LogicalDisk%1\\Disk Write Bytes/sec", EMetricDataType::Rate,    "SYSTEM", 0, -1, -1, bPerDiskEnabled, "LogicalDisk", "Disk");
 
 
-
-//    if( bDetailedEnabled )
-//    {
-//        //
-//        //  Add extra checkers
-//        //
-//        AddCounterMetricChecker( "memory_commit_limit",          "\\Memory%1\\Commit Limit",                 EMetricDataType::Counter, "SYSTEM" );
-//        AddCounterMetricChecker( "memory_cache_bytes_peak",      "\\Memory%1\\Cache Bytes Peak",             EMetricDataType::Counter, "SYSTEM" );
-//        AddCounterMetricChecker( "system_cache_resident_bytes",  "\\Memory%1\\System Cache Resident Bytes",  EMetricDataType::Counter, "SYSTEM" );
-//        AddCounterMetricChecker( "system_code_resident_bytes",   "\\Memory%1\\System Code Resident Bytes",   EMetricDataType::Counter, "SYSTEM" );
-//        AddCounterMetricChecker( "system_code_total_bytes",      "\\Memory%1\\System Code Total Bytes",      EMetricDataType::Counter, "SYSTEM" );
-//        AddCounterMetricChecker( "system_driver_resident_bytes", "\\Memory%1\\System Driver Resident Bytes", EMetricDataType::Counter, "SYSTEM" );
-//        AddCounterMetricChecker( "system_driver_total_bytes",    "\\Memory%1\\System Driver Total Bytes",    EMetricDataType::Counter, "SYSTEM" );
-//    }
+    if( bDetailedEnabled )
+    {
+        //
+        //  Add extra checkers
+        //
+        AddCounterMetricChecker( "disk_read_time",  "\\LogicalDisk%1\\% Disk Read Time",  EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerDiskEnabled, "LogicalDisk", "Disk");
+        AddCounterMetricChecker( "disk_time",       "\\LogicalDisk%1\\% Disk Time",       EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerDiskEnabled, "LogicalDisk", "Disk");
+        AddCounterMetricChecker( "disk_write_time", "\\LogicalDisk%1\\% Disk Write Time", EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerDiskEnabled, "LogicalDisk", "Disk");
+     }
 }
+
+//MetricDataList SystemDiskStatsChecker::CheckMetrics()
+//{
+//    MetricDataList lstBaseMetrics = Base::CheckMetrics();
+//    Q_ASSERT(m_lstDiskBusySpaceChecker.size() == m_lstDiskFreeBytesChecker);
+//}

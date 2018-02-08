@@ -51,7 +51,6 @@ private:
 };
 using SingleMetricCheckerSPtr = std::shared_ptr<CSingleMetricChecker>;
 
-
 //
 //  Inline implementations
 //

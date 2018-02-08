@@ -14,6 +14,12 @@ public:
     // IMetricsChecker interface
 public:
     void Initialize() override;
+    //MetricDataList CheckMetrics() override;
+
+//private:
+//    SingleMetricCheckersList m_lstDiskBusySpaceChecker;
+//    SingleMetricCheckersList m_lstDiskFreeBytesChecker;
+
 };
 
 REGISTER_METRIC_CHECKER(SystemDiskStatsChecker)

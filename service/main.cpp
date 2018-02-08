@@ -1,4 +1,4 @@
-#include <QCoreApplication>
+#include "application.h"
 #include "configurationmanager.h"
 #include <iostream>
 
@@ -10,7 +10,7 @@
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    CApplication a(argc, argv);
 
     EngineSPtr pEngine = std::make_shared<CEngine>();
 

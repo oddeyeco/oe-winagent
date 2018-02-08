@@ -41,17 +41,17 @@ SingleMetricCheckerSPtr CPdhMetricsChecker::AddSingleMetricChecker(SingleMetricC
     return pCounterChecker;
 }
 
-QList<SingleMetricCheckerSPtr> CPdhMetricsChecker::AddCounterMetricChecker(const QString &sMetricName,
-                                                                           const QString &sCounterPathOrWildcard,
-                                                                           EMetricDataType eMetricDataType,
-                                                                           const QString &sMetricType,
-                                                                           int nReaction,
-                                                                           double dHighValue,
-                                                                           double dSevereValue,
-                                                                           bool bCreateMultipleCheckersByInstanceNames,
-                                                                           const QString &sInstanceObjectName,
-                                                                           const QString &sInstanceType,
-                                                                           MetricModifierFunc funcMetricModifier)
+SingleMetricCheckersList CPdhMetricsChecker::AddCounterMetricChecker(const QString &sMetricName,
+                                                                     const QString &sCounterPathOrWildcard,
+                                                                     EMetricDataType eMetricDataType,
+                                                                     const QString &sMetricType,
+                                                                     int nReaction,
+                                                                     double dHighValue,
+                                                                     double dSevereValue,
+                                                                     bool bCreateMultipleCheckersByInstanceNames,
+                                                                     const QString &sInstanceObjectName,
+                                                                     const QString &sInstanceType,
+                                                                     MetricModifierFunc funcMetricModifier)
 {
     QList<SingleMetricCheckerSPtr> lstAddedCheckers;
 

@@ -1,11 +1,6 @@
 #include "application.h"
 #include "logger.h"
 
-CApplication::CApplication()
-{
-
-}
-
 CApplication::CApplication(int &argc, char **argv)
     : Base( argc, argv )
 {
@@ -19,10 +14,10 @@ bool CApplication::notify(QObject* pObject, QEvent *pEvent)
     }
     catch( std::exception const& oExcep )
     {
-        LOG_ERROR( "Exception: " + oExcep.what() );
+        LOG_ERROR( std::string( "Exception: " ) + oExcep.what() );
     }
     catch(...)
     {
-        LOG_ERROR( "Unhandled exception: " );
+        LOG_ERROR( "Critical Error: Undefined exception!" );
     }
 }

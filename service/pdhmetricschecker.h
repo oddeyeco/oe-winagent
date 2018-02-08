@@ -4,6 +4,10 @@
 #include "imetricschecker.h"
 #include "checkers/singlemetricchecker.h"
 
+
+using SingleMetricCheckersList = QList<SingleMetricCheckerSPtr>;
+
+
 class CPdhMetricsChecker : public IMetricsChecker
 {
     using Base = IMetricsChecker;
@@ -16,21 +20,21 @@ public:
 
 protected:
     SingleMetricCheckerSPtr AddSingleMetricChecker( SingleMetricCheckerSPtr pCounterChecker );
-    QList<SingleMetricCheckerSPtr> AddCounterMetricChecker( QString const& sMetricName,
-                                                            QString const& sCounterPathOrWildcard,
-                                                            EMetricDataType eMetricDataType,
-                                                            const QString &sMetricType,
-                                                            int     nReaction = 0,
-                                                            double  dHighValue = -1,
-                                                            double  dSevereValue = -1,
-                                                            bool    bCreateMultipleCheckersByInstanceNames = false,
-                                                            QString const& sInstanceObjectName = QString(),
-                                                            QString const& sInstanceType = QString(),
-                                                            MetricModifierFunc funcMetricModifier = nullptr);
+    SingleMetricCheckersList AddCounterMetricChecker( QString const& sMetricName,
+                                                      QString const& sCounterPathOrWildcard,
+                                                      EMetricDataType eMetricDataType,
+                                                      const QString &sMetricType,
+                                                      int     nReaction = 0,
+                                                      double  dHighValue = -1,
+                                                      double  dSevereValue = -1,
+                                                      bool    bCreateMultipleCheckersByInstanceNames = false,
+                                                      QString const& sInstanceObjectName = QString(),
+                                                      QString const& sInstanceType = QString(),
+                                                      MetricModifierFunc funcMetricModifier = nullptr );
 
 private:
     // Content
-    QList<SingleMetricCheckerSPtr> m_lstSingleMetricCheckers;
+    SingleMetricCheckersList m_lstSingleMetricCheckers;
 };
 
 
