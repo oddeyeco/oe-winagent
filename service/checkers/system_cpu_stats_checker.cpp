@@ -8,20 +8,20 @@ SystemCpuStatsChecker::SystemCpuStatsChecker(QObject *pParent)
 
 void SystemCpuStatsChecker::Initialize()
 {
-    double dConfigHighValue = -1;
-    double dConfigSevereValue = -1;
+    double dConfHighVal   = -1;
+    double dConfSevereVal = -1;
 
     bool bStaticAlertingEnabled = ConfigSection().Value<bool>("static_enabled", false);
     if( bStaticAlertingEnabled )
     {
-        dConfigHighValue = ConfigSection().Value<double>("high", -1);
-        dConfigSevereValue = ConfigSection().Value<double>("severe", -1);
+        dConfHighVal   = ConfigSection().Value<double>("high", -1);
+        dConfSevereVal = ConfigSection().Value<double>("severe", -1);
     }
 
     bool bPerCoreEnabled =  ConfigSection().Value<bool>("percore_stats", false);
     bool bDetailedEnabled =  ConfigSection().Value<bool>("detailed_stats", false);
 
-    AddCounterMetricChecker( "cpu_load",           "\\Processor%1\\% Processor Time", EMetricDataType::Percent, "SYSTEM", 0, dConfigHighValue, dConfigSevereValue, bPerCoreEnabled, "Processor", "Core" );
+    AddCounterMetricChecker( "cpu_load",           "\\Processor%1\\% Processor Time", EMetricDataType::Percent, "SYSTEM", 0, dConfHighVal, dConfSevereVal, bPerCoreEnabled, "Processor", "Core" );
     AddCounterMetricChecker( "cpu_idle",           "\\Processor%1\\% Idle Time",      EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerCoreEnabled, "Processor", "Core" );
     AddCounterMetricChecker( "cpu_interrupt_time", "\\Processor%1\\% Interrupt Time", EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerCoreEnabled, "Processor", "Core" );
     AddCounterMetricChecker( "process_count",      "\\System%1\\Processes",           EMetricDataType::Counter, "SYSTEM" );

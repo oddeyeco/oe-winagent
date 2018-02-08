@@ -35,7 +35,8 @@ SOURCES += main.cpp \
     upload/basicoddeyeclient.cpp \
     upload/oddeyecacheuploader.cpp \
     pinger.cpp \
-    application.cpp
+    application.cpp \
+    checkers/system_disk_stats_checker.cpp
 
 include(../3rdparty/qtservice/src/qtservice.pri)
 
@@ -61,4 +62,5 @@ HEADERS += \
     upload/oddeyecacheuploader.h \
     pinger.h \
     winpdhexception.h \
-    application.h
+    application.h \
+    checkers/system_disk_stats_checker.h

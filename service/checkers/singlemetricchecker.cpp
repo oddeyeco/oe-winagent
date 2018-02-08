@@ -10,7 +10,8 @@ CSingleMetricChecker::CSingleMetricChecker(QString const& sMetricName,
                                            double dHighValue,
                                            double dSevereValue,
                                            const QString &sInstanceType,
-                                           const QString &sInstanceName)
+                                           const QString &sInstanceName,
+                                           MetricModifierFunc funcMetricModifier)
     : m_hCounter(NULL),
       m_sMetricName(sMetricName),
       m_sCounterPath( sCounterPath ),
@@ -21,7 +22,8 @@ CSingleMetricChecker::CSingleMetricChecker(QString const& sMetricName,
       m_dHighValue( dHighValue ),
       m_dSevereValue( dSevereValue ),
       m_sInstanceType( sInstanceType ),
-      m_sInstanceName( sInstanceName )
+      m_sInstanceName( sInstanceName ),
+      m_pFuncMetricModifier( funcMetricModifier )
 {    
     Q_ASSERT( !sMetricName.isEmpty() );
     Q_ASSERT( !sCounterPath.isEmpty() );
@@ -56,6 +58,12 @@ MetricDataSPtr CSingleMetricChecker::CheckMetric() const
     {
         pMetric->SetInstanceType( m_sInstanceType );
         pMetric->SetInstanceName( m_sInstanceName );
+    }
+
+    // Check if custom modifier function is set
+    if( m_pFuncMetricModifier && pMetric )
+    {
+        m_pFuncMetricModifier( pMetric );
     }
 
     // Set data severity

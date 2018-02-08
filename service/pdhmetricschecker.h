@@ -15,17 +15,18 @@ public:
     MetricDataList CheckMetrics() override;
 
 protected:
-    void AddSingleMetricChecker( SingleMetricCheckerSPtr pCounterChecker );
-    void AddCounterMetricChecker(QString const& sMetricName,
-                                  QString const& sCounterPathOrWildcard,
-                                  EMetricDataType eMetricDataType,
-                                  const QString &sMetricType,
-                                  int     nReaction = 0,
-                                  double  dHighValue = -1,
-                                  double  dSevereValue = -1,
-                                  bool    bCreateMultipleCheckersByInstanceNames = false,
-                                  QString const& sInstanceObjectName = QString(),
-                                  QString const& sInstanceType = QString() );
+    SingleMetricCheckerSPtr AddSingleMetricChecker( SingleMetricCheckerSPtr pCounterChecker );
+    QList<SingleMetricCheckerSPtr> AddCounterMetricChecker( QString const& sMetricName,
+                                                            QString const& sCounterPathOrWildcard,
+                                                            EMetricDataType eMetricDataType,
+                                                            const QString &sMetricType,
+                                                            int     nReaction = 0,
+                                                            double  dHighValue = -1,
+                                                            double  dSevereValue = -1,
+                                                            bool    bCreateMultipleCheckersByInstanceNames = false,
+                                                            QString const& sInstanceObjectName = QString(),
+                                                            QString const& sInstanceType = QString(),
+                                                            MetricModifierFunc funcMetricModifier = nullptr);
 
 private:
     // Content

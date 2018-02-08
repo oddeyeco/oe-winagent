@@ -3,6 +3,11 @@
 
 #include "metricdata.h"
 #include "winperformancedataprovider.h"
+#include <functional>
+
+using MetricModifierFunc = std::function<void(MetricDataSPtr)>;
+
+
 
 class CSingleMetricChecker
 {
@@ -16,8 +21,9 @@ public:
                           double  dHighValue = -1,
                           double  dSevereValue = -1,
                           QString const& sInstanceType = QString(),
-                          QString const& sInstanceName = QString()
-                          );
+                          QString const& sInstanceName = QString(),
+                          MetricModifierFunc funcMetricModifier = nullptr
+                         );
 
 public:
     MetricDataSPtr CheckMetric() const;
@@ -25,6 +31,8 @@ public:
     inline QString GetMetricName() const;
     inline QString GetInstanceType() const;
     inline QString GetInstanceName() const;
+
+    inline void SetMetricModifierFunc( MetricModifierFunc funcModifer );
 
 private:
     // Content
@@ -39,16 +47,18 @@ private:
     double                          m_dSevereValue;
     QString                         m_sInstanceType;
     QString                         m_sInstanceName;
+    MetricModifierFunc              m_pFuncMetricModifier;
 };
+using SingleMetricCheckerSPtr = std::shared_ptr<CSingleMetricChecker>;
 
 
 //
 //  Inline implementations
 //
-QString CSingleMetricChecker::GetMetricName()   const { return m_sMetricName; }
-QString CSingleMetricChecker::GetInstanceType() const { return m_sInstanceType; }
-QString CSingleMetricChecker::GetInstanceName() const { return m_sInstanceName; }
+inline QString CSingleMetricChecker::GetMetricName()   const { return m_sMetricName; }
+inline QString CSingleMetricChecker::GetInstanceType() const { return m_sInstanceType; }
+inline QString CSingleMetricChecker::GetInstanceName() const { return m_sInstanceName; }
+inline void CSingleMetricChecker::SetMetricModifierFunc(MetricModifierFunc funcModifer) { m_pFuncMetricModifier = funcModifer; }
 
-using SingleMetricCheckerSPtr = std::shared_ptr<CSingleMetricChecker>;
 
 #endif // CSINGLEMETRICCHECKER_H
