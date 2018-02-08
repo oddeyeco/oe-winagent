@@ -19,7 +19,9 @@ public:
     MetricDataList CheckMetrics() override;
 
 protected:
-    SingleMetricCheckerSPtr AddSingleMetricChecker( SingleMetricCheckerSPtr pCounterChecker );
+    SingleMetricCheckerSPtr AddSingleMetricChecker( SingleMetricCheckerSPtr pMetricChecker );
+    void RemoveSingleMetricChecker( SingleMetricCheckerSPtr pMetricChecker );
+
     SingleMetricCheckersList AddCounterMetricChecker( QString const& sMetricName,
                                                       QString const& sCounterPathOrWildcard,
                                                       EMetricDataType eMetricDataType,
@@ -30,6 +32,17 @@ protected:
                                                       bool    bCreateMultipleCheckersByInstanceNames = false,
                                                       QString const& sInstanceObjectName = QString(),
                                                       QString const& sInstanceType = QString(),
+                                                      MetricModifierFunc funcMetricModifier = nullptr );
+
+    SingleMetricCheckerSPtr AddSingleMetricChecker(   QString const& sMetricName,
+                                                      QString const& sCurrentCounterPath,
+                                                      EMetricDataType eMetricDataType,
+                                                      const QString &sMetricType,
+                                                      int     nReaction = 0,
+                                                      double  dHighValue = -1,
+                                                      double  dSevereValue = -1,
+                                                      QString const& sInstanceType = QString(),
+                                                      QString const& sInstanceName = QString(),
                                                       MetricModifierFunc funcMetricModifier = nullptr );
 
 private:

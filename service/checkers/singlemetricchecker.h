@@ -25,6 +25,8 @@ public:
                           MetricModifierFunc funcMetricModifier = nullptr
                          );
 
+    ~CSingleMetricChecker();
+
 public:
     MetricDataSPtr CheckMetric() const;
 
@@ -58,6 +60,5 @@ inline QString CSingleMetricChecker::GetMetricName()   const { return m_sMetricN
 inline QString CSingleMetricChecker::GetInstanceType() const { return m_sInstanceType; }
 inline QString CSingleMetricChecker::GetInstanceName() const { return m_sInstanceName; }
 inline void CSingleMetricChecker::SetMetricModifierFunc(MetricModifierFunc funcModifer) { m_pFuncMetricModifier = funcModifer; }
-
 
 #endif // CSINGLEMETRICCHECKER_H

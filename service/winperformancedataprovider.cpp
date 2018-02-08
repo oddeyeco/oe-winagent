@@ -37,7 +37,7 @@ HCOUNTER CWinPerformanceDataProvider::AddCounter(const wchar_t *wszCounterPath)
     return hCounter;
 }
 
-void CWinPerformanceDataProvider::RemoveCounter(HCOUNTER hCounter)
+void CWinPerformanceDataProvider::RemoveCounter(HCOUNTER hCounter) throw()
 {
     Q_ASSERT(hCounter);
     PdhRemoveCounter( hCounter );
@@ -234,14 +234,6 @@ QStringList CWinPerformanceDataProvider::GetObjectInstanceNames(const QString &s
 
             if (status == ERROR_SUCCESS)
             {
-                // Walk the counters list. The list can contain one
-                // or more null-terminated strings. The list is terminated
-                // using two null-terminator characters.
-//                for (pTemp = pwsCounterListBuffer; *pTemp != 0; pTemp += wcslen(pTemp) + 1)
-//                {
-//                    wprintf(L"%s\n", pTemp);
-//                }
-
                 // Walk the instance list. The list can contain one
                 // or more null-terminated strings. The list is terminated
                 // using two null-terminator characters.
@@ -266,10 +258,10 @@ QStringList CWinPerformanceDataProvider::GetObjectInstanceNames(const QString &s
     }
 
     if (pwsCounterListBuffer != NULL)
-        free(pwsCounterListBuffer);
+        free( pwsCounterListBuffer );
 
     if (pwsInstanceListBuffer != NULL)
-        free(pwsInstanceListBuffer);
+        free( pwsInstanceListBuffer );
 
     return lstInstanceNames;
 }

@@ -21,7 +21,7 @@ MetricDataList CPdhMetricsChecker::CheckMetrics()
         }
         catch( std::exception const& oErr )
         {
-            LOG_ERROR( QString("Excpetion: Metric %1 %2%3 check failed: ")
+            LOG_ERROR( QString("Excpetion: Metric %1 : %2 %3 - check failed: ")
                        .arg( pCurrentSingleChecker->GetMetricName() )
                        .arg( pCurrentSingleChecker->GetInstanceType() )
                        .arg( pCurrentSingleChecker->GetInstanceType() )
@@ -39,6 +39,12 @@ SingleMetricCheckerSPtr CPdhMetricsChecker::AddSingleMetricChecker(SingleMetricC
         m_lstSingleMetricCheckers.append(pCounterChecker);
 
     return pCounterChecker;
+}
+
+void CPdhMetricsChecker::RemoveSingleMetricChecker(SingleMetricCheckerSPtr pMetricChecker)
+{
+    if( pMetricChecker )
+        m_lstSingleMetricCheckers.removeAll( pMetricChecker );
 }
 
 SingleMetricCheckersList CPdhMetricsChecker::AddCounterMetricChecker(const QString &sMetricName,
@@ -60,17 +66,17 @@ SingleMetricCheckersList CPdhMetricsChecker::AddCounterMetricChecker(const QStri
         // complete counter path
         QString sFilledCounterPathOrWildcard = sCounterPathOrWildcard.arg("(_Total)");
 
-        auto pChecker = AddSingleMetricChecker( std::make_shared<CSingleMetricChecker>( sMetricName,
-                                                                                        sFilledCounterPathOrWildcard,
-                                                                                        eMetricDataType,
-                                                                                        sMetricType,
-                                                                                        PerfDataProvider(),
-                                                                                        nReaction,
-                                                                                        dHighValue,
-                                                                                        dSevereValue,
-                                                                                        sInstanceType,
-                                                                                        "",
-                                                                                        funcMetricModifier) );
+        auto pChecker = AddSingleMetricChecker(  sMetricName,
+                                                 sFilledCounterPathOrWildcard,
+                                                 eMetricDataType,
+                                                 sMetricType,
+                                                 nReaction,
+                                                 dHighValue,
+                                                 dSevereValue,
+                                                 sInstanceType,
+                                                 "",
+                                                 funcMetricModifier );
+
         lstAddedCheckers.append( pChecker );
     }
     else
@@ -95,21 +101,46 @@ SingleMetricCheckersList CPdhMetricsChecker::AddCounterMetricChecker(const QStri
             QString sCurrentInstanceName = lstInstanceNames[i];
 
             // create checkers
-            auto pChecker = AddSingleMetricChecker( std::make_shared<CSingleMetricChecker>( sMetricName,
-                                                                                            sCurrentCounterPath,
-                                                                                            eMetricDataType,
-                                                                                            sMetricType,
-                                                                                            PerfDataProvider(),
-                                                                                            nReaction,
-                                                                                            dHighValue,
-                                                                                            dSevereValue,
-                                                                                            sInstanceType,
-                                                                                            sCurrentInstanceName,
-                                                                                            funcMetricModifier) );
+            auto pChecker = AddSingleMetricChecker(  sMetricName,
+                                                     sCurrentCounterPath,
+                                                     eMetricDataType,
+                                                     sMetricType,
+                                                     nReaction,
+                                                     dHighValue,
+                                                     dSevereValue,
+                                                     sInstanceType,
+                                                     sCurrentInstanceName,
+                                                     funcMetricModifier );
             lstAddedCheckers.append(pChecker);
         }
 
     }
 
     return lstAddedCheckers;
+}
+
+SingleMetricCheckerSPtr CPdhMetricsChecker::AddSingleMetricChecker(  const QString &sMetricName,
+                                                                     const QString &sCurrentCounterPath,
+                                                                     EMetricDataType eMetricDataType,
+                                                                     const QString &sMetricType,
+                                                                     int nReaction,
+                                                                     double dHighValue,
+                                                                     double dSevereValue,
+                                                                     const QString &sInstanceType,
+                                                                     const QString &sInstanceName,
+                                                                     MetricModifierFunc funcMetricModifier)
+{
+    // create checker
+    auto pChecker = AddSingleMetricChecker( std::make_shared<CSingleMetricChecker>( sMetricName,
+                                                                                    sCurrentCounterPath,
+                                                                                    eMetricDataType,
+                                                                                    sMetricType,
+                                                                                    PerfDataProvider(),
+                                                                                    nReaction,
+                                                                                    dHighValue,
+                                                                                    dSevereValue,
+                                                                                    sInstanceType,
+                                                                                    sInstanceName,
+                                                                                    funcMetricModifier) );
+    return pChecker;
 }

@@ -14,7 +14,7 @@ public:
 
     // IMetricsChecker interface
 public:
-    void Initialize();
+    void Initialize() override;
 };
 
 

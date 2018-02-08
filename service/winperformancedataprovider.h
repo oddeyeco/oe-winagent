@@ -23,7 +23,7 @@ public:
     //	Main Interface
     //
     HCOUNTER AddCounter(wchar_t const* wszCounterPath);
-    void	 RemoveCounter(HCOUNTER hCounter);
+    void	 RemoveCounter(HCOUNTER hCounter) throw();
     double   GetCounterValue(HCOUNTER hCounter);
     void     Reset();
 

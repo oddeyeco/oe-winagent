@@ -37,6 +37,12 @@ CSingleMetricChecker::CSingleMetricChecker(QString const& sMetricName,
     m_hCounter = m_pDataProvider->AddCounter( CWinPerformanceDataProvider::ToWCharArray( sCounterPath ).get() );
 }
 
+CSingleMetricChecker::~CSingleMetricChecker()
+{
+    Q_ASSERT( m_pDataProvider );
+    m_pDataProvider->RemoveCounter( m_hCounter );
+}
+
 MetricDataSPtr CSingleMetricChecker::CheckMetric() const
 {
     Q_ASSERT( m_hCounter );

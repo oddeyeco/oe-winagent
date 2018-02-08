@@ -1,5 +1,6 @@
 #include "engine.h"
 #include <QDebug>
+#include <QElapsedTimer>
 #include <iostream>
 
 CEngine::CEngine(QObject *pParent)
@@ -18,6 +19,12 @@ CEngine::CEngine(QObject *pParent)
 
 void CEngine::Start()
 {
+    if( m_setCheckers.empty() )
+    {
+        LOG_INFO( "No metric checkers" );
+        return;
+    }
+
     m_pDataProvider->UpdateCounters();
     onTimerTik();
     m_pTimer->start();
@@ -68,6 +75,15 @@ void CEngine::onTimerTik()
 
 void CEngine::CollectMetrics()
 {
+    if( m_setCheckers.empty() )
+    {
+        LOG_INFO( "No metric checkers" );
+        return;
+    }
+
+    QElapsedTimer oTimer;
+    oTimer.start();
+
     // Update Win Performance conters values
     Q_ASSERT(m_pDataProvider);
     m_pDataProvider->UpdateCounters();
@@ -83,11 +99,16 @@ void CEngine::CollectMetrics()
         lstAllCollectedMetrics.append( lstCurrentMetricList );
     }
 
-    // Notify
-    emit sigMetricsCollected( lstAllCollectedMetrics );
+    qint64 nElapsedOnDataCollection =  oTimer.elapsed();
+    qDebug() << "Time Elapsed On Data Collection: " << nElapsedOnDataCollection << " msec";
+    qDebug() << "Metric Count: " << lstAllCollectedMetrics.size();
 
-    for( MetricDataSPtr& pMetr : lstAllCollectedMetrics)
-        qDebug() << pMetr->GetName() +  " " + pMetr->GetInstanceType() + pMetr->GetInstanceName() + " : " + pMetr->GetValue().toString();
+    // Notify
+    //emit sigMetricsCollected( lstAllCollectedMetrics );
+
+//    for( MetricDataSPtr& pMetr : lstAllCollectedMetrics)
+//        qDebug() << pMetr->GetName() +  " " + pMetr->GetInstanceType() + " " + pMetr->GetInstanceName() + " : " + pMetr->GetValue().toString();
+
 }
 
 
