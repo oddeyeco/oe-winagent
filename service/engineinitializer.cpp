@@ -1,5 +1,6 @@
 #include "engineinitializer.h"
 #include "configurationmanager.h"
+#include "checkers/scriptsmetricschecker.h"
 
 #include <QDebug>
 
@@ -37,7 +38,7 @@ void CEngineInitialzier::InitializeEngine(EngineSPtr pEngine)
             if( bIsEnabled )
             {
                 IMetricsCategoryCheckerSPtr pChecker = CreateCheckerByConfigName( pCurrentConfig->GetName(),
-                                                                          sSectionName );
+                                                                                  sSectionName );
                 if( pChecker )
                 {
                     qDebug() << "Checker found!";
@@ -56,6 +57,20 @@ void CEngineInitialzier::InitializeEngine(EngineSPtr pEngine)
             }
         }
     }
+
+
+    //
+    //  Check if enabled cripts exists then add CScriptsMetricsChecker
+    //
+    if( !ConfMgr.GetEnabledScriptsConfigSection().isEmpty() )
+    {
+        // create scritps metrics checker
+        IMetricsCategoryCheckerSPtr pScriptsChecker = std::make_shared<CScriptsMetricsChecker>();
+        pScriptsChecker->SetConfigSection( ConfMgr.GetEnabledScriptsConfigSection() );
+        // Add to engine
+        pEngine->AddChecker(pScriptsChecker);
+    }
+
 }
 
 IMetricsCategoryCheckerSPtr CEngineInitialzier::CreateCheckerByConfigName(QString const& sConfigName,

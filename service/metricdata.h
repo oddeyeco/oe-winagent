@@ -23,6 +23,7 @@ enum class EMetricDataSeverity
 
 QString ToString( EMetricDataType eType );
 QString ToString( EMetricDataSeverity eType );
+EMetricDataType GetMetricDataTypeFromString( QString const& sDataTypeName );
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ///
@@ -48,6 +49,7 @@ public:
     inline QString GetName() const;
 
     inline void SetDataType(EMetricDataType eDataType);
+    inline void SetDataType(QString const&  sDataType);
     inline EMetricDataType GetDataType() const;
 
     inline void SetValue(QVariant const& vtValue);
@@ -99,6 +101,7 @@ inline void CMetricData::SetName(QString const& sName) { Q_ASSERT(!sName.isEmpty
 inline QString CMetricData::GetName() const { return m_sName; }
 
 inline void CMetricData::SetDataType(EMetricDataType eDataType) { m_eDataType = eDataType; }
+void CMetricData::SetDataType(const QString &sDataType) { SetDataType( GetMetricDataTypeFromString( sDataType ) ); }
 inline EMetricDataType CMetricData::GetDataType() const { return m_eDataType; }
 
 inline void CMetricData::SetValue(QVariant const& vtValue) { m_vtValue = vtValue; }

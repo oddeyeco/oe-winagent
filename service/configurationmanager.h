@@ -35,6 +35,8 @@ public:
     // clears all loaded configs
     void UnloadConfigs();
 
+    CConfigSection GetEnabledScriptsConfigSection();
+
 signals:
     void sigConfigsLoaded();
     void sigConfigsUnloaded();
@@ -48,9 +50,12 @@ private:
     QMap<QString, ConfigSPtr> m_mapConfis;
 
     QStringList m_lstLoadableConfigs;
+    CConfigSection m_oEnabledScriptsConfSection;
+
     // Constatns
     static char const* s_szConfigDirPath;
     static char const* s_szMainConfigName;
+    static char const* s_szEnabledScriptsDirPath;
 };
 
 #define ConfMgr CConfigurationManager::Instance()

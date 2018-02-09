@@ -41,7 +41,8 @@ SOURCES += main.cpp \
     metricsgroupchecker.cpp \
     basicmetricchecker.cpp \
     checkers/performanceounterhecker.cpp \
-    winperformancemetricschecker.cpp
+    winperformancemetricschecker.cpp \
+    checkers/scriptsmetricschecker.cpp
 
 include(../3rdparty/qtservice/src/qtservice.pri)
 
@@ -73,4 +74,5 @@ HEADERS += \
     metricsgroupchecker.h \
     basicmetricchecker.h \
     checkers/performanceounterhecker.h \
-    winperformancemetricschecker.h
+    winperformancemetricschecker.h \
+    checkers/scriptsmetricschecker.h

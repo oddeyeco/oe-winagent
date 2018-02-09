@@ -4,8 +4,10 @@
 #include <QDir>
 
 // static member initialization
-char const* CConfigurationManager::s_szConfigDirPath = "conf/";
-char const* CConfigurationManager::s_szMainConfigName= "conf";
+char const* CConfigurationManager::s_szConfigDirPath         = "conf/";
+char const* CConfigurationManager::s_szMainConfigName        = "conf";
+char const* CConfigurationManager::s_szEnabledScriptsDirPath = "scripts_enabled/";
+
 
 CConfigurationManager::CConfigurationManager()
 {}
@@ -45,6 +47,24 @@ void CConfigurationManager::LoadConfigurations()
     {
         QString sConfigPath = oConfigDir.filePath( sConfigName + ".ini");
         LoadConfigIfExists(sConfigPath);
+    }
+
+    //
+    //  Load enabled scripts config
+    //
+    QDir oEnabledScriptsDir( s_szEnabledScriptsDirPath );
+    if( oEnabledScriptsDir.exists() )
+    {
+        QStringList lstScriptsFileList = oEnabledScriptsDir.entryList(QStringList() << "*.bat");
+        if( lstScriptsFileList.size() > 0 )
+        {
+            QStringList lstScriptsFileAbsoloutPaths;
+            for( auto& sCurrentFileName : lstScriptsFileList )
+                lstScriptsFileAbsoloutPaths.append( oEnabledScriptsDir.absoluteFilePath( sCurrentFileName ) );
+
+            // add scripts file paths to config section
+            m_oEnabledScriptsConfSection.insert( "scripts_enabled", lstScriptsFileAbsoloutPaths );
+        }
     }
 
     // Notify [unused]
@@ -91,6 +111,11 @@ void CConfigurationManager::UnloadConfigs()
     // Delete existing configs
     m_mapConfis.clear();
     emit sigConfigsUnloaded();
+}
+
+CConfigSection CConfigurationManager::GetEnabledScriptsConfigSection()
+{
+    return m_oEnabledScriptsConfSection;
 }
 
 bool CConfigurationManager::LoadConfigIfExists(const QString &sConfFilePath)

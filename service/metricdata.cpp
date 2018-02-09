@@ -1,7 +1,9 @@
 #include "metricdata.h"
 
 CMetricData::CMetricData()
-    : m_nReaction{0}
+    : m_eDataType( EMetricDataType::None ),
+      m_nReaction{0},
+      m_eSeverity( EMetricDataSeverity::Normal )
 {}
 
 CMetricData::CMetricData(const QString &sName,
@@ -46,4 +48,16 @@ QString ToString(EMetricDataSeverity eType)
     default:
         case EMetricDataSeverity::Normal:   return QString( "Normal" );
     }
+}
+
+EMetricDataType GetMetricDataTypeFromString(const QString &sDataTypeName)
+{
+    if( sDataTypeName.compare( "Rate", Qt::CaseInsensitive ) == 0 )
+        return EMetricDataType::Rate;
+    else if( sDataTypeName.compare( "Percent", Qt::CaseInsensitive ) == 0 )
+        return EMetricDataType::Percent;
+    else if( sDataTypeName.compare( "Counter", Qt::CaseInsensitive ) == 0 )
+        return EMetricDataType::Counter;
+    else
+        return EMetricDataType::None;
 }
