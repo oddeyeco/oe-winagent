@@ -20,27 +20,27 @@ void SystemTcpStatsChecker::Initialize()
 
     if( bTCPv4Enabled )
     {
-        AddSingleMetricChecker("tcp_connection_failures",        "\\TCPv4\\Connection Failures",        EMetricDataType::Counter, "SYSTEM",0,-1,-1, "TCP Version", "v4" );
-        AddSingleMetricChecker("tcp_connections_active",         "\\TCPv4\\Connections Active",         EMetricDataType::Counter, "SYSTEM",0,-1,-1, "TCP Version", "v4" );
-        AddSingleMetricChecker("tcp_connections_established",    "\\TCPv4\\Connections Established",    EMetricDataType::Counter, "SYSTEM",0,-1,-1, "TCP Version", "v4" );
-        AddSingleMetricChecker("tcp_connections_passive",        "\\TCPv4\\Connections Passive",        EMetricDataType::Counter, "SYSTEM",0,-1,-1, "TCP Version", "v4" );
-        AddSingleMetricChecker("tcp_connections_reset",          "\\TCPv4\\Connections Reset",          EMetricDataType::Counter, "SYSTEM",0,-1,-1, "TCP Version", "v4" );
-        AddSingleMetricChecker("tcp_segments_received/sec",      "\\TCPv4\\Segments Received/sec",      EMetricDataType::Counter, "SYSTEM",0,-1,-1, "TCP Version", "v4" );
-        AddSingleMetricChecker("tcp_segments_retransmitted/sec", "\\TCPv4\\Segments Retransmitted/sec", EMetricDataType::Counter, "SYSTEM",0,-1,-1, "TCP Version", "v4" );
-        AddSingleMetricChecker("tcp_segments_sent/sec",          "\\TCPv4\\Segments Sent/sec",          EMetricDataType::Counter, "SYSTEM",0,-1,-1, "TCP Version", "v4" );
-        AddSingleMetricChecker("tcp_segments/sec",               "\\TCPv4\\Segments/sec",               EMetricDataType::Counter, "SYSTEM",0,-1,-1, "TCP Version", "v4" );
+        AddPerformanceCounterChecker("tcp_connection_failures",        "\\TCPv4\\Connection Failures",        EMetricDataType::Counter, "SYSTEM",0,-1,-1, "tcp_version", "v4" );
+        AddPerformanceCounterChecker("tcp_connections_active",         "\\TCPv4\\Connections Active",         EMetricDataType::Counter, "SYSTEM",0,-1,-1, "tcp_version", "v4" );
+        AddPerformanceCounterChecker("tcp_connections_established",    "\\TCPv4\\Connections Established",    EMetricDataType::Counter, "SYSTEM",0,-1,-1, "tcp_version", "v4" );
+        AddPerformanceCounterChecker("tcp_connections_passive",        "\\TCPv4\\Connections Passive",        EMetricDataType::Counter, "SYSTEM",0,-1,-1, "tcp_version", "v4" );
+        AddPerformanceCounterChecker("tcp_connections_reset",          "\\TCPv4\\Connections Reset",          EMetricDataType::Counter, "SYSTEM",0,-1,-1, "tcp_version", "v4" );
+        AddPerformanceCounterChecker("tcp_segments_received",      "\\TCPv4\\Segments Received/sec",      EMetricDataType::Counter, "SYSTEM",0,-1,-1, "tcp_version", "v4" );
+        AddPerformanceCounterChecker("tcp_segments_retransmitted", "\\TCPv4\\Segments Retransmitted/sec", EMetricDataType::Counter, "SYSTEM",0,-1,-1, "tcp_version", "v4" );
+        AddPerformanceCounterChecker("tcp_segments_sent",          "\\TCPv4\\Segments Sent/sec",          EMetricDataType::Counter, "SYSTEM",0,-1,-1, "tcp_version", "v4" );
+        AddPerformanceCounterChecker("tcp_segments",               "\\TCPv4\\Segments/sec",               EMetricDataType::Counter, "SYSTEM",0,-1,-1, "tcp_version", "v4" );
     }
 
     if( bTCPv6Enabled )
     {
-        AddSingleMetricChecker("tcp_connection_failures",        "\\TCPv6\\Connection Failures",        EMetricDataType::Counter, "SYSTEM",0,-1,-1, "TCP Version", "v6" );
-        AddSingleMetricChecker("tcp_connections_active",         "\\TCPv6\\Connections Active",         EMetricDataType::Counter, "SYSTEM",0,-1,-1, "TCP Version", "v6" );
-        AddSingleMetricChecker("tcp_connections_established",    "\\TCPv6\\Connections Established",    EMetricDataType::Counter, "SYSTEM",0,-1,-1, "TCP Version", "v6" );
-        AddSingleMetricChecker("tcp_connections_passive",        "\\TCPv6\\Connections Passive",        EMetricDataType::Counter, "SYSTEM",0,-1,-1, "TCP Version", "v6" );
-        AddSingleMetricChecker("tcp_connections_reset",          "\\TCPv6\\Connections Reset",          EMetricDataType::Counter, "SYSTEM",0,-1,-1, "TCP Version", "v6" );
-        AddSingleMetricChecker("tcp_segments_received/sec",      "\\TCPv6\\Segments Received/sec",      EMetricDataType::Counter, "SYSTEM",0,-1,-1, "TCP Version", "v6" );
-        AddSingleMetricChecker("tcp_segments_retransmitted/sec", "\\TCPv6\\Segments Retransmitted/sec", EMetricDataType::Counter, "SYSTEM",0,-1,-1, "TCP Version", "v6" );
-        AddSingleMetricChecker("tcp_segments_sent/sec",          "\\TCPv6\\Segments Sent/sec",          EMetricDataType::Counter, "SYSTEM",0,-1,-1, "TCP Version", "v6" );
-        AddSingleMetricChecker("tcp_segments/sec",               "\\TCPv6\\Segments/sec",               EMetricDataType::Counter, "SYSTEM",0,-1,-1, "TCP Version", "v6" );
+        AddPerformanceCounterChecker("tcp_connection_failures",        "\\TCPv6\\Connection Failures",        EMetricDataType::Counter, "SYSTEM",0,-1,-1, "tcp_version", "v6" );
+        AddPerformanceCounterChecker("tcp_connections_active",         "\\TCPv6\\Connections Active",         EMetricDataType::Counter, "SYSTEM",0,-1,-1, "tcp_version", "v6" );
+        AddPerformanceCounterChecker("tcp_connections_established",    "\\TCPv6\\Connections Established",    EMetricDataType::Counter, "SYSTEM",0,-1,-1, "tcp_version", "v6" );
+        AddPerformanceCounterChecker("tcp_connections_passive",        "\\TCPv6\\Connections Passive",        EMetricDataType::Counter, "SYSTEM",0,-1,-1, "tcp_version", "v6" );
+        AddPerformanceCounterChecker("tcp_connections_reset",          "\\TCPv6\\Connections Reset",          EMetricDataType::Counter, "SYSTEM",0,-1,-1, "tcp_version", "v6" );
+        AddPerformanceCounterChecker("tcp_segments_received",      "\\TCPv6\\Segments Received/sec",      EMetricDataType::Counter, "SYSTEM",0,-1,-1, "tcp_version", "v6" );
+        AddPerformanceCounterChecker("tcp_segments_retransmitted", "\\TCPv6\\Segments Retransmitted/sec", EMetricDataType::Counter, "SYSTEM",0,-1,-1, "tcp_version", "v6" );
+        AddPerformanceCounterChecker("tcp_segments_sent",          "\\TCPv6\\Segments Sent/sec",          EMetricDataType::Counter, "SYSTEM",0,-1,-1, "tcp_version", "v6" );
+        AddPerformanceCounterChecker("tcp_segments",               "\\TCPv6\\Segments/sec",               EMetricDataType::Counter, "SYSTEM",0,-1,-1, "tcp_version", "v6" );
     }
 }

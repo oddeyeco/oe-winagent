@@ -1,55 +1,52 @@
-#ifndef CPDHMETRICSCHECKER_H
-#define CPDHMETRICSCHECKER_H
+#ifndef CWINPERFORMANCEMETRICSCHECKER_H
+#define CWINPERFORMANCEMETRICSCHECKER_H
 
-#include "imetricschecker.h"
-#include "checkers/singlemetricchecker.h"
+#include "metricsgroupchecker.h"
+#include "checkers/performanceounterhecker.h"
 
+using PerformanceCounterCheckersList = QList<PerformanceCounterCheckerSPtr>;
 
-using SingleMetricCheckersList = QList<SingleMetricCheckerSPtr>;
-
-
-class CPdhMetricsChecker : public IMetricsChecker
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///
+///  Base class for Windows performance counter checkers group
+///
+class CWinPerformanceMetricsChecker : public CMetricsGroupChecker
 {
-    using Base = IMetricsChecker;
+    using Base = CMetricsGroupChecker;
 
 public:
-    CPdhMetricsChecker(QObject* pParent = nullptr);
-
-public:
-    MetricDataList CheckMetrics() override;
+    CWinPerformanceMetricsChecker(QObject* pParent = nullptr);
 
 protected:
-    SingleMetricCheckerSPtr AddSingleMetricChecker( SingleMetricCheckerSPtr pMetricChecker );
-    void RemoveSingleMetricChecker( SingleMetricCheckerSPtr pMetricChecker );
+    // Creates CPerformanceCounterChecker instance and addes to checkers list
+    PerformanceCounterCheckerSPtr AddPerformanceCounterChecker( QString const& sMetricName,
+                                                                QString const& sCurrentCounterPath,
+                                                                EMetricDataType eMetricDataType,
+                                                                const QString &sMetricType,
+                                                                int     nReaction = 0,
+                                                                double  dHighValue = -1,
+                                                                double  dSevereValue = -1,
+                                                                QString const& sInstanceType = QString(),
+                                                                QString const& sInstanceName = QString(),
+                                                                ValueModifierFunc funcMetricModifier = nullptr );
 
-    SingleMetricCheckersList AddCounterMetricChecker( QString const& sMetricName,
-                                                      QString const& sCounterPathOrWildcard,
-                                                      EMetricDataType eMetricDataType,
-                                                      const QString &sMetricType,
-                                                      int     nReaction = 0,
-                                                      double  dHighValue = -1,
-                                                      double  dSevereValue = -1,
-                                                      bool    bCreateMultipleCheckersByInstanceNames = false,
-                                                      QString const& sInstanceObjectName = QString(),
-                                                      QString const& sInstanceType = QString(),
-                                                      MetricModifierFunc funcMetricModifier = nullptr );
+    // Creates CPerformanceCounterChecker instance and addes to checkers list.
+    // if bCreateMultipleCheckersByInstanceNames is TRUE then creates multiple checkers
+    // acording to Counter Instance Names using specified Counter Object
+    PerformanceCounterCheckersList AddPerformanceCounterCheckerEx( QString const& sMetricName,
+                                                                   QString const& sCounterPathOrWildcard,
+                                                                   EMetricDataType eMetricDataType,
+                                                                   const QString &sMetricType,
+                                                                   int     nReaction = 0,
+                                                                   double  dHighValue = -1,
+                                                                   double  dSevereValue = -1,
+                                                                   bool    bCreateMultipleCheckersByInstanceNames = false,
+                                                                   QString const& sInstanceObjectName = QString(),
+                                                                   QString const& sInstanceType = QString(),
+                                                                   ValueModifierFunc funcMetricModifier = nullptr );
 
-    SingleMetricCheckerSPtr AddSingleMetricChecker(   QString const& sMetricName,
-                                                      QString const& sCurrentCounterPath,
-                                                      EMetricDataType eMetricDataType,
-                                                      const QString &sMetricType,
-                                                      int     nReaction = 0,
-                                                      double  dHighValue = -1,
-                                                      double  dSevereValue = -1,
-                                                      QString const& sInstanceType = QString(),
-                                                      QString const& sInstanceName = QString(),
-                                                      MetricModifierFunc funcMetricModifier = nullptr );
-
-private:
-    // Content
-    SingleMetricCheckersList m_lstSingleMetricCheckers;
 };
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-#endif // CPDHMETRICSCHECKER_H
+#endif // CWINPERFORMANCEMETRICSCHECKER_H

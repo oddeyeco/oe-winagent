@@ -1,18 +1,18 @@
 #ifndef SYSTEMMEMORYSTATSCHECKER_H
 #define SYSTEMMEMORYSTATSCHECKER_H
 
-#include "../pdhmetricschecker.h"
+#include "../winperformancemetricschecker.h"
 
-class SystemMemoryStatsChecker : public CPdhMetricsChecker
+class SystemMemoryStatsChecker : public CWinPerformanceMetricsChecker
 {
     DECLARE_MERTIC_CHECKER(SystemMemoryStatsChecker)
-    using Base = CPdhMetricsChecker;
+    using Base = CWinPerformanceMetricsChecker;
 
 public:
     SystemMemoryStatsChecker();
 
 
-    // IMetricsChecker interface
+    // IMetricsCategoryChecker interface
 public:
     void Initialize() override;
 };

@@ -1,18 +1,18 @@
 #ifndef SYSTEM_NETWORK_STATS_CHECKER_H
 #define SYSTEM_NETWORK_STATS_CHECKER_H
 
-#include "../pdhmetricschecker.h"
+#include "../winperformancemetricschecker.h"
 
-class SystemNetworkStatsChecker : public CPdhMetricsChecker
+class SystemNetworkStatsChecker : public CWinPerformanceMetricsChecker
 {
     DECLARE_MERTIC_CHECKER(SystemNetworkStatsChecker)
-    using Base = CPdhMetricsChecker;
+    using Base = CWinPerformanceMetricsChecker;
 
 public:
     SystemNetworkStatsChecker(QObject* pParent = nullptr);
 
 
-    // IMetricsChecker interface
+    // IMetricsCategoryChecker interface
 public:
     void Initialize() override;
 

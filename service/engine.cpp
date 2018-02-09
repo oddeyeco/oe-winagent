@@ -35,7 +35,7 @@ void CEngine::Stop()
     m_pTimer->stop();
 }
 
-void CEngine::AddChecker(IMetricsCheckerSPtr pChecker)
+void CEngine::AddChecker(IMetricsCategoryCheckerSPtr pChecker)
 {
     Q_ASSERT(pChecker);
     if( pChecker && m_setCheckers.find( pChecker ) == m_setCheckers.end() )
@@ -48,7 +48,7 @@ void CEngine::AddChecker(IMetricsCheckerSPtr pChecker)
     }
 }
 
-void CEngine::RemoveChecker(IMetricsCheckerSPtr pChecker)
+void CEngine::RemoveChecker(IMetricsCategoryCheckerSPtr pChecker)
 {
     m_setCheckers.erase(pChecker);
 }
@@ -89,7 +89,7 @@ void CEngine::CollectMetrics()
     m_pDataProvider->UpdateCounters();
 
     MetricDataList lstAllCollectedMetrics;
-    for( IMetricsCheckerSPtr const& pChecker : m_setCheckers )
+    for( IMetricsCategoryCheckerSPtr const& pChecker : m_setCheckers )
     {
         Q_ASSERT(pChecker);
         if( !pChecker )
@@ -104,10 +104,10 @@ void CEngine::CollectMetrics()
     qDebug() << "Metric Count: " << lstAllCollectedMetrics.size();
 
     // Notify
-    //emit sigMetricsCollected( lstAllCollectedMetrics );
+    emit sigMetricsCollected( lstAllCollectedMetrics );
 
-//    for( MetricDataSPtr& pMetr : lstAllCollectedMetrics)
-//        qDebug() << pMetr->GetName() +  " " + pMetr->GetInstanceType() + " " + pMetr->GetInstanceName() + " : " + pMetr->GetValue().toString();
+    for( MetricDataSPtr& pMetr : lstAllCollectedMetrics)
+        qDebug() << pMetr->GetName() +  " " + pMetr->GetInstanceType() + " " + pMetr->GetInstanceName() + " : " + pMetr->GetValue().toString();
 
 }
 

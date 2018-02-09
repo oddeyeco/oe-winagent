@@ -1,19 +1,19 @@
 #ifndef SYSTEMTCPSTATSCHECKER_H
 #define SYSTEMTCPSTATSCHECKER_H
 
-#include <pdhmetricschecker.h>
+#include <winperformancemetricschecker.h>
 
 
-class SystemTcpStatsChecker : public CPdhMetricsChecker
+class SystemTcpStatsChecker : public CWinPerformanceMetricsChecker
 {
     DECLARE_MERTIC_CHECKER(SystemTcpStatsChecker)
-    using Base = CPdhMetricsChecker;
+    using Base = CWinPerformanceMetricsChecker;
 
 public:
     SystemTcpStatsChecker(QObject* pParent = nullptr);
 
 
-    // IMetricsChecker interface
+    // IMetricsCategoryChecker interface
 public:
     void Initialize() override;
 };

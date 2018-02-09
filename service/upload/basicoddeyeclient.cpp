@@ -104,6 +104,24 @@ void CBasicOddEyeClient::SendJsonData(const QJsonDocument &oJsonData)
     });
 }
 
+QString CBasicOddEyeClient::NormailzeAsOEName(QString sName)
+{
+    sName = sName.toLower();
+    QRegExp oExtraCharRegExp( "[^_a-zA-Z0-9]" );
+    sName.replace( oExtraCharRegExp, "_" );
+
+    while(sName.contains( "__" ))
+        sName.replace("__", "_");
+
+    if( sName.left(1) == "_" )
+        sName.remove(0, 1);
+
+    if( sName.right(1) == "_" )
+        sName.remove(sName.length() - 1, 1);
+
+    return sName;
+}
+
 
 QJsonObject CBasicOddEyeClient::CreateMetricJson(MetricDataSPtr pSingleMetric)
 {
@@ -124,8 +142,11 @@ QJsonObject CBasicOddEyeClient::CreateMetricJson(MetricDataSPtr pSingleMetric)
     oTagsJson["host"] = m_sHostName;
     oTagsJson["type"] = pSingleMetric->GetType();
     if( !pSingleMetric->GetInstanceType().isEmpty() && !pSingleMetric->GetInstanceName().isEmpty() )
-        oTagsJson[pSingleMetric->GetInstanceType()] = pSingleMetric->GetInstanceName();
-
+    {
+        QString sTagName = NormailzeAsOEName( pSingleMetric->GetInstanceType() );
+        QString sTagVal  = NormailzeAsOEName( pSingleMetric->GetInstanceName() );
+        oTagsJson[sTagName] = sTagVal;
+    }
     // add tags
     oMetricJson["tags"] = oTagsJson;
 
@@ -161,7 +182,11 @@ QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(const QString &sMessage, 
     oTagsJson["group"] = m_sGroupName;
     oTagsJson["host"] = m_sHostName;
     if( !pRelatedMetric->GetInstanceType().isEmpty() && !pRelatedMetric->GetInstanceName().isEmpty() )
-        oTagsJson[pRelatedMetric->GetInstanceType()] = pRelatedMetric->GetInstanceName();
+    {
+        QString sTagName = NormailzeAsOEName( pRelatedMetric->GetInstanceType() );
+        QString sTagVal  = NormailzeAsOEName( pRelatedMetric->GetInstanceName() );
+        oTagsJson[sTagName] = sTagVal;
+    }
 
     // add tags
     oMetricJson["tags"] = oTagsJson;

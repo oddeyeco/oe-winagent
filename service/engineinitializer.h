@@ -7,7 +7,7 @@ class CEngineInitialzier
 {
 public:
     static void InitializeEngine( EngineSPtr pEngine );
-    static IMetricsCheckerSPtr CreateCheckerByConfigName(QString const& sConfigName,
+    static IMetricsCategoryCheckerSPtr CreateCheckerByConfigName(QString const& sConfigName,
                                                          QString const& sSectionName);
 private:
     // helpers

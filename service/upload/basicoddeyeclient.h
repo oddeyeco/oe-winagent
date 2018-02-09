@@ -36,6 +36,8 @@ public:
 
     void SendJsonData( QJsonDocument const& oJsonData );
 
+    static QString NormailzeAsOEName( QString sName );
+
 protected:
     virtual void HandleSendSuccedded( QNetworkReply* pReply, QJsonDocument const& oJsonData );
     virtual void HandleSendError(     QNetworkReply* pReply, QJsonDocument const& oJsonData) ;

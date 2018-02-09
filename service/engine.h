@@ -1,7 +1,7 @@
 #ifndef CENGINE_H
 #define CENGINE_H
 
-#include "imetricschecker.h"
+#include "imetricscategorychecker.h"
 #include "winperformancedataprovider.h"
 // Qt
 #include <QObject>
@@ -28,8 +28,8 @@ public slots:
     void Stop();
     void SetUpdateInterval(int nMsecs);
 
-    void AddChecker( IMetricsCheckerSPtr pChecker );
-    void RemoveChecker( IMetricsCheckerSPtr pChecker );
+    void AddChecker( IMetricsCategoryCheckerSPtr pChecker );
+    void RemoveChecker( IMetricsCategoryCheckerSPtr pChecker );
     void RemoveAllCheckers();
 
 signals:
@@ -44,7 +44,7 @@ private:
 private:
     // Content
     QTimer*                        m_pTimer;
-    std::set<IMetricsCheckerSPtr>  m_setCheckers;
+    std::set<IMetricsCategoryCheckerSPtr>  m_setCheckers;
     WinPerformanceDataProviderSPtr m_pDataProvider;
 };
 

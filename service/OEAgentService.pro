@@ -22,13 +22,10 @@ SOURCES += main.cpp \
     commonexceptions.cpp \
     engine.cpp \
     metricdata.cpp \
-    imetricschecker.cpp \
     engineinitializer.cpp \
     checkers/system_cpu_stats_checker.cpp \
     checkers/system_memory_stats_checker.cpp \
     winperformancedataprovider.cpp \
-    checkers/singlemetricchecker.cpp \
-    pdhmetricschecker.cpp \
     upload/oddeyeclient.cpp \
     upload/sendcontroller.cpp \
     logger.cpp \
@@ -38,7 +35,13 @@ SOURCES += main.cpp \
     application.cpp \
     checkers/system_disk_stats_checker.cpp \
     checkers/system_network_stats_checker.cpp \
-    checkers/system_tcp_stats_checker.cpp
+    checkers/system_tcp_stats_checker.cpp \
+    imetricscategorychecker.cpp \
+    imetricchecker.cpp \
+    metricsgroupchecker.cpp \
+    basicmetricchecker.cpp \
+    checkers/performanceounterhecker.cpp \
+    winperformancemetricschecker.cpp
 
 include(../3rdparty/qtservice/src/qtservice.pri)
 
@@ -49,14 +52,11 @@ HEADERS += \
     commonexceptions.h \
     engine.h \
     metricdata.h \
-    imetricschecker.h \
     engineinitializer.h \
     checkers/system_cpu_stats_checker.h \
     macros.h \
     checkers/system_memory_stats_checker.h \
     winperformancedataprovider.h \
-    checkers/singlemetricchecker.h \
-    pdhmetricschecker.h \
     upload/oddeyeclient.h \
     upload/sendcontroller.h \
     logger.h \
@@ -67,4 +67,10 @@ HEADERS += \
     application.h \
     checkers/system_disk_stats_checker.h \
     checkers/system_network_stats_checker.h \
-    checkers/system_tcp_stats_checker.h
+    checkers/system_tcp_stats_checker.h \
+    imetricscategorychecker.h \
+    imetricchecker.h \
+    metricsgroupchecker.h \
+    basicmetricchecker.h \
+    checkers/performanceounterhecker.h \
+    winperformancemetricschecker.h

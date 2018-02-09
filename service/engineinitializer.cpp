@@ -36,7 +36,7 @@ void CEngineInitialzier::InitializeEngine(EngineSPtr pEngine)
 
             if( bIsEnabled )
             {
-                IMetricsCheckerSPtr pChecker = CreateCheckerByConfigName( pCurrentConfig->GetName(),
+                IMetricsCategoryCheckerSPtr pChecker = CreateCheckerByConfigName( pCurrentConfig->GetName(),
                                                                           sSectionName );
                 if( pChecker )
                 {
@@ -58,7 +58,7 @@ void CEngineInitialzier::InitializeEngine(EngineSPtr pEngine)
     }
 }
 
-IMetricsCheckerSPtr CEngineInitialzier::CreateCheckerByConfigName(QString const& sConfigName,
+IMetricsCategoryCheckerSPtr CEngineInitialzier::CreateCheckerByConfigName(QString const& sConfigName,
                                                                   QString const& sSectionName)
 {
     Q_ASSERT(!sConfigName.isEmpty());
@@ -76,7 +76,7 @@ IMetricsCheckerSPtr CEngineInitialzier::CreateCheckerByConfigName(QString const&
     void* pCheckerPtr = QMetaType::create(nTypeID);
     if( pCheckerPtr )
     {
-        IMetricsCheckerSPtr spChecker( static_cast<IMetricsChecker*>(pCheckerPtr) );
+        IMetricsCategoryCheckerSPtr spChecker( static_cast<IMetricsCategoryChecker*>(pCheckerPtr) );
         return spChecker;
     }
 

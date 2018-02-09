@@ -1,18 +1,18 @@
 #ifndef SYSTEMCPUSTATSCHECKER_H
 #define SYSTEMCPUSTATSCHECKER_H
 
-#include "../pdhmetricschecker.h"
+#include "../winperformancemetricschecker.h"
 
 
-class SystemCpuStatsChecker : public CPdhMetricsChecker
+class SystemCpuStatsChecker : public CWinPerformanceMetricsChecker
 {
     DECLARE_MERTIC_CHECKER( SystemCpuStatsChecker )
-    using Base = CPdhMetricsChecker;
+    using Base = CWinPerformanceMetricsChecker;
 
 public:
     SystemCpuStatsChecker(QObject *pParent = nullptr);
 
-    // IMetricsChecker interface
+    // IMetricsCategoryChecker interface
 public:
     void Initialize() override;
 };

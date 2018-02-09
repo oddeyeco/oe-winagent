@@ -1,5 +1,5 @@
-#ifndef IMETRICSCHECKER_H
-#define IMETRICSCHECKER_H
+#ifndef IMETRICSCATEGORYCHECKER_H
+#define IMETRICSCATEGORYCHECKER_H
 
 #include <QObject>
 #include "metricdata.h"
@@ -10,24 +10,25 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ///
-/// Interface IMetricsChecker
+/// Interface IMetricsCategoryChecker
 ///
-/// Base class for all metric checkers
+/// Base class for all category metric checkers
 ///
-class IMetricsChecker : public QObject
+class IMetricsCategoryChecker : public QObject
 {
     Q_OBJECT
     using Base = QObject;
 
 public:
-    explicit IMetricsChecker(QObject* pParent = nullptr);
+    explicit IMetricsCategoryChecker(QObject* pParent = nullptr);
+    virtual  ~IMetricsCategoryChecker() = default;
 
 public:
-    virtual void SetConfigSection( CConfigSection const& oConfig );
-    void    SetPerformanceDataProvider( WinPerformanceDataProviderSPtr pDataProvider );
-
     virtual void Initialize();
     virtual MetricDataList CheckMetrics() = 0;
+
+    virtual void SetConfigSection( CConfigSection const& oConfig );
+            void SetPerformanceDataProvider( WinPerformanceDataProviderSPtr pDataProvider );
 
 protected:
     // accessors
@@ -42,17 +43,17 @@ private:
     CConfigSection m_oConfigSection;
     WinPerformanceDataProviderSPtr m_pDataProvider;
 };
-using IMetricsCheckerSPtr = std::shared_ptr<IMetricsChecker>;
+using IMetricsCategoryCheckerSPtr = std::shared_ptr<IMetricsCategoryChecker>;
 ////////////////////////////////////////////////////////////////////////////////////////
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
 /// inline implementations
-CConfigSection       &IMetricsChecker::ConfigSection()      { return m_oConfigSection; }
-const CConfigSection &IMetricsChecker::ConfigSection()const { return m_oConfigSection; }
+CConfigSection       &IMetricsCategoryChecker::ConfigSection()      { return m_oConfigSection; }
+const CConfigSection &IMetricsCategoryChecker::ConfigSection()const { return m_oConfigSection; }
 
-WinPerformanceDataProviderSPtr      IMetricsChecker::PerfDataProvider()       { return m_pDataProvider; }
-WinPerformanceDataProviderConstSPtr IMetricsChecker::PerfDataProvider() const { return m_pDataProvider; }
+WinPerformanceDataProviderSPtr      IMetricsCategoryChecker::PerfDataProvider()       { return m_pDataProvider; }
+WinPerformanceDataProviderConstSPtr IMetricsCategoryChecker::PerfDataProvider() const { return m_pDataProvider; }
 ////////////////////////////////////////////////////////////////////////////////////////
 
-#endif // IMETRICSCHECKER_H
+#endif // IMETRICSCATEGORYCHECKER_H
