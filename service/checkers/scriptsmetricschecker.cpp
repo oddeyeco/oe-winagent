@@ -40,6 +40,18 @@ MetricDataList CScriptsMetricsChecker::CheckMetrics()
     return lstResults;
 }
 
+QStringList CScriptsMetricsChecker::GetScriptFileNameList()
+{
+    QStringList lstScriptFiles = ConfigSection().Value<QStringList>("scripts_enabled", QStringList());
+    QStringList lstScriptFileNames;
+
+    for( auto& sFile : lstScriptFiles )
+    {
+        lstScriptFileNames.append( QFileInfo( sFile ).fileName() );
+    }
+    return lstScriptFileNames;
+}
+
 MetricDataList CScriptsMetricsChecker::GetScriptFileResults(const QString &sSrcoptFilePath)
 {
     MetricDataList lstResltMetricsData;

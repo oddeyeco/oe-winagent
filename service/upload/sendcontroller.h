@@ -2,12 +2,15 @@
 #define SENDCONTROLLER_H
 
 #include "../metricdata.h"
+#include "oddeyeclient.h"
+
 #include <QNetworkAccessManager>
 #include <QThread>
 
 using NetworkAccessManagerSPtr = std::shared_ptr<QNetworkAccessManager>;
+using NetworkAccessManagerWPtr = std::weak_ptr<QNetworkAccessManager>;
+
 // Forward declarations
-class COddEyeClient;
 class COddEyeCacheUploader;
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -28,8 +31,10 @@ public:
 public slots:
     // Main Interface
     void SendMetricsData( MetricDataList const& lstMetrics );
+    void SendMessage( QString const& sMessage, EMessageType eType );
 
-    NetworkAccessManagerSPtr GetNetworkAccessManager();
+    NetworkAccessManagerWPtr GetNetworkAccessManager();
+    bool IsReady() const;
 
 signals:
     void sigStartCacheUploading();
@@ -44,6 +49,7 @@ private:
     OddEyeClientUPtr         m_pOEClient;
     QThread*                 m_pCacheUploaderThread;
     OddEyeCacheUploaderUPtr  m_pOECacheUploader;
+    std::atomic<bool>        m_bIsReady;
 };
 
 using SendControllerSPtr = std::shared_ptr<CSendController>;

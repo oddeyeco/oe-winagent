@@ -15,9 +15,7 @@ class COddEyeClient : public CBasicOddEyeClient
 public:
     explicit COddEyeClient(QObject *parent = nullptr);
 
-
 public:
-
     void SendMetrics( MetricDataList const& lstMetrics );
 
 protected:

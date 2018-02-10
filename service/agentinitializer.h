@@ -7,7 +7,7 @@ class CAgentInitialzier
 {
 public:
     static void InitializeLogger();
-    static void InitializeEngine( EngineSPtr pEngine );
+    static void InitializeEngine( CEngine* pEngine );
     static IMetricsCategoryCheckerSPtr CreateCheckerByConfigName( QString const& sConfigName,
                                                                   QString const& sSectionName);
 

@@ -30,18 +30,21 @@ void CAgentInitialzier::InitializeLogger()
     Logger::getInstance().SetDebugLoggingEnabled( bDebugLoggingEnabled );
 }
 
-void CAgentInitialzier::InitializeEngine(EngineSPtr pEngine)
+void CAgentInitialzier::InitializeEngine(CEngine *pEngine)
 {
     if( !pEngine )
     {
         Q_ASSERT(false);
         return;
     }
+    LOG_INFO( "OE engine init started" );
 
     // Setup Main Settings
     double dUpdateSecs = ConfMgr.GetMainConfiguration().Value<double>("SelfConfig/check_period_seconds", 1);
     int nMsec = static_cast<int>( dUpdateSecs * 1000 );
     pEngine->SetUpdateInterval( nMsec );
+
+    LOG_INFO( "Check period is: " + std::to_string(int(dUpdateSecs)) + " sec" );
 
     auto lstAllConfigs = ConfMgr.GetAllConfigurations();
     for( ConfigSPtr& pCurrentConfig : lstAllConfigs  )
@@ -65,9 +68,11 @@ void CAgentInitialzier::InitializeEngine(EngineSPtr pEngine)
             {
                 IMetricsCategoryCheckerSPtr pChecker = CreateCheckerByConfigName( pCurrentConfig->GetName(),
                                                                                   sSectionName );
+                QString sCheckerName = MakeCheckerName( pCurrentConfig->GetName(), sSectionName );
                 if( pChecker )
                 {
-                    qDebug() << "Checker found!";
+                    LOG_INFO( "Checker loaded: " + sCheckerName.toStdString() );
+                    pChecker->metaObject()->className();
 
                     // Pass config section to checker
                     auto&& oSection = pCurrentConfig->GetSection(sSectionName);
@@ -77,6 +82,7 @@ void CAgentInitialzier::InitializeEngine(EngineSPtr pEngine)
                 }
                 else
                 {
+                    LOG_INFO( "Checker NOT found: " + sCheckerName.toStdString() );
                     qDebug() << "Checker NOT found!";
                     // TODO
                 }
@@ -91,10 +97,16 @@ void CAgentInitialzier::InitializeEngine(EngineSPtr pEngine)
     if( !ConfMgr.GetEnabledScriptsConfigSection().isEmpty() )
     {
         // create scritps metrics checker
-        IMetricsCategoryCheckerSPtr pScriptsChecker = std::make_shared<CScriptsMetricsChecker>();
+        std::shared_ptr<CScriptsMetricsChecker> pScriptsChecker = std::make_shared<CScriptsMetricsChecker>();
         pScriptsChecker->SetConfigSection( ConfMgr.GetEnabledScriptsConfigSection() );
         // Add to engine
         pEngine->AddChecker(pScriptsChecker);
+
+        LOG_INFO( "Script(s) are enabled: " + pScriptsChecker->GetScriptFileNameList().join(", ").toStdString() );
+    }
+    else
+    {
+        LOG_INFO("No enabled scripts");
     }
 
 }

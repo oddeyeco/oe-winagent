@@ -12,7 +12,8 @@
 
 
 CSendController::CSendController(QObject *pParent)
-    : Base(pParent)
+    : Base(pParent),
+      m_bIsReady(false)
 {
     m_pNetworkManager = std::make_shared<QNetworkAccessManager>();
     //  setup OddEye client and OddEye cache uploader
@@ -21,10 +22,12 @@ CSendController::CSendController(QObject *pParent)
 
     // Start Cache Uploading in worker thread
     emit sigStartCacheUploading();
+
+    m_bIsReady = true;
 }
 
 CSendController::~CSendController()
-{
+{   
     Q_ASSERT(m_pCacheUploaderThread);
     m_pCacheUploaderThread->quit();
     m_pCacheUploaderThread->wait();
@@ -121,9 +124,23 @@ void CSendController::SendMetricsData(const MetricDataList &lstMetrics)
     m_pOEClient->SendMetrics( lstMetrics );
 }
 
-NetworkAccessManagerSPtr CSendController::GetNetworkAccessManager()
+void CSendController::SendMessage(const QString &sMessage, EMessageType eType)
+{
+    Q_ASSERT(m_pOEClient);
+    if( !m_pOEClient->IsReady())
+        return;
+
+    //m_pOEClient->SendMessage( sMessage, eType );
+}
+
+NetworkAccessManagerWPtr CSendController::GetNetworkAccessManager()
 {
     return m_pNetworkManager;
+}
+
+bool CSendController::IsReady() const
+{
+    return m_bIsReady;
 }
 
 

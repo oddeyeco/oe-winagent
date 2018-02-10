@@ -24,6 +24,10 @@ void CEngine::Start()
         LOG_INFO( "No metric checkers" );
         return;
     }
+    std::string sSep( 80, '-' );
+    LOG_INFO( sSep );
+    LOG_INFO( "Engine started!" );
+    LOG_INFO( sSep );
 
     m_pDataProvider->UpdateCounters();
     onTimerTik();
@@ -33,6 +37,7 @@ void CEngine::Start()
 void CEngine::Stop()
 {
     m_pTimer->stop();
+    LOG_INFO( "Engine stopped!" );
 }
 
 void CEngine::AddChecker(IMetricsCategoryCheckerSPtr pChecker)
@@ -100,15 +105,15 @@ void CEngine::CollectMetrics()
     }
 
     qint64 nElapsedOnDataCollection =  oTimer.elapsed();
-    qDebug() << "Time Elapsed On Data Collection: " << nElapsedOnDataCollection << " msec";
-    qDebug() << "Metric Count: " << lstAllCollectedMetrics.size();
+    LOG_INFO( QString( "Metrics collected. Count: %1, Duration: %2 msec").arg(lstAllCollectedMetrics.size()).arg( nElapsedOnDataCollection).toStdString() );
 
     // Notify
     emit sigMetricsCollected( lstAllCollectedMetrics );
 
+
+
     for( MetricDataSPtr& pMetr : lstAllCollectedMetrics)
         qDebug() << pMetr->GetName() +  " " + pMetr->GetInstanceType() + " " + pMetr->GetInstanceName() + " : " + pMetr->GetValue().toString();
-
 }
 
 

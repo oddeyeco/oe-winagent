@@ -47,8 +47,6 @@ private:
     std::set<IMetricsCategoryCheckerSPtr>  m_setCheckers;
     WinPerformanceDataProviderSPtr m_pDataProvider;
 };
-
-using EngineSPtr = std::shared_ptr<CEngine>;
 ////////////////////////////////////////////////////////////////////////////////////////
 
 #endif // CENGINE_H

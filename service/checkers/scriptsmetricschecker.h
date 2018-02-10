@@ -18,6 +18,7 @@ public:
     // IMetricsCategoryChecker interface
 public:
     MetricDataList CheckMetrics();
+    QStringList GetScriptFileNameList();
 
 private:
     // helpers

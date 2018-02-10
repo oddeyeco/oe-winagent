@@ -44,7 +44,8 @@ SOURCES += main.cpp \
     checkers/system_tcp_stats.cpp \
     checkers/oddeyeselfcheck.cpp \
     agentinitializer.cpp \
-    cservicecontroller.cpp
+    oeagentservice.cpp \
+    servicecontroller.cpp
 
 include(../3rdparty/qtservice/src/qtservice.pri)
 
@@ -79,4 +80,5 @@ HEADERS += \
     checkers/system_tcp_stats.h \
     checkers/oddeyeselfcheck.h \
     agentinitializer.h \
-    cservicecontroller.h
+    oeagentservice.h \
+    servicecontroller.h

@@ -2,7 +2,11 @@
 #define CSERVICECONTROLLER_H
 
 #include <QObject>
+#include "engine.h"
+#include "upload/sendcontroller.h"
 
+using EngineUPtr = std::unique_ptr<CEngine>;
+using SendControllerUPtr = std::unique_ptr<CSendController>;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 ///
@@ -30,7 +34,10 @@ private:
     //
     //  Content
     //
+    EngineUPtr         m_pEngine;
+    SendControllerUPtr m_pSendController;
 
 };
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #endif // CSERVICECONTROLLER_H

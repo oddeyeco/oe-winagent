@@ -10,6 +10,13 @@
 
 using NetworkAccessManagerSPtr = std::shared_ptr<QNetworkAccessManager>;
 
+enum class EMessageType
+{
+    Error = 0,
+    Warning,
+    Information
+};
+
 ////////////////////////////////////////////////////////////////////////////////////
 ///
 /// class CBasicOddEyeClient
@@ -27,6 +34,9 @@ public:
     void SetNetworkAccessManager( NetworkAccessManagerSPtr pNetAccessManager );
     void SetTSDBUrl( QUrl const& oUrl );
     void SetUuid( QByteArray const& aOddEyeUuid );
+    void SendSpecialMessage(const QString &sMetricName,
+                            const QString &sMessage,
+                            EMessageType eType);
 
     void SetClusterName( QString const& sClusterName );
     void SetGroupName( QString const& sGroupName );
@@ -36,6 +46,7 @@ public:
 
     void SendJsonData( QJsonDocument const& oJsonData );
 
+    virtual bool IsReady() const;
     static QString NormailzeAsOEName( QString sName );
 
 protected:
@@ -44,7 +55,7 @@ protected:
 
     QJsonObject CreateMetricJson( MetricDataSPtr pSingleMetric );
     QJsonObject CreateErrorMessageJson( QString const& sMessage, MetricDataSPtr pRelatedMetric );
-    QJsonObject CreateErrorMessageJson( QString const& sMessage, QString sMetricName, QVariant vtMetricValue = QVariant(0) );
+    QJsonObject CreateErrorMessageJson( QString const& sMessage, QString sMetricName, EMessageType eMessageType, QVariant vtMetricValue = QVariant(0) );
 
 signals:
 

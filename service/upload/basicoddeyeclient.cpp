@@ -29,6 +29,15 @@ void CBasicOddEyeClient::SetUuid(const QByteArray &aOddEyeUuid)
     m_aOddEyeUuid = aOddEyeUuid;
 }
 
+void CBasicOddEyeClient::SendSpecialMessage(const QString &sMetricName, const QString &sMessage, EMessageType eType)
+{
+    if(!IsReady())
+        return;
+
+    QJsonArray oRootArray;
+    oRootArray.append( CreateErrorMessageJson( sMetricName, sMessage, eType ) );
+    SendJsonData( QJsonDocument( oRootArray ));
+}
 
 void CBasicOddEyeClient::SetClusterName(const QString &sClusterName)
 {
@@ -104,6 +113,26 @@ void CBasicOddEyeClient::SendJsonData(const QJsonDocument &oJsonData)
     });
 }
 
+bool CBasicOddEyeClient::IsReady() const
+{
+    if( !m_pNetworkAccessManager )
+        return false;
+
+    if( !m_oTsdbUrl.isValid() )
+        return false;
+
+    if( m_aOddEyeUuid.isEmpty() )
+        return false;
+
+    if( m_sClusterName.isEmpty() || m_sGroupName.isEmpty() || m_sHostName.isEmpty() )
+        return false;
+
+    if( m_sCacheDir.isEmpty() )
+        return false;
+
+    return true;
+}
+
 QString CBasicOddEyeClient::NormailzeAsOEName(QString sName)
 {
     sName = sName.toLower();
@@ -168,12 +197,22 @@ QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(const QString &sMessage, 
     oMetricJson["timestamp"] = QString::number( pRelatedMetric->GetTime().toTime_t() );
 
     QVariant vtValue;
+    QString sStatus;
     if( pRelatedMetric->GetDataSeverity() == EMetricDataSeverity::Normal)
-        vtValue = pRelatedMetric->GetValue();
+    {
+        vtValue = 0;/*pRelatedMetric->GetValue();*/
+        sStatus = "OK";
+    }
     else if( pRelatedMetric->GetDataSeverity() == EMetricDataSeverity::High )
+    {
         vtValue = 8;
+        sStatus = "WARNING";
+    }
     else
+    {
         vtValue = 16;
+        sStatus = "ERROR";
+    }
 
     oMetricJson["value"] = vtValue.toString();
 
@@ -193,7 +232,7 @@ QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(const QString &sMessage, 
 
 
     oMetricJson["type"] = "Special";
-    oMetricJson["status"] = "ERROR";
+    oMetricJson["status"] = sStatus;
     oMetricJson["message"] = sMessage;
 
     return oMetricJson;
@@ -201,6 +240,7 @@ QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(const QString &sMessage, 
 
 QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(const QString &sMessage,
                                                        QString sMetricName,
+                                                       EMessageType eMessageType,
                                                        QVariant vtMetricValue)
 {
     Q_ASSERT( !sMessage.isEmpty() );
@@ -210,7 +250,6 @@ QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(const QString &sMessage,
     oMetricJson["metric"] = sMetricName;
     oMetricJson["reaction"] = -2;
     oMetricJson["timestamp"] = QString::number( QDateTime::currentDateTime().toTime_t() );
-    oMetricJson["value"] = vtMetricValue.toString();
 
     QJsonObject oTagsJson;
     oTagsJson["cluster"] = m_sClusterName;
@@ -219,10 +258,27 @@ QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(const QString &sMessage,
 
     // add tags
     oMetricJson["tags"] = oTagsJson;
-
-
     oMetricJson["type"] = "Special";
-    oMetricJson["status"] = "ERROR";
+
+    QString sStatus;
+    switch (eMessageType) {
+    case EMessageType::Error:
+        sStatus = "ERROR";
+        vtMetricValue = 16;
+        break;
+    case EMessageType::Warning:
+        sStatus = "WARNING";
+        vtMetricValue = 8;
+        break;
+
+    default:
+        break;
+        sStatus = "OK";
+        vtMetricValue = 0;
+    }
+
+    oMetricJson["value"] = vtMetricValue.toString();
+    oMetricJson["status"] = sStatus;
     oMetricJson["message"] = sMessage;
 
     return oMetricJson;

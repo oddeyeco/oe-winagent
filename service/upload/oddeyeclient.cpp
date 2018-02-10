@@ -40,12 +40,15 @@ QJsonDocument COddEyeClient::ConvertMetricsToJSON(const MetricDataList &lstMetri
                                                                        );
              oRootArray.append( Base::CreateErrorMessageJson( sErrorMsg, pCurrentMetric ) );
          }
+         else
+         {
+             if( pCurrentMetric->GetName() == "cpu_load" )
+                 oRootArray.append( Base::CreateErrorMessageJson( "Sample Message: NO Error", pCurrentMetric ) );
+         }
     }
 
     return QJsonDocument( oRootArray );
 }
-
-
 
 void COddEyeClient::HandleSendSuccedded(QNetworkReply *pReply, const QJsonDocument &oJsonData)
 {
