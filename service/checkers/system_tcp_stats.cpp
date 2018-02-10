@@ -1,10 +1,10 @@
-#include "system_tcp_stats_checker.h"
+#include "system_tcp_stats.h"
 
-SystemTcpStatsChecker::SystemTcpStatsChecker(QObject *pParent)
+SystemTcpStats::SystemTcpStats(QObject *pParent)
     : Base( pParent )
 {}
 
-void SystemTcpStatsChecker::Initialize()
+void SystemTcpStats::Initialize()
 {
     QStringList lstAllowedTcpVersions = ConfigSection().Value<QStringList>("version", QStringList() << "v4" << "v6" );
     bool bTCPv4Enabled = false;

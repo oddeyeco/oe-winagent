@@ -1,12 +1,12 @@
-#include "system_disk_stats_checker.h"
+#include "system_disk_stats.h"
 
 constexpr int MBSize = 1048576;
 
-SystemDiskStatsChecker::SystemDiskStatsChecker(QObject *pParent)
+SystemDiskStats::SystemDiskStats(QObject *pParent)
     : Base(pParent)
 {}
 
-void SystemDiskStatsChecker::Initialize()
+void SystemDiskStats::Initialize()
 {
     double dConfHighVal = -1;
     double dConfSevereVal = -1;
@@ -62,7 +62,7 @@ void SystemDiskStatsChecker::Initialize()
      }
 }
 
-//MetricDataList SystemDiskStatsChecker::CheckMetrics()
+//MetricDataList SystemDiskStats::CheckMetrics()
 //{
 //    MetricDataList lstBaseMetrics = Base::CheckMetrics();
 //    Q_ASSERT(m_lstDiskBusySpaceChecker.size() == m_lstDiskFreeBytesChecker);

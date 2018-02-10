@@ -18,6 +18,10 @@ public:
     void info( const std::string &prefix, std::string msg );
     void debug( const std::string &prefix, std::string msg );
     
+    void setLogRotateSeconds( qint64 nSeconds );
+    void setBackupFileCount( int nCount );
+    void setLogsFolderPath( QString const& sFolderPath );
+    void SetDebugLoggingEnabled( bool bEnabled );
 
 private:
     enum class LogType
@@ -37,12 +41,17 @@ private:
     template<LogType type>
     void _log(const std::string &prefix, const std::string&msg );
 
-    void _prepare_logs_file();
+    bool _prepare_logs_file();
+    void _init_log_file( QDateTime const& oLogFileDateTime );
 
     // members
     QFile		_logs_file;
     QTextStream _logs_stream;
-    QDate		_logs_file_open_date;
+    QDateTime   _logs_file_open_datetime;
+    qint64      _nLogRotateSeconds;
+    int         _nBackupFileCount;
+    QString     _logs_folder_path;
+    bool        _bDebugLoggingEnabled;
 };
 
 #define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
@@ -51,7 +60,7 @@ private:
 #define LOG_VERBOSE( __MSG__ ) { }
 #define LOG_DEBUG( __MSG__ ) { Logger::getInstance().debug( std::string( __PREFIX__ ), std::string( __MSG__ ) ) ; }
 #define LOG_INFO( __MSG__ ) { Logger::getInstance().info( /*std::string( __PREFIX__ )*/"", std::string( __MSG__ ) ) ; }
-#define LOG_WARNING( __MSG__ ) { Logger::getInstance().warning( std::string( __PREFIX__ ), std::string( __MSG__ ) ); }
-#define LOG_ERROR( __MSG__ ) { Logger::getInstance().error( std::string( __PREFIX__ ), std::string( __MSG__ ) ); }
+#define LOG_WARNING( __MSG__ ) { Logger::getInstance().warning( std::string( /*__PREFIX__*/"" ), std::string( __MSG__ ) ); }
+#define LOG_ERROR( __MSG__ ) { Logger::getInstance().error( std::string( /*__PREFIX__*/ "" ), std::string( __MSG__ ) ); }
 
 #endif // LOGGER_H

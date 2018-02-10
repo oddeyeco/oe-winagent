@@ -23,6 +23,11 @@ public slots:
     void Stop();
     void SetUpdateInterval( int nMsecs );
 
+protected:
+    // CBasicOddEyeClient interface
+    void HandleSendSuccedded(QNetworkReply *pReply, const QJsonDocument &oJsonData) override;
+    void HandleSendError(    QNetworkReply *pReply, const QJsonDocument &oJsonData) override;
+
 private slots:
     void onCheckAndUpload();
 private:
@@ -33,11 +38,6 @@ private:
 private:
     QTimer*  m_pTimer;
     QQueue<QString> m_qUploadingFiles;
-
-    // CBasicOddEyeClient interface
-protected:
-    void HandleSendSuccedded(QNetworkReply *pReply, const QJsonDocument &oJsonData) override;
-    void HandleSendError(    QNetworkReply *pReply, const QJsonDocument &oJsonData) override;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #endif // ODDEYECACHEUPLOADER_H

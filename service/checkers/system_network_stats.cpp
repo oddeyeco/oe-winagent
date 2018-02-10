@@ -1,11 +1,11 @@
-#include "system_network_stats_checker.h"
+#include "system_network_stats.h"
 
-SystemNetworkStatsChecker::SystemNetworkStatsChecker(QObject *pParent)
+SystemNetworkStats::SystemNetworkStats(QObject *pParent)
     : Base(pParent)
 {
 }
 
-void SystemNetworkStatsChecker::Initialize()
+void SystemNetworkStats::Initialize()
 {
 //    double dConfHighVal = -1;
 //    double dConfSevereVal = -1;
@@ -71,7 +71,7 @@ void SystemNetworkStatsChecker::Initialize()
 
 }
 
-bool SystemNetworkStatsChecker::ContainesOneOf(const QString &sSourceString, const QStringList &lstLexems) const
+bool SystemNetworkStats::ContainesOneOf(const QString &sSourceString, const QStringList &lstLexems) const
 {
     for( QString const& sLex : lstLexems )
     {

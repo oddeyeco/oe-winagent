@@ -1,4 +1,5 @@
 #include "basicmetricchecker.h"
+#include "exception.h"
 
 CBasicMetricChecker::CBasicMetricChecker(const QString &sMetricName,
                                           EMetricDataType eMetricDataType,
@@ -54,4 +55,15 @@ MetricDataSPtr CBasicMetricChecker::CheckMetric()
     pMetric->SetDataSeverity( eSeverity );
 
     return pMetric;
+}
+
+double CBasicMetricChecker::CheckMetricValue()
+{
+    if( m_pValueCheckerFunc )
+        return m_pValueCheckerFunc();
+    else
+    {
+        Q_ASSERT(false);
+        throw CException("Internal error: CBasicMetricChecker::CheckMetricValue not overidden");
+    }
 }

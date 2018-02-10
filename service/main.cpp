@@ -5,7 +5,7 @@
 
 #include "commonexceptions.h"
 #include "engine.h"
-#include "engineinitializer.h"
+#include "agentinitializer.h"
 #include "upload/sendcontroller.h"
 
 int main(int argc, char *argv[])
@@ -15,10 +15,11 @@ int main(int argc, char *argv[])
     EngineSPtr pEngine = std::make_shared<CEngine>();
 
     try {
-        ConfMgr.RegisterLoadableConfigs( QStringList() << "system" );
+        ConfMgr.RegisterLoadableConfigs( QStringList() << "system" << "oddeye" );
         ConfMgr.LoadConfigurations();
 
-        CEngineInitialzier::InitializeEngine( pEngine );
+        CAgentInitialzier::InitializeLogger();
+        CAgentInitialzier::InitializeEngine( pEngine );
 
         auto pSendController = new CSendController(pEngine.get());
         QObject::connect(pEngine.get(), &CEngine::sigMetricsCollected, pSendController, &CSendController::SendMetricsData  );

@@ -1,14 +1,16 @@
-#ifndef CENGINEINITIALIZER_H
-#define CENGINEINITIALIZER_H
+#ifndef CAGENTITIALIZER_H
+#define CAGENTITIALIZER_H
 
 #include "engine.h"
 
-class CEngineInitialzier
+class CAgentInitialzier
 {
 public:
+    static void InitializeLogger();
     static void InitializeEngine( EngineSPtr pEngine );
-    static IMetricsCategoryCheckerSPtr CreateCheckerByConfigName(QString const& sConfigName,
-                                                         QString const& sSectionName);
+    static IMetricsCategoryCheckerSPtr CreateCheckerByConfigName( QString const& sConfigName,
+                                                                  QString const& sSectionName);
+
 private:
     // helpers
     static QString SimplifyName( QString sName );
@@ -17,4 +19,4 @@ private:
                                     QString const& sSectionName );
 };
 
-#endif // CENGINEINITIALIZER_H
+#endif // CAGENTITIALIZER_H

@@ -28,7 +28,9 @@ public:
     CConfigSection GetSection( QString const& sSectionName );
 
     template <typename T>
-    T Value( QString const& sKey, T const& tDefaultVal = T() );
+    T Value( QString const& sKey );
+    template <typename T>
+    T Value( QString const& sKey, T const& tDefaultVal );
 };
 
 // usefull type definitions
@@ -100,6 +102,24 @@ inline QString CConfigSection::GetParentConfigName() { return m_sParentConfigNam
 inline void    CConfigSection::SetParentConfigName(const QString &sName) { m_sParentConfigName = sName; }
 
 
+//
+//  class CConfiguraion
+//
+template<typename T>
+T CConfiguraion::Value(const QString &sKey)
+{
+    if( !Base::contains( sKey ) )
+        throw CConfigValueMissingException( sKey );
+
+    QVariant vtVal = Base::value(sKey);
+    if( !vtVal.convert( qMetaTypeId<T>()) )
+    {
+        QString sInfo = sKey + "=" + Base::value(sKey).toString()
+                + " : " + GetName() + ".ini";
+        throw CInvalidConfigValueException(sInfo);
+    }
+    return vtVal.value<T>();
+}
 
 template <typename T>
 T CConfiguraion::Value(const QString &sKey, T const& tDefaultVal )

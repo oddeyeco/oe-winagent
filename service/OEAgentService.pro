@@ -22,9 +22,6 @@ SOURCES += main.cpp \
     commonexceptions.cpp \
     engine.cpp \
     metricdata.cpp \
-    engineinitializer.cpp \
-    checkers/system_cpu_stats_checker.cpp \
-    checkers/system_memory_stats_checker.cpp \
     winperformancedataprovider.cpp \
     upload/oddeyeclient.cpp \
     upload/sendcontroller.cpp \
@@ -33,16 +30,21 @@ SOURCES += main.cpp \
     upload/oddeyecacheuploader.cpp \
     pinger.cpp \
     application.cpp \
-    checkers/system_disk_stats_checker.cpp \
-    checkers/system_network_stats_checker.cpp \
-    checkers/system_tcp_stats_checker.cpp \
     imetricscategorychecker.cpp \
     imetricchecker.cpp \
     metricsgroupchecker.cpp \
     basicmetricchecker.cpp \
     checkers/performanceounterhecker.cpp \
     winperformancemetricschecker.cpp \
-    checkers/scriptsmetricschecker.cpp
+    checkers/scriptsmetricschecker.cpp \
+    checkers/system_cpu_stats.cpp \
+    checkers/system_disk_stats.cpp \
+    checkers/system_memory_stats.cpp \
+    checkers/system_network_stats.cpp \
+    checkers/system_tcp_stats.cpp \
+    checkers/oddeyeselfcheck.cpp \
+    agentinitializer.cpp \
+    cservicecontroller.cpp
 
 include(../3rdparty/qtservice/src/qtservice.pri)
 
@@ -53,10 +55,7 @@ HEADERS += \
     commonexceptions.h \
     engine.h \
     metricdata.h \
-    engineinitializer.h \
-    checkers/system_cpu_stats_checker.h \
     macros.h \
-    checkers/system_memory_stats_checker.h \
     winperformancedataprovider.h \
     upload/oddeyeclient.h \
     upload/sendcontroller.h \
@@ -66,13 +65,18 @@ HEADERS += \
     pinger.h \
     winpdhexception.h \
     application.h \
-    checkers/system_disk_stats_checker.h \
-    checkers/system_network_stats_checker.h \
-    checkers/system_tcp_stats_checker.h \
     imetricscategorychecker.h \
     imetricchecker.h \
     metricsgroupchecker.h \
     basicmetricchecker.h \
     checkers/performanceounterhecker.h \
     winperformancemetricschecker.h \
-    checkers/scriptsmetricschecker.h
+    checkers/scriptsmetricschecker.h \
+    checkers/system_cpu_stats.h \
+    checkers/system_disk_stats.h \
+    checkers/system_memory_stats.h \
+    checkers/system_network_stats.h \
+    checkers/system_tcp_stats.h \
+    checkers/oddeyeselfcheck.h \
+    agentinitializer.h \
+    cservicecontroller.h

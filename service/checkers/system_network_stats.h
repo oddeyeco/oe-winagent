@@ -3,13 +3,13 @@
 
 #include "../winperformancemetricschecker.h"
 
-class SystemNetworkStatsChecker : public CWinPerformanceMetricsChecker
+class SystemNetworkStats : public CWinPerformanceMetricsChecker
 {
-    DECLARE_MERTIC_CHECKER(SystemNetworkStatsChecker)
+    DECLARE_MERTIC_CHECKER(SystemNetworkStats)
     using Base = CWinPerformanceMetricsChecker;
 
 public:
-    SystemNetworkStatsChecker(QObject* pParent = nullptr);
+    SystemNetworkStats(QObject* pParent = nullptr);
 
 
     // IMetricsCategoryChecker interface
@@ -22,6 +22,6 @@ private:
 };
 
 
-REGISTER_METRIC_CHECKER( SystemNetworkStatsChecker )
+REGISTER_METRIC_CHECKER( SystemNetworkStats )
 
 #endif // SYSTEM_NETWORK_STATS_CHECKER_H

@@ -1,13 +1,13 @@
-#include "system_memory_stats_checker.h"
+#include "system_memory_stats.h"
 
 
-SystemMemoryStatsChecker::SystemMemoryStatsChecker()
+SystemMemoryStats::SystemMemoryStats()
 {
 
 }
 
 
-void SystemMemoryStatsChecker::Initialize()
+void SystemMemoryStats::Initialize()
 {
     double dConfHighVal = -1;
     double dConfSevereVal = -1;

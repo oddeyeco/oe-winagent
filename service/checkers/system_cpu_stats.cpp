@@ -1,12 +1,12 @@
-#include "system_cpu_stats_checker.h"
+#include "system_cpu_stats.h"
 
-SystemCpuStatsChecker::SystemCpuStatsChecker(QObject *pParent)
+SystemCpuStats::SystemCpuStats(QObject *pParent)
     : Base( pParent )
 {
 
 }
 
-void SystemCpuStatsChecker::Initialize()
+void SystemCpuStats::Initialize()
 {
     double dConfHighVal   = -1;
     double dConfSevereVal = -1;

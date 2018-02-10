@@ -1,10 +1,36 @@
-#include "engineinitializer.h"
+#include "agentinitializer.h"
 #include "configurationmanager.h"
 #include "checkers/scriptsmetricschecker.h"
+#include "logger.h"
 
 #include <QDebug>
 
-void CEngineInitialzier::InitializeEngine(EngineSPtr pEngine)
+void CAgentInitialzier::InitializeLogger()
+{
+    // log_rotate_seconds
+    qint64 nLogRotateSeconds = ConfMgr.GetMainConfiguration().Value<qint64>("SelfConfig/log_rotate_seconds", 3600);
+    Logger::getInstance().setLogRotateSeconds( nLogRotateSeconds );
+
+    // log_rotate_backups
+    int nBackupLogFilesCount = ConfMgr.GetMainConfiguration().Value<int>("SelfConfig/log_rotate_backups", 24);
+    Logger::getInstance().setBackupFileCount( nBackupLogFilesCount );
+
+    if( nLogRotateSeconds <= 0  || nBackupLogFilesCount <= 0)
+        LOG_ERROR("Logging disabled");
+
+    // log_dir
+    QString sLogsDirPath = ConfMgr.GetMainConfiguration().Value<QString>( "SelfConfig/log_dir" );
+    if( sLogsDirPath.isEmpty() )
+    {
+        throw CInvalidConfigValueException( "log_dir is empty" );
+    }
+    Logger::getInstance().setLogsFolderPath( sLogsDirPath );
+
+    bool bDebugLoggingEnabled = ConfMgr.GetMainConfiguration().Value<bool>( "SelfConfig/debug_log", false );
+    Logger::getInstance().SetDebugLoggingEnabled( bDebugLoggingEnabled );
+}
+
+void CAgentInitialzier::InitializeEngine(EngineSPtr pEngine)
 {
     if( !pEngine )
     {
@@ -73,7 +99,7 @@ void CEngineInitialzier::InitializeEngine(EngineSPtr pEngine)
 
 }
 
-IMetricsCategoryCheckerSPtr CEngineInitialzier::CreateCheckerByConfigName(QString const& sConfigName,
+IMetricsCategoryCheckerSPtr CAgentInitialzier::CreateCheckerByConfigName(QString const& sConfigName,
                                                                   QString const& sSectionName)
 {
     Q_ASSERT(!sConfigName.isEmpty());
@@ -98,7 +124,7 @@ IMetricsCategoryCheckerSPtr CEngineInitialzier::CreateCheckerByConfigName(QStrin
     return nullptr;
 }
 
-QString CEngineInitialzier::SimplifyName(QString sName)
+QString CAgentInitialzier::SimplifyName(QString sName)
 {
     QString sSimplifiedName = sName.simplified().toLower();
     sSimplifiedName.replace(' ', '_');
@@ -106,15 +132,14 @@ QString CEngineInitialzier::SimplifyName(QString sName)
     return sSimplifiedName;
 }
 
-QString CEngineInitialzier::MakeCheckerName(const QString &sConfigName, const QString &sSectionName)
+QString CAgentInitialzier::MakeCheckerName(const QString &sConfigName, const QString &sSectionName)
 {
     QString sCheckerClassName = SimplifyName(sConfigName)
-            + "_" + SimplifyName(sSectionName)
-            + "_checker";
+            + "_" + SimplifyName(sSectionName);
     return ToCamelCase( sCheckerClassName );
 }
 
-QString CEngineInitialzier::ToCamelCase(const QString &s)
+QString CAgentInitialzier::ToCamelCase(const QString &s)
 {
     QStringList parts = s.split('_', QString::SkipEmptyParts);
     for (int i=0; i<parts.size(); ++i)

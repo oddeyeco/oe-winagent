@@ -3,13 +3,13 @@
 
 #include "../winperformancemetricschecker.h"
 
-class SystemDiskStatsChecker : public CWinPerformanceMetricsChecker
+class SystemDiskStats : public CWinPerformanceMetricsChecker
 {
-    DECLARE_MERTIC_CHECKER( SystemDiskStatsChecker )
+    DECLARE_MERTIC_CHECKER( SystemDiskStats )
     using Base = CWinPerformanceMetricsChecker;
 
 public:
-    SystemDiskStatsChecker(QObject *pParent = nullptr);
+    SystemDiskStats(QObject *pParent = nullptr);
 
     // IMetricsCategoryChecker interface
 public:
@@ -22,7 +22,7 @@ public:
 
 };
 
-REGISTER_METRIC_CHECKER(SystemDiskStatsChecker)
+REGISTER_METRIC_CHECKER(SystemDiskStats)
 
 
 #endif // SYSTEM_DISK_STATS_CHECKER_H

@@ -18,9 +18,9 @@ CScriptsMetricsChecker::CScriptsMetricsChecker(QObject *pParent)
         if( m_pProcess->arguments().size() >= 2 )
         {
             QString sFilePathArg = m_pProcess->arguments().at(1);
-            sFileName = QFileInfo(sFilePathArg).baseName();
+            sFileName = QFileInfo(sFilePathArg).fileName();
         }
-        LOG_ERROR( QString("Script execution error: %1 : File %2").arg(aError, sFileName).toStdString() );
+        LOG_ERROR( QString("Script execution error: %1 : File: %2").arg(aError, sFileName ).toStdString() );
     });
 }
 
@@ -44,6 +44,13 @@ MetricDataList CScriptsMetricsChecker::GetScriptFileResults(const QString &sSrco
 {
     MetricDataList lstResltMetricsData;
 
+    if( !QFile(sSrcoptFilePath).exists() )
+    {
+        LOG_ERROR("Script execution error: Script file not exists. File: " +
+                  QFileInfo( sSrcoptFilePath ).fileName().toStdString() );
+        return lstResltMetricsData;
+    }
+
     auto sCommand = QString("cmd.exe");
     auto lstArguments = QStringList{ QString("/C"), sSrcoptFilePath };
 
@@ -63,7 +70,8 @@ MetricDataList CScriptsMetricsChecker::GetScriptFileResults(const QString &sSrco
             if( lstMetricData.size() < 2 )
             {
                 // Invalid result
-                LOG_ERROR( "Invalid script result. Insufficient number of output data" );
+                LOG_ERROR( "Invalid script result. Insufficient number of output data: File: "
+                           + QFileInfo( sSrcoptFilePath ).fileName().toStdString() );
                 continue;
             }
 
@@ -86,6 +94,10 @@ MetricDataList CScriptsMetricsChecker::GetScriptFileResults(const QString &sSrco
 
             lstResltMetricsData.append( pMetricData );
         }
+    }
+    else
+    {
+        LOG_ERROR( "Error: Script has been crashed: File: " + QFileInfo( sSrcoptFilePath ).fileName().toStdString() );
     }
 
     return lstResltMetricsData;
