@@ -1,15 +1,18 @@
 #include "agentcontroller.h"
-#include <QApplication>
+#include "application.h"
+#include <QMessageBox>
 
-
+#include <iostream>
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    CApplication a(argc, argv);
     //CAgentController w;
     //w.show();
 
-    CAgentController c;
+    //std::cout << "AAAA" << std::endl;
+
+    //CAgentController c;
 
     return a.exec();
 }

@@ -5,8 +5,19 @@
 
 #include <QDebug>
 
+// static init
+QString CAgentInitialzier::s_sDefaultLogDir = "tmp/oddeye_log";
+
 void CAgentInitialzier::InitializeLogger()
 {
+    // log_dir
+    QString sLogsDirPath = ConfMgr.GetMainConfiguration().Value<QString>( "SelfConfig/log_dir", s_sDefaultLogDir );
+    if( sLogsDirPath.isEmpty() )
+    {
+        throw CInvalidConfigValueException( "log_dir is empty" );
+    }
+    Logger::getInstance().setLogsFolderPath( sLogsDirPath );
+
     // log_rotate_seconds
     qint64 nLogRotateSeconds = ConfMgr.GetMainConfiguration().Value<qint64>("SelfConfig/log_rotate_seconds", 3600);
     Logger::getInstance().setLogRotateSeconds( nLogRotateSeconds );
@@ -15,16 +26,8 @@ void CAgentInitialzier::InitializeLogger()
     int nBackupLogFilesCount = ConfMgr.GetMainConfiguration().Value<int>("SelfConfig/log_rotate_backups", 24);
     Logger::getInstance().setBackupFileCount( nBackupLogFilesCount );
 
-    if( nLogRotateSeconds <= 0  || nBackupLogFilesCount <= 0)
+    if( nLogRotateSeconds <= 0 || nBackupLogFilesCount <= 0)
         LOG_ERROR("Logging disabled");
-
-    // log_dir
-    QString sLogsDirPath = ConfMgr.GetMainConfiguration().Value<QString>( "SelfConfig/log_dir" );
-    if( sLogsDirPath.isEmpty() )
-    {
-        throw CInvalidConfigValueException( "log_dir is empty" );
-    }
-    Logger::getInstance().setLogsFolderPath( sLogsDirPath );
 
     bool bDebugLoggingEnabled = ConfMgr.GetMainConfiguration().Value<bool>( "SelfConfig/debug_log", false );
     Logger::getInstance().SetDebugLoggingEnabled( bDebugLoggingEnabled );
@@ -44,7 +47,7 @@ void CAgentInitialzier::InitializeEngine(CEngine *pEngine)
     int nMsec = static_cast<int>( dUpdateSecs * 1000 );
     pEngine->SetUpdateInterval( nMsec );
 
-    LOG_INFO( "Check period is: " + std::to_string(int(dUpdateSecs)) + " sec" );
+    LOG_INFO( "Check period is: " + QString::number(int(dUpdateSecs)) + " sec" );
 
     auto lstAllConfigs = ConfMgr.GetAllConfigurations();
     for( ConfigSPtr& pCurrentConfig : lstAllConfigs  )
@@ -71,7 +74,7 @@ void CAgentInitialzier::InitializeEngine(CEngine *pEngine)
                 QString sCheckerName = MakeCheckerName( pCurrentConfig->GetName(), sSectionName );
                 if( pChecker )
                 {
-                    LOG_INFO( "Checker loaded: " + sCheckerName.toStdString() );
+                    LOG_INFO( "Checker loaded: " + sCheckerName );
                     pChecker->metaObject()->className();
 
                     // Pass config section to checker
@@ -82,7 +85,7 @@ void CAgentInitialzier::InitializeEngine(CEngine *pEngine)
                 }
                 else
                 {
-                    LOG_INFO( "Checker NOT found: " + sCheckerName.toStdString() );
+                    LOG_INFO( "Checker NOT found: " + sCheckerName );
                     qDebug() << "Checker NOT found!";
                     // TODO
                 }
@@ -102,7 +105,7 @@ void CAgentInitialzier::InitializeEngine(CEngine *pEngine)
         // Add to engine
         pEngine->AddChecker(pScriptsChecker);
 
-        LOG_INFO( "Script(s) are enabled: " + pScriptsChecker->GetScriptFileNameList().join(", ").toStdString() );
+        LOG_INFO( "Script(s) are enabled: " + pScriptsChecker->GetScriptFileNameList().join(", ") );
     }
     else
     {

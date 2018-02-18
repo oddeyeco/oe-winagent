@@ -3,8 +3,6 @@
 
 #include <QString>
 
-
-
 class CPinger
 {
 public:

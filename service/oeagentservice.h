@@ -3,6 +3,10 @@
 
 #include <QtService>
 #include "application.h"
+#include "oeagentcontrolserver.h"
+#include <memory>
+
+using  OEAgentControlServerUPtr = std::unique_ptr<COEAgentControlServer>;
 
 class COEAgentService : public QtService<CApplication>
 {
@@ -15,6 +19,9 @@ protected:
     // QtServiceBase interface
     void start();
     void stop();
+
+private:
+    OEAgentControlServerUPtr m_pControlServer;
 };
 
 #endif // OEAGENTSERVICE_H

@@ -17,6 +17,10 @@ private:
     static QString ToCamelCase(const QString& s);
     static QString MakeCheckerName( QString const& sConfigName,
                                     QString const& sSectionName );
+
+private:
+    // content
+    static QString s_sDefaultLogDir;
 };
 
 #endif // CAGENTITIALIZER_H

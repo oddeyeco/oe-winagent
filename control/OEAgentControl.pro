@@ -4,7 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
+
+CONFIG += console
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -24,12 +26,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 include(../3rdparty/qtservice/src/qtservice.pri)
 
+INCLUDEPATH += ../common/
+
 SOURCES += \
         main.cpp \
-        agentcontroller.cpp
+        agentcontroller.cpp \
+    ../common/message.cpp \
+    application.cpp
 
 HEADERS += \
-        agentcontroller.h
+        agentcontroller.h \
+    ../common/message.h \
+    application.h
 
 RESOURCES += \
     res.qrc

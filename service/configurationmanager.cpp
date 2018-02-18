@@ -1,6 +1,7 @@
 #include "configurationmanager.h"
 #include "commonexceptions.h"
 // Qt
+#include <QCoreApplication>
 #include <QDir>
 
 // static member initialization
@@ -33,9 +34,10 @@ void CConfigurationManager::LoadConfigurations()
 {
     UnloadConfigs();
 
-    QDir oConfigDir( s_szConfigDirPath );
+    QString sConfPath = QCoreApplication::applicationDirPath() + QDir::separator() + s_szConfigDirPath ;
+    QDir oConfigDir( sConfPath );
     if( !oConfigDir.exists() )
-        throw CConfigLoadFailedException( "Configuration directory not found" );
+        throw CConfigLoadFailedException( "Configuration directory not found: " + sConfPath );
 
     // Load Main Config
     QString sMainConfigPath = oConfigDir.filePath( s_szMainConfigName + QLatin1String(".ini"));

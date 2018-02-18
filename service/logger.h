@@ -7,6 +7,7 @@
 #include <QDate>
 #include <QFile>
 #include <QTextStream>
+#include <QMutex>
 
 class Logger
 {
@@ -52,6 +53,7 @@ private:
     int         _nBackupFileCount;
     QString     _logs_folder_path;
     bool        _bDebugLoggingEnabled;
+    QMutex      m_oMutex;
 };
 
 #define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
@@ -59,7 +61,7 @@ private:
 
 #define LOG_VERBOSE( __MSG__ ) { }
 #define LOG_DEBUG( __MSG__ ) { Logger::getInstance().debug( std::string( __PREFIX__ ), std::string( __MSG__ ) ) ; }
-#define LOG_INFO( __MSG__ ) { Logger::getInstance().info( /*std::string( __PREFIX__ )*/"", std::string( __MSG__ ) ) ; }
+#define LOG_INFO( __MSG__ ) { Logger::getInstance().info( /*std::string( __PREFIX__ )*/"", QString( __MSG__ ).toStdString() ) ; }
 #define LOG_WARNING( __MSG__ ) { Logger::getInstance().warning( std::string( /*__PREFIX__*/"" ), std::string( __MSG__ ) ); }
 #define LOG_ERROR( __MSG__ ) { Logger::getInstance().error( std::string( /*__PREFIX__*/ "" ), std::string( __MSG__ ) ); }
 

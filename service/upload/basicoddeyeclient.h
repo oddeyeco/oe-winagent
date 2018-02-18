@@ -2,6 +2,7 @@
 #define BASICODDEYECLIENT_H
 
 #include "../metricdata.h"
+#include "message.h"
 #include <QJsonDocument>
 #include <QNetworkReply>
 #include <QObject>
@@ -9,13 +10,6 @@
 #include <memory>
 
 using NetworkAccessManagerSPtr = std::shared_ptr<QNetworkAccessManager>;
-
-enum class EMessageType
-{
-    Error = 0,
-    Warning,
-    Information
-};
 
 ////////////////////////////////////////////////////////////////////////////////////
 ///
@@ -45,7 +39,6 @@ public:
     void SetMaxCacheCount( int nMaxCacheCount );
 
     void SendJsonData( QJsonDocument const& oJsonData );
-
     virtual bool IsReady() const;
     static QString NormailzeAsOEName( QString sName );
 
@@ -54,7 +47,7 @@ protected:
     virtual void HandleSendError(     QNetworkReply* pReply, QJsonDocument const& oJsonData) ;
 
     QJsonObject CreateMetricJson( MetricDataSPtr pSingleMetric );
-    QJsonObject CreateErrorMessageJson( QString const& sMessage, MetricDataSPtr pRelatedMetric );
+    QJsonObject CreateErrorMessageJson( MetricSeverityDescriptorSPtr pDescriptor );
     QJsonObject CreateErrorMessageJson( QString const& sMessage, QString sMetricName, EMessageType eMessageType, QVariant vtMetricValue = QVariant(0) );
 
 signals:

@@ -15,10 +15,6 @@ public:
     // IMetricsCategoryChecker interface
 public:
     void Initialize() override;
-
-private:
-    // Content
-    QString m_sOddEyeAddress;
 };
 
 REGISTER_METRIC_CHECKER( OddeyeSelfCheck )

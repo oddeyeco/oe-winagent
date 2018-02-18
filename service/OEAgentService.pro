@@ -15,6 +15,8 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
+INCLUDEPATH += ../common/
+
 SOURCES += main.cpp \
     configurationmanager.cpp \
     configuration.cpp \
@@ -45,7 +47,9 @@ SOURCES += main.cpp \
     checkers/oddeyeselfcheck.cpp \
     agentinitializer.cpp \
     oeagentservice.cpp \
-    servicecontroller.cpp
+    servicecontroller.cpp \
+    oeagentcontrolserver.cpp \
+    ../common/message.cpp
 
 include(../3rdparty/qtservice/src/qtservice.pri)
 
@@ -81,4 +85,6 @@ HEADERS += \
     checkers/oddeyeselfcheck.h \
     agentinitializer.h \
     oeagentservice.h \
-    servicecontroller.h
+    servicecontroller.h \
+    oeagentcontrolserver.h \
+    ../common/message.h

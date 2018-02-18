@@ -17,14 +17,15 @@ void COddEyeCacheUploader::Start()
 {
     Q_ASSERT(m_pTimer);
     m_pTimer->start();
-    LOG_DEBUG("Cache checking started");
+    LOG_INFO("Cache checking started");
 }
 
 void COddEyeCacheUploader::Stop()
 {
     Q_ASSERT(m_pTimer);
     m_pTimer->stop();
-    LOG_DEBUG("Cache checking stopped");
+    m_qUploadingFiles.clear();
+    LOG_INFO("Cache checking stopped");
 }
 
 void COddEyeCacheUploader::SetUpdateInterval(int nMsecs)
@@ -58,7 +59,8 @@ void COddEyeCacheUploader::onCheckAndUpload()
     }
 
     // stop checking
-    Stop();
+    Q_ASSERT(m_pTimer);
+    m_pTimer->stop();
 
     //TODO:
     m_pNetworkAccessManager.reset(new QNetworkAccessManager());
@@ -71,6 +73,8 @@ void COddEyeCacheUploader::StartUploading()
     Q_ASSERT(!m_qUploadingFiles.isEmpty());
     if( m_qUploadingFiles.isEmpty() )
         return;
+
+    LOG_INFO( QString("Cache uploading started: %1 files").arg( m_qUploadingFiles.size()) );
     UploadHead();
 }
 
@@ -116,7 +120,7 @@ void COddEyeCacheUploader::DequeueHead()
 
     if( m_qUploadingFiles.isEmpty() )
     {
-        Start();
+        m_pTimer->start();
     }
     else
     {
@@ -127,7 +131,7 @@ void COddEyeCacheUploader::DequeueHead()
 
 void COddEyeCacheUploader::HandleSendSuccedded(QNetworkReply *pReply, const QJsonDocument &oJsonData)
 {
-    LOG_INFO( "Cached file uploaded: " + pReply->readAll().toStdString() );
+    LOG_INFO( "Cached file uploaded: " + pReply->readAll() );
     DequeueHead();
 }
 

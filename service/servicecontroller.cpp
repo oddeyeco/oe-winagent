@@ -8,7 +8,6 @@
 CServiceController::CServiceController(QObject *pParent)
     : QObject(pParent)
 {
-
 }
 
 CServiceController &CServiceController::Instance()
@@ -22,7 +21,11 @@ void CServiceController::Start()
     try
     {
         // Reset Engine
-        m_pEngine.reset( new CEngine() );
+        if( !m_pEngine )
+        {
+            m_pEngine.reset( new CEngine() );
+            QObject::connect( m_pEngine.get(), &CEngine::sigMetricsCollected, &CSendController::Instance(), &CSendController::SendMetricsData );
+        }
 
         // Register Loadable Configs
         ConfMgr.RegisterLoadableConfigs( QStringList() << "system" << "oddeye" );
@@ -42,15 +45,14 @@ void CServiceController::Start()
     try
     {
         // Create Send Controller
-        m_pSendController.reset( new CSendController );
+        CSendController::Instance().TurnOn();
 
         // Initialize Engine
         CAgentInitialzier::InitializeEngine( m_pEngine.get() );
 
-        QObject::connect( m_pEngine.get(), &CEngine::sigMetricsCollected, m_pSendController.get(), &CSendController::SendMetricsData );
-
         // Start Engine
         m_pEngine->Start();
+        LOG_INFO( ":::AGENT STARTED:::" );
     }
     catch( std::exception& oExc )
     {
@@ -59,6 +61,12 @@ void CServiceController::Start()
         // rethrow
         throw oExc;
     }
+    catch( ... )
+    {
+        LOG_ERROR( std::string("Start Failed: Unknown Exception") );
+    }
+
+    emit sigStarted();
 }
 
 void CServiceController::Stop()
@@ -66,11 +74,19 @@ void CServiceController::Stop()
     if( m_pEngine )
     {
         m_pEngine->Stop();
-        m_pEngine.reset();
+        m_pEngine->RemoveAllCheckers();
     }
 
-    if( m_pSendController )
-    {
-        m_pSendController.reset();
-    }
+    CSendController::Instance().TurnOff();
+    LOG_INFO( "___AGENT_STOPPED___" );
+
+    emit sigStopped();
+}
+
+bool CServiceController::IsStarted() const
+{
+    if( m_pEngine && m_pEngine->IsStarted() )
+        return true;
+
+    return false;
 }

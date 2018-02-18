@@ -97,7 +97,7 @@ MetricDataList CScriptsMetricsChecker::GetScriptFileResults(const QString &sSrco
             // continue commiting outputs
             if( lstMetricData.size() >= 3 )
             {
-                pMetricData->SetType( lstMetricData[2] );
+                pMetricData->SetMetricType( lstMetricData[2] );
                 if( lstMetricData.size() >= 4 )
                 {
                     pMetricData->SetDataType( lstMetricData[3] );

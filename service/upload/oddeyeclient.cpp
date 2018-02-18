@@ -15,6 +15,12 @@ COddEyeClient::COddEyeClient(QObject *parent)
 
 void COddEyeClient::SendMetrics(const MetricDataList &lstMetrics)
 {
+    if( !IsReady() )
+    {
+        LOG_WARNING( "Unable to send metrics: OEClient is not ready" );
+        Q_ASSERT(false);
+        return;
+    }
     auto oJsonData = ConvertMetricsToJSON( lstMetrics );
     Base::SendJsonData( oJsonData );
 }
@@ -30,20 +36,10 @@ QJsonDocument COddEyeClient::ConvertMetricsToJSON(const MetricDataList &lstMetri
          oRootArray.append( Base::CreateMetricJson( pCurrentMetric ) );
 
          // Check metric value severity
-         if( pCurrentMetric->GetDataSeverity() != EMetricDataSeverity::Normal )
+         if( pCurrentMetric->HasSeverityDescriptor() )
          {
              // setnd error message
-             QString sErrorMsg = QString("%4: %1 value is %2: %3").arg(pCurrentMetric->GetName(),
-                                                                          ToString( pCurrentMetric->GetDataSeverity() ).toLower(),
-                                                                          pCurrentMetric->GetValue().toString(),
-                                                                          pCurrentMetric->GetDataSeverity() == EMetricDataSeverity::High? "WARNING" : "ERROR"
-                                                                       );
-             oRootArray.append( Base::CreateErrorMessageJson( sErrorMsg, pCurrentMetric ) );
-         }
-         else
-         {
-             if( pCurrentMetric->GetName() == "cpu_load" )
-                 oRootArray.append( Base::CreateErrorMessageJson( "Sample Message: NO Error", pCurrentMetric ) );
+             oRootArray.append( Base::CreateErrorMessageJson( pCurrentMetric->GetSeverityDescriptor()) );
          }
     }
 
@@ -53,6 +49,7 @@ QJsonDocument COddEyeClient::ConvertMetricsToJSON(const MetricDataList &lstMetri
 void COddEyeClient::HandleSendSuccedded(QNetworkReply *pReply, const QJsonDocument &oJsonData)
 {
     LOG_INFO( "Metrics successfully sent: " + pReply->readAll() );
+    Q_UNUSED( oJsonData );
 }
 
 void COddEyeClient::HandleSendError(QNetworkReply *pReply, const QJsonDocument &oJsonData)

@@ -11,19 +11,37 @@
 #include <QHostInfo>
 
 
-CSendController::CSendController(QObject *pParent)
-    : Base(pParent),
-      m_bIsReady(false)
+CSendController::CSendController()
+    : m_bIsReady(false)
 {
     m_pNetworkManager = std::make_shared<QNetworkAccessManager>();
-    //  setup OddEye client and OddEye cache uploader
-    SetupOEClients();
 
+    // create oddeye client
+    m_pOEClient = std::make_unique<COddEyeClient>();
 
-    // Start Cache Uploading in worker thread
-    emit sigStartCacheUploading();
+    // create cache uploader thread
+    m_pCacheUploaderThread = new QThread(this);
+    // create cache uploader
+    m_pOECacheUploader = std::make_unique<COddEyeCacheUploader>();
+    m_pOECacheUploader->moveToThread(m_pCacheUploaderThread);
 
-    m_bIsReady = true;
+    bool bOK = connect( this, SIGNAL(sigStartCacheUploading()), m_pOECacheUploader.get(), SLOT(Start()) );
+    Q_ASSERT(bOK);
+    bOK      = connect( this, SIGNAL(sigStopCacheUploading()), m_pOECacheUploader.get(), SLOT(Stop()) );
+    Q_ASSERT(bOK);
+
+    // set network access manager
+    m_pOEClient->SetNetworkAccessManager(m_pNetworkManager);
+    m_pOECacheUploader->SetNetworkAccessManager( m_pNetworkManager );
+
+    // Start thread
+    m_pCacheUploaderThread->start();
+}
+
+CSendController &CSendController::Instance()
+{
+    static CSendController oInst;
+    return oInst;
 }
 
 CSendController::~CSendController()
@@ -36,27 +54,11 @@ CSendController::~CSendController()
 
 void CSendController::SetupOEClients()
 {
-    // create oddeye client
-    m_pOEClient = std::make_unique<COddEyeClient>();
-
-    // create cache uploader thread
-    m_pCacheUploaderThread = new QThread(this);
-    // create cache uploader
-    m_pOECacheUploader = std::make_unique<COddEyeCacheUploader>();
-    m_pOECacheUploader->moveToThread(m_pCacheUploaderThread);
-    bool bOK = connect( this, SIGNAL(sigStartCacheUploading()), m_pOECacheUploader.get(), SLOT(Start()) );
-    Q_ASSERT(bOK);
-
     m_pOECacheUploader->SetUpdateInterval( 2000 );
 
     //
     //  Read settings from config
     //
-
-    // set network access manager
-    m_pOEClient->SetNetworkAccessManager(m_pNetworkManager);
-    m_pOECacheUploader->SetNetworkAccessManager( m_pNetworkManager );
-
     // set server url from
     QString sTsdbUrl = ConfMgr.GetMainConfiguration().Value<QByteArray>("TSDB/url");
     if( sTsdbUrl.isEmpty() )
@@ -112,16 +114,13 @@ void CSendController::SetupOEClients()
 
     m_pOEClient->SetMaxCacheCount( nMaxCacheCount );
     m_pOECacheUploader->SetMaxCacheCount( nMaxCacheCount );
-
-
-    // Start thread
-    m_pCacheUploaderThread->start();
 }
 
 void CSendController::SendMetricsData(const MetricDataList &lstMetrics)
 {    
     Q_ASSERT(m_pOEClient);
-    m_pOEClient->SendMetrics( lstMetrics );
+    if( m_pOEClient )
+        m_pOEClient->SendMetrics( lstMetrics );
 }
 
 void CSendController::SendMessage(const QString &sMessage, EMessageType eType)
@@ -130,6 +129,7 @@ void CSendController::SendMessage(const QString &sMessage, EMessageType eType)
     if( !m_pOEClient->IsReady())
         return;
 
+    Q_ASSERT(false);
     //m_pOEClient->SendMessage( sMessage, eType );
 }
 
@@ -138,10 +138,38 @@ NetworkAccessManagerWPtr CSendController::GetNetworkAccessManager()
     return m_pNetworkManager;
 }
 
+void CSendController::TurnOn()
+{
+
+    m_pNetworkManager->setNetworkAccessible( QNetworkAccessManager::Accessible );
+    //  setup OddEye client and OddEye cache uploader
+    SetupOEClients();
+
+
+    // Start Cache Uploading in worker thread
+    emit sigStartCacheUploading();
+
+    m_bIsReady = true;
+}
+
+void CSendController::TurnOff()
+{
+    // stop cache checking
+
+    emit sigStopCacheUploading();
+    // delete uploader
+//    auto pUploader = m_pOECacheUploader.release();
+//    pUploader->deleteLater();
+
+    // delete Network Manager
+    m_pNetworkManager->setNetworkAccessible( QNetworkAccessManager::NotAccessible );
+    //auto pOEClient = m_pOEClient.release();
+    //pOEClient->deleteLater();
+
+    m_bIsReady = false;
+}
+
 bool CSendController::IsReady() const
 {
     return m_bIsReady;
 }
-
-
-

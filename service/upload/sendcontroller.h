@@ -6,6 +6,7 @@
 
 #include <QNetworkAccessManager>
 #include <QThread>
+#include <atomic>
 
 using NetworkAccessManagerSPtr = std::shared_ptr<QNetworkAccessManager>;
 using NetworkAccessManagerWPtr = std::weak_ptr<QNetworkAccessManager>;
@@ -24,8 +25,10 @@ class CSendController : public QObject
     using OddEyeClientUPtr = std::unique_ptr<COddEyeClient>;
     using OddEyeCacheUploaderUPtr = std::unique_ptr<COddEyeCacheUploader>;
 
+private:
+    CSendController();
 public:
-    CSendController(QObject* pParent = nullptr);
+    static CSendController& Instance();
     ~CSendController();
 
 public slots:
@@ -34,10 +37,14 @@ public slots:
     void SendMessage( QString const& sMessage, EMessageType eType );
 
     NetworkAccessManagerWPtr GetNetworkAccessManager();
+
+    void TurnOn();
+    void TurnOff();
     bool IsReady() const;
 
 signals:
     void sigStartCacheUploading();
+    void sigStopCacheUploading();
 
 private:
     // Helpers
@@ -52,7 +59,9 @@ private:
     std::atomic<bool>        m_bIsReady;
 };
 
-using SendControllerSPtr = std::shared_ptr<CSendController>;
+
+
+//using SendControllerSPtr = std::shared_ptr<CSendController>;
 //////////////////////////////////////////////////////////////////////////////////////////
 
 #endif // SENDCONTROLLER_H

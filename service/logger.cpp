@@ -103,6 +103,7 @@ void Logger::_log(const std::string& prefix, const std::string& msg)
        << (prefix.empty()? std::setw( 0 ): std::setw( 70 ) )<< prefix
        << std::setw( 0 ) << msg << std::endl;
 
+    QMutexLocker oLocker(&m_oMutex);
     _logs_stream << ss.str().c_str();
     _logs_stream.flush();
 

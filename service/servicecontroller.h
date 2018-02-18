@@ -6,7 +6,7 @@
 #include "upload/sendcontroller.h"
 
 using EngineUPtr = std::unique_ptr<CEngine>;
-using SendControllerUPtr = std::unique_ptr<CSendController>;
+//using SendControllerUPtr = std::unique_ptr<CSendController>;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 ///
@@ -30,12 +30,19 @@ public:
     void Start();
     void Stop();
 
+    bool IsStarted() const;
+
+signals:
+    void sigStarted();
+    void sigStopped();
+    void sigError( QString const& sErrorMessage );
+
 private:
     //
     //  Content
     //
     EngineUPtr         m_pEngine;
-    SendControllerUPtr m_pSendController;
+    //SendControllerUPtr m_pSendController;
 
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

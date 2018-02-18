@@ -2,6 +2,7 @@
 #define CENGINE_H
 
 #include "imetricscategorychecker.h"
+#include "message.h"
 #include "winperformancedataprovider.h"
 // Qt
 #include <QObject>
@@ -32,8 +33,12 @@ public slots:
     void RemoveChecker( IMetricsCategoryCheckerSPtr pChecker );
     void RemoveAllCheckers();
 
+public:
+    bool IsStarted();
+
 signals:
     void sigMetricsCollected( MetricDataList const& lstAllMetrics );
+    void sigNotify( CMessage const& oMessage );
 
 private slots:
     void onTimerTik();

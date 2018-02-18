@@ -2,6 +2,7 @@
 #define BASICMETRICCHECKER_H
 
 #include "imetricchecker.h"
+#include <functional>
 
 using ValueCheckerFunc = std::function<double(void)>;
 
@@ -51,6 +52,7 @@ private:
     QString          m_sInstanceType;
     QString          m_sInstanceName;
     ValueCheckerFunc m_pValueCheckerFunc;
+    bool             m_bWereLastValueHighOrSevery;
 };
 
 using BasicMetricCheckerSPtr = std::shared_ptr<CBasicMetricChecker>;

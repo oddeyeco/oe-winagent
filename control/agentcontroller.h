@@ -4,6 +4,8 @@
 #include <QtServiceController>
 #include <QMenu>
 #include <QSystemTrayIcon>
+#include <QLocalSocket>
+
 #include <memory>
 
 using SystemTrayIconUPtr = std::unique_ptr<QSystemTrayIcon>;
@@ -18,13 +20,18 @@ public:
     CAgentController(QObject* pParent = nullptr);
     ~CAgentController();
 
-public:
-    void CheckAgentState();
+    void Start();
+    void Stop();
+    void Restart();
 
 private slots:
-    void onStart();
-    void onStop();
-    void onRestart();
+    void onStartClicked();
+    void onStopClicked();
+    void onRestartClicked();
+    void onExitClicked();
+
+    void onSocketError();
+    void onReadyRead();
 
 private:
     // Content
@@ -33,6 +40,7 @@ private:
     QAction*            m_pactStop;
     QAction*            m_pactRestart;
     QtServiceController m_oServiceController;
+    QLocalSocket*       m_pServerSocket;
 };
 
 #endif // AGENTCONTROLLER_H

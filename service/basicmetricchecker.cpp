@@ -16,7 +16,8 @@ CBasicMetricChecker::CBasicMetricChecker(const QString &sMetricName,
       m_dHighValue( dHighValue ),
       m_dSevereValue( dSevereValue ),
       m_sInstanceType( sInstanceType ),
-      m_sInstanceName( sInstanceName )
+      m_sInstanceName( sInstanceName ),
+      m_bWereLastValueHighOrSevery(false)
 {
     Q_ASSERT( !sMetricName.isEmpty() );
     Q_ASSERT( nReaction >= -3 && nReaction <=0);
@@ -32,7 +33,7 @@ MetricDataSPtr CBasicMetricChecker::CheckMetric()
     pMetric->SetTime( QDateTime::currentDateTime() );
     pMetric->SetName(m_sMetricName);
     pMetric->SetDataType(m_eMetricDataType);
-    pMetric->SetType(m_sMetricType);
+    pMetric->SetMetricType(m_sMetricType);
     pMetric->SetReaction(m_nReaction);
 
     if( !m_sInstanceType.isEmpty() && !m_sInstanceName.isEmpty() )
@@ -46,13 +47,33 @@ MetricDataSPtr CBasicMetricChecker::CheckMetric()
 
     pMetric->SetValue( dValue );
 
+
+
     // Set data severity
     EMetricDataSeverity eSeverity = EMetricDataSeverity::Normal;
     if( m_dSevereValue != -1 && dValue >= m_dSevereValue )
         eSeverity = EMetricDataSeverity::Severe;
     else if( m_dHighValue != -1 && dValue > m_dHighValue )
         eSeverity = EMetricDataSeverity::High;
-    pMetric->SetDataSeverity( eSeverity );
+    
+    if( eSeverity == EMetricDataSeverity::High
+            || eSeverity == EMetricDataSeverity::Severe )
+    {
+        QString sErrorMsg = QString("%4: %1 value is %2: %3").arg( m_sMetricName,
+                                                                   ToString( eSeverity ).toLower(),
+                                                                   QString::number(dValue),
+                                                                   eSeverity == EMetricDataSeverity::High? "WARNING" : "ERROR"
+                                                                 );
+        pMetric->SetSeverityDescriptor( GetMetricName(), eSeverity, 0, sErrorMsg );
+        m_bWereLastValueHighOrSevery = true;
+    }
+    else if( eSeverity == EMetricDataSeverity::Normal && m_bWereLastValueHighOrSevery )
+    {
+            pMetric->SetSeverityDescriptor( GetMetricName(), eSeverity, 0 );
+            m_bWereLastValueHighOrSevery = false;
+    }
+
+
 
     return pMetric;
 }

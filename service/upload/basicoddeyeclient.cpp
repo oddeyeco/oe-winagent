@@ -96,8 +96,8 @@ void CBasicOddEyeClient::SendJsonData(const QJsonDocument &oJsonData)
             qDebug() << "finished with error";
             HandleSendError( pReplay, pReplay->property("json_doc").toJsonDocument() );
             // cleare network caches
-            m_pNetworkAccessManager->clearAccessCache();
-            m_pNetworkAccessManager->clearConnectionCache();
+            //m_pNetworkAccessManager->clearAccessCache();
+            //m_pNetworkAccessManager->clearConnectionCache();
         }
 
         pReplay->deleteLater();
@@ -169,7 +169,7 @@ QJsonObject CBasicOddEyeClient::CreateMetricJson(MetricDataSPtr pSingleMetric)
     oTagsJson["cluster"] = m_sClusterName;
     oTagsJson["group"] = m_sGroupName;
     oTagsJson["host"] = m_sHostName;
-    oTagsJson["type"] = pSingleMetric->GetType();
+    oTagsJson["type"] = pSingleMetric->GetMetricType();
     if( !pSingleMetric->GetInstanceType().isEmpty() && !pSingleMetric->GetInstanceName().isEmpty() )
     {
         QString sTagName = NormailzeAsOEName( pSingleMetric->GetInstanceType() );
@@ -185,25 +185,26 @@ QJsonObject CBasicOddEyeClient::CreateMetricJson(MetricDataSPtr pSingleMetric)
 }
 
 
-QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(const QString &sMessage, MetricDataSPtr pRelatedMetric)
+QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(MetricSeverityDescriptorSPtr pDescriptor)
 {
-    Q_ASSERT( pRelatedMetric );
-    Q_ASSERT( !sMessage.isEmpty() );
+    Q_ASSERT( pDescriptor );
+    if( !pDescriptor )
+        return QJsonObject();
 
 
     QJsonObject oMetricJson;
-    oMetricJson["metric"] = pRelatedMetric->GetName();
-    oMetricJson["reaction"] = pRelatedMetric->GetReaction();
-    oMetricJson["timestamp"] = QString::number( pRelatedMetric->GetTime().toTime_t() );
+    oMetricJson["metric"] = pDescriptor->GetMetricName();
+    oMetricJson["reaction"] = 0;
+    oMetricJson["timestamp"] = QString::number( pDescriptor->GetTime().toTime_t() );
 
     QVariant vtValue;
     QString sStatus;
-    if( pRelatedMetric->GetDataSeverity() == EMetricDataSeverity::Normal)
+    if( pDescriptor->GetDataSeverity() == EMetricDataSeverity::Normal)
     {
-        vtValue = 0;/*pRelatedMetric->GetValue();*/
+        vtValue = 0;/*pDescriptor->GetValue();*/
         sStatus = "OK";
     }
-    else if( pRelatedMetric->GetDataSeverity() == EMetricDataSeverity::High )
+    else if( pDescriptor->GetDataSeverity() == EMetricDataSeverity::High )
     {
         vtValue = 8;
         sStatus = "WARNING";
@@ -220,10 +221,10 @@ QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(const QString &sMessage, 
     oTagsJson["cluster"] = m_sClusterName;
     oTagsJson["group"] = m_sGroupName;
     oTagsJson["host"] = m_sHostName;
-    if( !pRelatedMetric->GetInstanceType().isEmpty() && !pRelatedMetric->GetInstanceName().isEmpty() )
+    if( !pDescriptor->GetInstanceType().isEmpty() && !pDescriptor->GetInstanceName().isEmpty() )
     {
-        QString sTagName = NormailzeAsOEName( pRelatedMetric->GetInstanceType() );
-        QString sTagVal  = NormailzeAsOEName( pRelatedMetric->GetInstanceName() );
+        QString sTagName = NormailzeAsOEName( pDescriptor->GetInstanceType() );
+        QString sTagVal  = NormailzeAsOEName( pDescriptor->GetInstanceName() );
         oTagsJson[sTagName] = sTagVal;
     }
 
@@ -233,7 +234,7 @@ QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(const QString &sMessage, 
 
     oMetricJson["type"] = "Special";
     oMetricJson["status"] = sStatus;
-    oMetricJson["message"] = sMessage;
+    oMetricJson["message"] = pDescriptor->GetMessage();
 
     return oMetricJson;
 }
@@ -289,6 +290,8 @@ QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(const QString &sMessage,
 void CBasicOddEyeClient::HandleSendError(QNetworkReply *pReply, const QJsonDocument &oJsonData)
 {
     // nothing to do
+    Q_UNUSED(pReply);
+    Q_UNUSED(oJsonData);
 }
 
 
@@ -296,4 +299,6 @@ void CBasicOddEyeClient::HandleSendError(QNetworkReply *pReply, const QJsonDocum
 void CBasicOddEyeClient::HandleSendSuccedded(QNetworkReply *pReply, const QJsonDocument &oJsonData)
 {
      // nothing to do
+    Q_UNUSED(pReply);
+    Q_UNUSED(oJsonData);
 }

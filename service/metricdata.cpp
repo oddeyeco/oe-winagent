@@ -2,8 +2,7 @@
 
 CMetricData::CMetricData()
     : m_eDataType( EMetricDataType::None ),
-      m_nReaction{0},
-      m_eSeverity( EMetricDataSeverity::Normal )
+      m_nReaction{0}
 {}
 
 CMetricData::CMetricData(const QString &sName,
@@ -12,21 +11,34 @@ CMetricData::CMetricData(const QString &sName,
                          QDateTime oTimestamp,
                          const QString &sMetricType,
                          int nReaction,
-                         EMetricDataSeverity eSeverity,
                          QString const& sInstanceType,
                          QString const& sInstanceName )
     : m_nReaction{0}
 {
-    SetName(sName);
-    SetValue(vtValue);
-    SetDataType(eDataType);
-    SetTime(oTimestamp);
-    SetType( sMetricType );
-    SetReaction(nReaction);
-    SetDataSeverity( eSeverity );
-    SetInstanceType(sInstanceType);
-    SetInstanceType(sInstanceName);
+    SetName( sName );
+    SetValue( vtValue );
+    SetDataType( eDataType );
+    SetTime( oTimestamp );
+    SetMetricType( sMetricType );
+    SetReaction( nReaction );
+    SetInstanceType( sInstanceType );
+    SetInstanceType( sInstanceName );
 }
+
+MetricSeverityDescriptorSPtr CMetricData::SetSeverityDescriptor(const QString &sMetricName, EMetricDataSeverity eSeverity, double dAlertDurationHint, const QString &sMessage)
+{
+    auto pDescriptor = std::make_shared<CMetricSeverityDescriptor>(sMetricName,
+                                                                   QDateTime::currentDateTime(),
+                                                                   eSeverity,
+                                                                   dAlertDurationHint,
+                                                                   sMessage,
+                                                                   GetInstanceType(),
+                                                                   GetInstanceName()
+                                                                   );
+    SetSeverityDescriptor( pDescriptor );
+    return pDescriptor;
+}
+
 
 QString ToString( EMetricDataType eType )
 {
@@ -60,4 +72,21 @@ EMetricDataType GetMetricDataTypeFromString(const QString &sDataTypeName)
         return EMetricDataType::Counter;
     else
         return EMetricDataType::None;
+}
+
+CMetricSeverityDescriptor::CMetricSeverityDescriptor( const QString &sMetricName,
+                                                      QDateTime oTimestamp,
+                                                      EMetricDataSeverity eSeverity,
+                                                      double dAlertDurationHint,
+                                                      const QString &sMessage,
+                                                      const QString &sInstanceType,
+                                                      const QString &sInstanceName )
+    : m_sName( sMetricName ),
+      m_oTime( oTimestamp ),
+      m_eSeverity( eSeverity ),
+      m_dAlertDurationHint( dAlertDurationHint ),
+      m_sMessage( sMessage ),
+      m_sInstanceType( sInstanceType ),
+      m_sInstanceName( sInstanceName )
+{
 }
