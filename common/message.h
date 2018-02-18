@@ -37,11 +37,17 @@ public:
 
 public:
     inline QString GetTitle() const;
+    inline void SetTitle( QString const& sTitle );
     inline QString GetMessage() const;
+    inline void SetMessage( QString const& sMessage );
     inline EMessageType GetType() const;
+    inline void SetType( EMessageType eMessageType );
     inline QString  FullText() const;
     inline bool     HasMessage() const;
+    inline bool     IsEmpty() const;
+
     inline ENotificationEvent GetEvent() const;
+    inline void SetEvent( ENotificationEvent eEvent );
 
 
 private:
@@ -65,14 +71,29 @@ QString CMessage::GetTitle() const
     return m_sTitle;
 }
 
+void CMessage::SetTitle(const QString &sTitle)
+{
+    m_sTitle = sTitle;
+}
+
 QString CMessage::GetMessage() const
 {
     return m_sMessage;
 }
 
+void CMessage::SetMessage(const QString &sMessage)
+{
+    m_sMessage = sMessage;
+}
+
 EMessageType CMessage::GetType() const
 {
     return m_eType;
+}
+
+void CMessage::SetType(EMessageType eMessageType)
+{
+    m_eType = eMessageType;
 }
 
 QString CMessage::FullText() const
@@ -89,9 +110,19 @@ bool CMessage::HasMessage() const
     return !m_sMessage.isEmpty() || !m_sTitle.isEmpty();
 }
 
+bool CMessage::IsEmpty() const
+{
+    return !HasMessage() && m_eEvent == ENotificationEvent::NoEvent;
+}
+
 ENotificationEvent CMessage::GetEvent() const
 {
     return m_eEvent;
+}
+
+void CMessage::SetEvent(ENotificationEvent eEvent)
+{
+    m_eEvent = eEvent;
 }
 
 inline CMessage::CMessage(const QString &sTitle,

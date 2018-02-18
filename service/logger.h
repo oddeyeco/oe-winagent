@@ -23,6 +23,7 @@ public:
     void setBackupFileCount( int nCount );
     void setLogsFolderPath( QString const& sFolderPath );
     void SetDebugLoggingEnabled( bool bEnabled );
+    QString GetLogDirPath() const;
 
 private:
     enum class LogType

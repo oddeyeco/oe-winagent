@@ -91,6 +91,12 @@ void Logger::SetDebugLoggingEnabled(bool bEnabled)
     _bDebugLoggingEnabled = bEnabled;
 }
 
+QString Logger::GetLogDirPath() const
+{
+    QDir logs_dir(_logs_folder_path);
+    return logs_dir.absolutePath();
+}
+
 template<Logger::LogType type>
 void Logger::_log(const std::string& prefix, const std::string& msg)
 {

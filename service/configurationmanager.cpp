@@ -34,7 +34,7 @@ void CConfigurationManager::LoadConfigurations()
 {
     UnloadConfigs();
 
-    QString sConfPath = QCoreApplication::applicationDirPath() + QDir::separator() + s_szConfigDirPath ;
+    QString sConfPath = GetConfigsDirPath();
     QDir oConfigDir( sConfPath );
     if( !oConfigDir.exists() )
         throw CConfigLoadFailedException( "Configuration directory not found: " + sConfPath );
@@ -118,6 +118,11 @@ void CConfigurationManager::UnloadConfigs()
 CConfigSection CConfigurationManager::GetEnabledScriptsConfigSection()
 {
     return m_oEnabledScriptsConfSection;
+}
+
+QString CConfigurationManager::GetConfigsDirPath() const
+{
+    return QCoreApplication::applicationDirPath() + QDir::separator() + s_szConfigDirPath;
 }
 
 bool CConfigurationManager::LoadConfigIfExists(const QString &sConfFilePath)

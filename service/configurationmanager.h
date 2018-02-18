@@ -37,6 +37,8 @@ public:
 
     CConfigSection GetEnabledScriptsConfigSection();
 
+    QString GetConfigsDirPath() const;
+
 signals:
     void sigConfigsLoaded();
     void sigConfigsUnloaded();

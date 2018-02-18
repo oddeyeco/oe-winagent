@@ -6,8 +6,6 @@
 
 QT       += core gui network
 
-CONFIG += console
-
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = OEAgentControl
@@ -24,20 +22,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-include(../3rdparty/qtservice/src/qtservice.pri)
+include(../../3rdparty/qtservice/src/qtservice.pri)
 
-INCLUDEPATH += ../common/
+INCLUDEPATH += ../../common/
 
 SOURCES += \
         main.cpp \
-        agentcontroller.cpp \
-    ../common/message.cpp \
-    application.cpp
+    guicontroller.cpp \
+    ../../common/agentcontrolclient.cpp
 
 HEADERS += \
-        agentcontroller.h \
-    ../common/message.h \
-    application.h
+    ../../common/message.h \
+    ../../common/agentcontrolclient.h \
+    guicontroller.h
 
 RESOURCES += \
     res.qrc
