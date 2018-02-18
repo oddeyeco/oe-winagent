@@ -3,6 +3,7 @@
 #include "checkers/scriptsmetricschecker.h"
 #include "logger.h"
 
+#include <QCoreApplication>
 #include <QDebug>
 
 // static init
@@ -16,6 +17,10 @@ void CAgentInitialzier::InitializeLogger()
     {
         throw CInvalidConfigValueException( "log_dir is empty" );
     }
+
+    if( sLogsDirPath.startsWith( "\\" ) || sLogsDirPath.startsWith("/") )
+        sLogsDirPath.prepend( QCoreApplication::applicationDirPath() );
+
     Logger::getInstance().setLogsFolderPath( sLogsDirPath );
 
     // log_rotate_seconds

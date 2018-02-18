@@ -24,15 +24,22 @@ private slots:
     void onStartClicked();
     void onStopClicked();
     void onRestartClicked();
+
+    void onOpenFolder();
+
     void onExitClicked();
+
     void onNotification( CMessage const& oMsg );
 
+    void ShowInGraphicalShell(const QString &pathIn);
 private:
     // Content
     SystemTrayIconUPtr  m_pSystemTrayIcon;
     QAction*            m_pactStart;
     QAction*            m_pactStop;
     QAction*            m_pactRestart;
+    QAction*            m_pactOpenConfDir;
+    QAction*            m_pactOpenLogsDir;
 };
 
 #endif // AGENTCONTROLLER_H

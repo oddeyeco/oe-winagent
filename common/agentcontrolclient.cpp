@@ -140,6 +140,14 @@ void CAgentControlClient::onReadyRead()
         oMsg.SetEvent( eEvent );
     }
 
+    if( oJsonObj.contains("notification_config_info") )
+    {
+        CConfigInfo oConfInfo = oJsonObj["notification_config_info"].toObject().toVariantMap();
+        oMsg.SetConfigInfo( oConfInfo );
+    }
+
+
+
     // notify
     emit sigNotification( oMsg );
 }

@@ -7,6 +7,7 @@
 #include "../pinger.h"
 
 // Qt
+#include <QCoreApplication>
 #include <QDir>
 #include <QHostInfo>
 
@@ -96,6 +97,8 @@ void CSendController::SetupOEClients()
     QString sCacheDir = ConfMgr.GetMainConfiguration().Value<QString>( "SelfConfig/tmpdir" );
     if( sCacheDir.isEmpty() )
         throw CInvalidConfigException("tempdir is missing");
+    if( sCacheDir.startsWith( "\\" ) || sCacheDir.startsWith("/") )
+        sCacheDir.prepend( QCoreApplication::applicationDirPath() );
 
     QDir oCacheDir(sCacheDir);
     if(!oCacheDir.exists())

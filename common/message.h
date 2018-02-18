@@ -2,6 +2,7 @@
 #define MESSAGE_H
 
 #include <QString>
+#include <QVariant>
 
 
 enum class EMessageType
@@ -17,6 +18,8 @@ enum class ENotificationEvent : qint32
     AgentStarted,
     AgentStopped
 };
+
+using CConfigInfo = QMap<QString, QVariant>;
 
 class CMessage
 {
@@ -49,6 +52,8 @@ public:
     inline ENotificationEvent GetEvent() const;
     inline void SetEvent( ENotificationEvent eEvent );
 
+    inline CConfigInfo GetConfigInfo() const;
+    inline void SetConfigInfo( CConfigInfo const& oInfo );
 
 private:
     // Content
@@ -56,6 +61,7 @@ private:
     QString m_sMessage;
     EMessageType m_eType;
     ENotificationEvent m_eEvent;
+    CConfigInfo m_oConfInfo;
 };
 
 CMessage::CMessage(const QString &sTitle, const QString &sMessage, EMessageType eType, ENotificationEvent eEvent)
@@ -123,6 +129,16 @@ ENotificationEvent CMessage::GetEvent() const
 void CMessage::SetEvent(ENotificationEvent eEvent)
 {
     m_eEvent = eEvent;
+}
+
+CConfigInfo CMessage::GetConfigInfo() const
+{
+    return m_oConfInfo;
+}
+
+void CMessage::SetConfigInfo(const CConfigInfo &oInfo)
+{
+    m_oConfInfo = oInfo;
 }
 
 inline CMessage::CMessage(const QString &sTitle,

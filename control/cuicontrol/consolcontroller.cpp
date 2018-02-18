@@ -100,9 +100,17 @@ void CConsolController::onNotification(const CMessage &oMsg)
     else
     {
         QString sEventText;
-        switch (oMsg.GetEvent()) {
+        switch (oMsg.GetEvent())
+        {
         case ENotificationEvent::AgentStarted:
             sEventText = "OddEye Agent is running";
+            if( !oMsg.GetConfigInfo().isEmpty() )
+            {
+                sEventText.append("\nConfig Dir: ");
+                sEventText.append(oMsg.GetConfigInfo().value("conf_dir").toString());
+                sEventText.append("\nLogs Dir: ");
+                sEventText.append(oMsg.GetConfigInfo().value("log_dir").toString());
+            }
             break;
         case ENotificationEvent::AgentStopped:
             sEventText = "OddEye Agent is stopped";

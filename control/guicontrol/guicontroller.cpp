@@ -1,9 +1,14 @@
 #include "guicontroller.h"
 
+#include <QDesktopServices>
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMessageBox>
+#include <QUrl>
+#include <QProcessEnvironment>
+#include <QFileInfo>
+#include <QDir>
 
 #include "message.h"
 
@@ -11,13 +16,20 @@ CGuiController::CGuiController(QObject *pParent)
     : Base(pParent),
       m_pactStart(nullptr),
       m_pactStop(nullptr),
-      m_pactRestart(nullptr)
+      m_pactRestart(nullptr),
+      m_pactOpenConfDir(nullptr),
+      m_pactOpenLogsDir( nullptr )
 {
     m_pSystemTrayIcon = std::make_unique<QSystemTrayIcon>();
     QMenu* pMenu = new QMenu();
     m_pactStart   = pMenu->addAction( "Start", this, SLOT(onStartClicked()));
     m_pactStop    = pMenu->addAction( "Stop", this, SLOT(onStopClicked()) );
     m_pactRestart = pMenu->addAction( "Restart", this, SLOT(onRestartClicked()) );
+
+    pMenu->addSeparator();
+    m_pactOpenConfDir = pMenu->addAction( "Open Configs Folder", this, SLOT(onOpenFolder()));
+    m_pactOpenLogsDir = pMenu->addAction( "Open Logs Folder", this, SLOT(onOpenFolder()));
+
     pMenu->addSeparator();
     auto pactExit = pMenu->addAction( "Exit", this, SLOT(onExitClicked()) );
 
@@ -54,6 +66,15 @@ void CGuiController::onStopClicked()
 void CGuiController::onRestartClicked()
 {
     AgentController.Restart();
+}
+
+void CGuiController::onOpenFolder()
+{
+    QObject* pSenderAct = sender();
+    if( pSenderAct )
+        pSenderAct->setProperty("clicked", true);
+
+    AgentController.Status();
 }
 
 void CGuiController::onExitClicked()
@@ -105,4 +126,40 @@ void CGuiController::onNotification(const CMessage &oMsg)
         m_pactRestart->setEnabled(false);
         m_pactStart->setEnabled(true);
     }
+
+    if( !oMsg.GetConfigInfo().isEmpty() )
+    {
+        if( m_pactOpenConfDir->property( "clicked" ).toBool() )
+        {
+            m_pactOpenConfDir->setProperty("clicked", false );
+            QString sConfigsDirPath = oMsg.GetConfigInfo().value("conf_dir").toString();
+            ShowInGraphicalShell( sConfigsDirPath );
+        }
+
+        if( m_pactOpenLogsDir->property( "clicked" ).toBool() )
+        {
+            m_pactOpenLogsDir->setProperty("clicked", false );
+            QString sLogsDirPath = oMsg.GetConfigInfo().value("log_dir").toString();
+            ShowInGraphicalShell( sLogsDirPath );
+        }
+    }
+}
+
+void CGuiController::ShowInGraphicalShell(const QString &pathIn)
+{
+    QWidget *parent = nullptr;
+
+    const QString explorer = "explorer.exe";
+    if (explorer.isEmpty()) {
+        QMessageBox::warning(parent,
+                             tr("Launching Windows Explorer failed"),
+                             tr("Could not find explorer.exe in path to launch Windows Explorer."));
+        return;
+    }
+    QString param;
+    if (!QFileInfo(pathIn).isDir())
+        param = QLatin1String("/select,");
+    param += QDir::toNativeSeparators(pathIn);
+    QString command = explorer + " " + param;
+    QProcess::startDetached(command);
 }

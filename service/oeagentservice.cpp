@@ -19,6 +19,24 @@ COEAgentService::COEAgentService(int argc, char **argv)
 void COEAgentService::start()
 {
     m_pControlServer->StartListening();
+
+
+    // Start
+    try
+    {
+        CServiceController::Instance().Start();
+    }
+    catch(std::exception const& oExc)
+    {
+        std::cout << "OE-Agent start faield: Exception: " << oExc.what() << std::endl;
+        QString sErrorMessage = QString( "OE-Agent start faield: %1" ).arg( oExc.what() );
+        logMessage( sErrorMessage, QtService::Error );
+    }
+    catch( ... )
+    {
+        QString sErrorMessage = "OE-Agent start faield: Unknown exception";
+        logMessage( sErrorMessage, QtService::Error );
+    }
 }
 
 void COEAgentService::stop()

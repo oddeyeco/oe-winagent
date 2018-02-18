@@ -122,7 +122,7 @@ CConfigSection CConfigurationManager::GetEnabledScriptsConfigSection()
 
 QString CConfigurationManager::GetConfigsDirPath() const
 {
-    return QCoreApplication::applicationDirPath() + QDir::separator() + s_szConfigDirPath;
+    return QCoreApplication::applicationDirPath() + "/" + s_szConfigDirPath;
 }
 
 bool CConfigurationManager::LoadConfigIfExists(const QString &sConfFilePath)

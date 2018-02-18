@@ -17,23 +17,23 @@ public:
     void StartListening();
     void StopListening();
 
+    //
+    //  Controls
+    //
+    bool StartAgent( QLocalSocket* pRequestedClientSock );
+    bool StopAgent( QLocalSocket* pRequestedClientSock );
+    bool RestartAgent( QLocalSocket* pRequestedClientSock );
+    bool SendStatus( QLocalSocket* pRequestedClientSock );
+
 private slots:
     void onNewConnection();
     void onReadyRead();
     void onSocketAboutToClose();
 
-    //
-    //  Controls
-    //
-    bool onStartAgent( QLocalSocket* pRequestedClientSock );
-    bool onStopAgent( QLocalSocket* pRequestedClientSock );
-    bool onRestartAgent( QLocalSocket* pRequestedClientSock );
-    bool onSendStatus( QLocalSocket* pRequestedClientSock );
-
 private:
     void ProcessCommandJson(QJsonObject const& oCommand, QLocalSocket* pSenderSock );
     void NotifyToAllClients( CMessage const& oMsg );
-    void NotifyToClient( QLocalSocket* pClientSock,
+    void NotifyToClient(QLocalSocket* pClientSock,
                          CMessage const& oMsg );
 private:
     // content
