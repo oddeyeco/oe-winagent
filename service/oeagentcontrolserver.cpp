@@ -158,6 +158,9 @@ void COEAgentControlServer::NotifyToClient(QLocalSocket *pClientSock,
     if( aNotif.isEmpty() )
         return;
 
+    // terminate
+    aNotif.append( "\r\n\r\n" );
+
     pClientSock->write( aNotif );
     pClientSock->waitForBytesWritten(500);
 }
@@ -166,7 +169,8 @@ bool COEAgentControlServer::StartAgent(QLocalSocket *pRequestedClientSock)
 {
     if( CServiceController::Instance().IsStarted() )
     {
-        NotifyToClient(pRequestedClientSock, CMessage("OddEye Agent is already running"));
+        NotifyToClient(pRequestedClientSock, CMessage( ENotificationEvent::AgentStarted,
+                                                       "OddEye Agent is already running"));
         return true;
     }
     else
@@ -185,6 +189,8 @@ bool COEAgentControlServer::StartAgent(QLocalSocket *pRequestedClientSock)
                                                             "OddEye Agent Started",
                                                             sInfo));
 
+            NotifyToAllClients( CMessage(ENotificationEvent::AgentStarted) );
+
             LOG_INFO("Control SERVER: StartAgent succedded!")
             return true;
         }
@@ -193,7 +199,7 @@ bool COEAgentControlServer::StartAgent(QLocalSocket *pRequestedClientSock)
             QString sMessageTitle = QString( "OE-Agent start faield: %1" ).arg( oExc.what() );
             NotifyToClient( pRequestedClientSock, CMessage("OE-Agent start faield",
                                                            oExc.what(),
-                                                           EMessageType::Error) );
+                                                           EMessageType::Error ) );
             LOG_ERROR("Control SERVER: StartAgent failed!" + std::string(oExc.what()));
             return false;
         }
@@ -211,7 +217,7 @@ bool COEAgentControlServer::StopAgent(QLocalSocket *pRequestedClientSock)
 {
     if( !CServiceController::Instance().IsStarted() )
     {
-        NotifyToClient(pRequestedClientSock, CMessage( "OddEye Agent is not running" ) );
+        NotifyToClient(pRequestedClientSock, CMessage( ENotificationEvent::AgentStopped, "OddEye Agent is not running" ) );
         return true;
     }
     else
@@ -222,6 +228,7 @@ bool COEAgentControlServer::StopAgent(QLocalSocket *pRequestedClientSock)
             CServiceController::Instance().Stop();
 
             NotifyToClient( pRequestedClientSock, CMessage(ENotificationEvent::AgentStopped,"OddEye Agent Stopped"));
+            NotifyToAllClients( CMessage(ENotificationEvent::AgentStopped) );
             LOG_INFO("Control SERVER: StopAgent succedded!")
             return true;
         }
@@ -253,7 +260,7 @@ bool COEAgentControlServer::RestartAgent(QLocalSocket *pRequestedClientSock)
 
         NotifyToClient( pRequestedClientSock, CMessage(ENotificationEvent::AgentStarted,
                                                        "OddEye Agent Restarted"));
-        LOG_INFO("Control SERVER: RestartAgent succedded!")
+        LOG_INFO("Control SERVER: RestartAgent succedded!");
         return true;
     }
     catch(std::exception const& oExc)

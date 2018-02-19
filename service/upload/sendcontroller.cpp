@@ -5,7 +5,6 @@
 #include "../logger.h"
 
 #include "../pinger.h"
-
 // Qt
 #include <QCoreApplication>
 #include <QDir>
@@ -28,7 +27,7 @@ CSendController::CSendController()
 
     bool bOK = connect( this, SIGNAL(sigStartCacheUploading()), m_pOECacheUploader.get(), SLOT(Start()) );
     Q_ASSERT(bOK);
-    bOK      = connect( this, SIGNAL(sigStopCacheUploading()), m_pOECacheUploader.get(), SLOT(Stop()) );
+    bOK      = connect( this, SIGNAL(sigStopCacheUploading()),  m_pOECacheUploader.get(), SLOT(Stop()) );
     Q_ASSERT(bOK);
 
     // set network access manager
@@ -51,7 +50,6 @@ CSendController::~CSendController()
     m_pCacheUploaderThread->quit();
     m_pCacheUploaderThread->wait();
 }
-
 
 void CSendController::SetupOEClients()
 {
@@ -143,7 +141,6 @@ NetworkAccessManagerWPtr CSendController::GetNetworkAccessManager()
 
 void CSendController::TurnOn()
 {
-
     m_pNetworkManager->setNetworkAccessible( QNetworkAccessManager::Accessible );
     //  setup OddEye client and OddEye cache uploader
     SetupOEClients();
@@ -160,14 +157,9 @@ void CSendController::TurnOff()
     // stop cache checking
 
     emit sigStopCacheUploading();
-    // delete uploader
-//    auto pUploader = m_pOECacheUploader.release();
-//    pUploader->deleteLater();
 
     // delete Network Manager
     m_pNetworkManager->setNetworkAccessible( QNetworkAccessManager::NotAccessible );
-    //auto pOEClient = m_pOEClient.release();
-    //pOEClient->deleteLater();
 
     m_bIsReady = false;
 }

@@ -110,6 +110,8 @@ bool COddEyeClient::CacheJsonData(const QJsonDocument &oJsonDoc)
     if( nBytesWritten < aJsonData.size() )
         oJsonFile.waitForBytesWritten(100);
     oJsonFile.close();
+
+    LOG_INFO( "Metric data was cached." );
     return true;
 }
 

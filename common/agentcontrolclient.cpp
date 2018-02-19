@@ -110,44 +110,48 @@ void CAgentControlClient::onReadyRead()
 {
     Q_ASSERT(m_pServerSocket);
 
-    QByteArray aData = m_pServerSocket->readAll();
-    QJsonDocument oJsonDoc = QJsonDocument::fromJson( aData );
-    if( oJsonDoc.isEmpty())
+    QString sAllData = m_pServerSocket->readAll();
+    QStringList lstNotifications = sAllData.split( "\r\n\r\n", QString::SkipEmptyParts );
+    for( QString& sData : lstNotifications )
     {
-        Q_ASSERT_X(false, "onReadyRead Invalid DOC", aData);
-        return;
+        QByteArray aData = sData.toLatin1();
+        QJsonDocument oJsonDoc = QJsonDocument::fromJson( aData );
+        if( oJsonDoc.isEmpty())
+        {
+            Q_ASSERT_X(false, "onReadyRead Invalid DOC", aData);
+            return;
+        }
+
+        if( !oJsonDoc.isObject() )
+        {
+            Q_ASSERT_X(false, "onReadyRead Not Object", aData);
+        }
+
+        // create message object
+        CMessage oMsg;
+
+        QJsonObject oJsonObj = oJsonDoc.object();
+        if( oJsonObj.contains("notification_title") )
+        {
+            oMsg.SetTitle( oJsonObj["notification_title"].toString() );
+            oMsg.SetMessage( oJsonObj["notification_message"].toString() );
+            oMsg.SetType( MessageTypeFromString( oJsonObj["notification_type"].toString() ) );
+        }
+
+        if( oJsonObj.contains("notification_event") )
+        {
+            ENotificationEvent eEvent = static_cast<ENotificationEvent>( oJsonObj["notification_event"].toInt() );
+            oMsg.SetEvent( eEvent );
+        }
+
+        if( oJsonObj.contains("notification_config_info") )
+        {
+            CConfigInfo oConfInfo = oJsonObj["notification_config_info"].toObject().toVariantMap();
+            oMsg.SetConfigInfo( oConfInfo );
+        }
+
+        // notify
+        emit sigNotification( oMsg );
+
     }
-
-    if( !oJsonDoc.isObject() )
-    {
-        Q_ASSERT_X(false, "onReadyRead Not Object", aData);
-    }
-
-    // create message object
-    CMessage oMsg;
-
-    QJsonObject oJsonObj = oJsonDoc.object();
-    if( oJsonObj.contains("notification_title") )
-    {
-        oMsg.SetTitle( oJsonObj["notification_title"].toString() );
-        oMsg.SetMessage( oJsonObj["notification_message"].toString() );
-        oMsg.SetType( MessageTypeFromString( oJsonObj["notification_type"].toString() ) );
-    }
-
-    if( oJsonObj.contains("notification_event") )
-    {
-        ENotificationEvent eEvent = static_cast<ENotificationEvent>( oJsonObj["notification_event"].toInt() );
-        oMsg.SetEvent( eEvent );
-    }
-
-    if( oJsonObj.contains("notification_config_info") )
-    {
-        CConfigInfo oConfInfo = oJsonObj["notification_config_info"].toObject().toVariantMap();
-        oMsg.SetConfigInfo( oConfInfo );
-    }
-
-
-
-    // notify
-    emit sigNotification( oMsg );
 }
