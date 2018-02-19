@@ -3,9 +3,10 @@
 
 #define MyAppName "OddEye Agent"
 #define MyAppVersion "0.5"
-#define MyAppExeName "oe-tray-control.exe"
+#define MyAppExeName "oe-tray-menu.exe"
 #define MyAppServiceName "agent-service.exe"
 #define MyAppTerminalName "oe-terminal.exe"
+#define OddEyeDirName "OddEye Agent"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -18,7 +19,7 @@ AppVersion={#MyAppVersion}
 DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
 OutputDir=C:\Users\Aram\Documents\OE-Agent\setup\output
-OutputBaseFilename=oe-setup
+OutputBaseFilename=oe-agent-setup
 Compression=lzma
 SolidCompression=yes
 

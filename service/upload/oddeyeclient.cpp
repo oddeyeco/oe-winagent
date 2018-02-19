@@ -1,4 +1,5 @@
 #include "oddeyeclient.h"
+#include "networkaccessmanager.h"
 
 #include <QJsonDocument>
 #include <QDebug>
@@ -60,6 +61,8 @@ void COddEyeClient::HandleSendError(QNetworkReply *pReply, const QJsonDocument &
 
     // store JSON data in cache
     CacheJsonData( oJsonData );
+
+    //m_pNetworkAccessManager->Reset();
 }
 
 bool COddEyeClient::CacheJsonData(const QJsonDocument &oJsonDoc)

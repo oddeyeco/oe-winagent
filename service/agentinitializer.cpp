@@ -19,7 +19,7 @@ void CAgentInitialzier::InitializeLogger()
     }
 
     if( sLogsDirPath.startsWith( "\\" ) || sLogsDirPath.startsWith("/") )
-        sLogsDirPath.prepend( QCoreApplication::applicationDirPath() );
+        sLogsDirPath.prepend( ConfMgr.GetAgentDirPath() );
 
     Logger::getInstance().setLogsFolderPath( sLogsDirPath );
 

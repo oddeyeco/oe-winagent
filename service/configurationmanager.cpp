@@ -3,6 +3,7 @@
 // Qt
 #include <QCoreApplication>
 #include <QDir>
+#include <QStandardPaths>
 
 // static member initialization
 char const* CConfigurationManager::s_szConfigDirPath         = "conf/";
@@ -120,9 +121,30 @@ CConfigSection CConfigurationManager::GetEnabledScriptsConfigSection()
     return m_oEnabledScriptsConfSection;
 }
 
+QString CConfigurationManager::GetAgentDirPath() const
+{
+//    QString sPath = QStandardPaths::loca( QStandardPaths::DocumentsLocation );
+//    if( !sPath.isEmpty() )
+//    {
+//        QDir oDir( sPath );
+//        if( !oDir.cd( "OddEye Agent" ) )
+//        {
+//            oDir.mkdir( "OddEye Agent" );
+//            bool bOK = oDir.cd( "OddEye Agent" );
+//            Q_ASSERT(bOK);
+//        }
+
+//        sPath = oDir.absolutePath();
+//    }
+//    else
+    QString sPath = QCoreApplication::applicationDirPath();
+
+    return sPath;
+}
+
 QString CConfigurationManager::GetConfigsDirPath() const
 {
-    return QCoreApplication::applicationDirPath() + "/" + s_szConfigDirPath;
+    return GetAgentDirPath() + "/" + s_szConfigDirPath;
 }
 
 bool CConfigurationManager::LoadConfigIfExists(const QString &sConfFilePath)

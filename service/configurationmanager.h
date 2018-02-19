@@ -36,8 +36,9 @@ public:
     void UnloadConfigs();
 
     CConfigSection GetEnabledScriptsConfigSection();
-
+    QString GetAgentDirPath() const;
     QString GetConfigsDirPath() const;
+
 
 signals:
     void sigConfigsLoaded();

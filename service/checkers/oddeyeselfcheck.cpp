@@ -47,7 +47,7 @@ public:
 
         QUrl oUrl = QUrl("https://api.oddeye.co/ok.txt");
         Q_ASSERT( oUrl.isValid() );
-        auto pReply = pNetworkManager->get(QNetworkRequest( oUrl) );
+        auto pReply = pNetworkManager->Get(QNetworkRequest( oUrl) );
 
         QEventLoop loop;
         connect(pReply, SIGNAL(finished()), &loop, SLOT(quit()));

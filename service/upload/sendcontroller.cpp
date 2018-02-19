@@ -14,7 +14,7 @@
 CSendController::CSendController()
     : m_bIsReady(false)
 {
-    m_pNetworkManager = std::make_shared<QNetworkAccessManager>();
+    m_pNetworkManager = std::make_shared<CNetworkAccessManager>();
 
     // create oddeye client
     m_pOEClient = std::make_unique<COddEyeClient>();
@@ -96,7 +96,7 @@ void CSendController::SetupOEClients()
     if( sCacheDir.isEmpty() )
         throw CInvalidConfigException("tempdir is missing");
     if( sCacheDir.startsWith( "\\" ) || sCacheDir.startsWith("/") )
-        sCacheDir.prepend( QCoreApplication::applicationDirPath() );
+        sCacheDir.prepend( ConfMgr.GetAgentDirPath() );
 
     QDir oCacheDir(sCacheDir);
     if(!oCacheDir.exists())
@@ -141,7 +141,7 @@ NetworkAccessManagerWPtr CSendController::GetNetworkAccessManager()
 
 void CSendController::TurnOn()
 {
-    m_pNetworkManager->setNetworkAccessible( QNetworkAccessManager::Accessible );
+    m_pNetworkManager->SetNetworkAccessible( QNetworkAccessManager::Accessible );
     //  setup OddEye client and OddEye cache uploader
     SetupOEClients();
 
@@ -159,7 +159,7 @@ void CSendController::TurnOff()
     emit sigStopCacheUploading();
 
     // delete Network Manager
-    m_pNetworkManager->setNetworkAccessible( QNetworkAccessManager::NotAccessible );
+    m_pNetworkManager->SetNetworkAccessible( QNetworkAccessManager::NotAccessible );
 
     m_bIsReady = false;
 }

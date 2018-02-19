@@ -1,5 +1,6 @@
 #include "basicoddeyeclient.h"
 #include "../logger.h"
+#include "networkaccessmanager.h"
 // Qt
 #include <QJsonObject>
 #include <QJsonArray>
@@ -10,6 +11,10 @@ CBasicOddEyeClient::CBasicOddEyeClient(QObject *parent)
     : Base(parent),
       m_nMaxCacheCount( 50000 )
 {}
+
+CBasicOddEyeClient::~CBasicOddEyeClient()
+{
+}
 
 void CBasicOddEyeClient::SetNetworkAccessManager(NetworkAccessManagerSPtr pNetAccessManager)
 {
@@ -79,7 +84,7 @@ void CBasicOddEyeClient::SendJsonData(const QJsonDocument &oJsonData)
     oPOSTRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 
 
-    QNetworkReply* pReplay = m_pNetworkAccessManager->post( oPOSTRequest, aPOSTRequestData );
+    QNetworkReply* pReplay = m_pNetworkAccessManager->Post( oPOSTRequest, aPOSTRequestData );
     pReplay->setProperty( "json_doc", oJsonData );
 
     connect( pReplay, &QNetworkReply::finished, this,
@@ -101,6 +106,9 @@ void CBasicOddEyeClient::SendJsonData(const QJsonDocument &oJsonData)
         }
 
         pReplay->deleteLater();
+
+        // reset
+        m_pNetworkAccessManager->Reset();
     });
 
     void (QNetworkReply:: *pError)(QNetworkReply::NetworkError) = &QNetworkReply::error;

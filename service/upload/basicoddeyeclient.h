@@ -9,7 +9,8 @@
 #include <QUrl>
 #include <memory>
 
-using NetworkAccessManagerSPtr = std::shared_ptr<QNetworkAccessManager>;
+class CNetworkAccessManager;
+using NetworkAccessManagerSPtr = std::shared_ptr<CNetworkAccessManager>;
 
 ////////////////////////////////////////////////////////////////////////////////////
 ///
@@ -23,6 +24,7 @@ class CBasicOddEyeClient : public QObject
 
 public:
     explicit CBasicOddEyeClient(QObject *parent = nullptr);
+    ~CBasicOddEyeClient();
 
 public:
     void SetNetworkAccessManager( NetworkAccessManagerSPtr pNetAccessManager );

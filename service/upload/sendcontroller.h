@@ -4,12 +4,13 @@
 #include "../metricdata.h"
 #include "oddeyeclient.h"
 
-#include <QNetworkAccessManager>
+#include "networkaccessmanager.h"
 #include <QThread>
 #include <atomic>
+#include <memory>
 
-using NetworkAccessManagerSPtr = std::shared_ptr<QNetworkAccessManager>;
-using NetworkAccessManagerWPtr = std::weak_ptr<QNetworkAccessManager>;
+using NetworkAccessManagerSPtr = std::shared_ptr<CNetworkAccessManager>;
+using NetworkAccessManagerWPtr = std::weak_ptr<CNetworkAccessManager>;
 
 // Forward declarations
 class COddEyeCacheUploader;

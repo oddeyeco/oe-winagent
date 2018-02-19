@@ -49,7 +49,8 @@ SOURCES += main.cpp \
     oeagentservice.cpp \
     servicecontroller.cpp \
     oeagentcontrolserver.cpp \
-    ../common/message.cpp
+    ../common/message.cpp \
+    upload/networkaccessmanager.cpp
 
 include(../3rdparty/qtservice/src/qtservice.pri)
 
@@ -87,4 +88,5 @@ HEADERS += \
     oeagentservice.h \
     servicecontroller.h \
     oeagentcontrolserver.h \
-    ../common/message.h
+    ../common/message.h \
+    upload/networkaccessmanager.h

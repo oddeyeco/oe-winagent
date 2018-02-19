@@ -1,3 +1,4 @@
+#include "networkaccessmanager.h"
 #include "oddeyecacheuploader.h"
 #include "../logger.h"
 #include <QDir>
@@ -63,7 +64,8 @@ void COddEyeCacheUploader::onCheckAndUpload()
     m_pTimer->stop();
 
     //TODO:
-    m_pNetworkAccessManager.reset(new QNetworkAccessManager());
+    //m_pNetworkAccessManager.reset(new CNetworkAccessManager());
+    m_pNetworkAccessManager->Reset();
 
     StartUploading();
 }
