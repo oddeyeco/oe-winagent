@@ -13,6 +13,8 @@ TARGET = OE-Agent
 CONFIG += console
 CONFIG -= app_bundle
 
+QMAKE_LFLAGS_CONSOLE    = /SUBSYSTEM:CONSOLE,5.01
+
 TEMPLATE = app
 
 INCLUDEPATH += ../common/

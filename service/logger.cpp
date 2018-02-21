@@ -41,17 +41,12 @@ Logger::Logger()
 
 void Logger::error(const std::string &prefix, std::string msg)
 {
-    _log<LogType::Error>(prefix, "Error: " + msg );
-}
-
-void Logger::warning(const std::string &prefix, std::string msg)
-{
-    _log<LogType::Warning>(prefix, "Warning: " + msg );
+    _log<LogType::Error>(prefix,     "Error: " + msg );
 }
 
 void Logger::info(const std::string &prefix, std::string msg)
 {
-    _log<LogType::Info>(prefix, "Info: " + msg );
+    _log<LogType::Info>(prefix,      "Info:  " + msg );
 }
 
 void Logger::debug(const std::string &prefix, std::string msg)
@@ -64,6 +59,12 @@ void Logger::setLogRotateSeconds(qint64 nSeconds)
 {
     _nLogRotateSeconds = nSeconds;
 }
+
+void Logger::warning(const std::string &prefix, std::string msg)
+{
+    _log<LogType::Warning>(prefix,   "Warning: " + msg );
+}
+
 
 void Logger::setBackupFileCount(int nCount)
 {

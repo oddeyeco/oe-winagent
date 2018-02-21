@@ -76,7 +76,7 @@ void COddEyeCacheUploader::StartUploading()
     if( m_qUploadingFiles.isEmpty() )
         return;
 
-    LOG_INFO( QString("Cache uploading started: %1 files").arg( m_qUploadingFiles.size()) );
+    LOG_INFO( QString("Try to upload cached metrics: %1 files").arg( m_qUploadingFiles.size()) );
     UploadHead();
 }
 
@@ -95,7 +95,7 @@ void COddEyeCacheUploader::UploadHead()
     QByteArray aJsonData = oFile.readAll();
 
     QJsonDocument oJsonDoc( QJsonDocument::fromJson(aJsonData) );
-    //Q_ASSERT( !oJsonDoc.isEmpty() );
+    Q_ASSERT( !oJsonDoc.isEmpty() );
     if( oJsonDoc.isEmpty() )
     {
         DequeueHead();
@@ -135,11 +135,14 @@ void COddEyeCacheUploader::HandleSendSuccedded(QNetworkReply *pReply, const QJso
 {
     LOG_INFO( "Cached file uploaded: " + pReply->readAll() );
     DequeueHead();
+    if( m_qUploadingFiles.isEmpty() )
+        LOG_INFO( "-All cached files uploaded!-" );
 }
 
 void COddEyeCacheUploader::HandleSendError(QNetworkReply *pReply, const QJsonDocument &oJsonData)
 {
     LOG_ERROR( "Failed to uploaded file: " + pReply->errorString().toStdString() );
+    LOG_INFO( QString("Chache uploading aborted! (%1 files left)").arg( m_qUploadingFiles.size() ) );
     m_qUploadingFiles.clear();
     Start();
 }

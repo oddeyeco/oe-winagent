@@ -9,6 +9,7 @@ CONFIG -= app_bundle
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
+QMAKE_LFLAGS_CONSOLE    = /SUBSYSTEM:CONSOLE,5.01
 
 win32:RC_ICONS += icons/terminal.ico
 

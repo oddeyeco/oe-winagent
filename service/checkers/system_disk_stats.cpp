@@ -1,6 +1,6 @@
 #include "system_disk_stats.h"
 
-constexpr int MBSize = 1048576;
+const int MBSize = 1048576;
 
 SystemDiskStats::SystemDiskStats(QObject *pParent)
     : Base(pParent)

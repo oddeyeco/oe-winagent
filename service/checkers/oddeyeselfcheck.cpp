@@ -3,22 +3,27 @@
 #include "pinger.h"
 #include "../upload/sendcontroller.h"
 #include "../configurationmanager.h"
+#include "../commonexceptions.h"
 
 #include <QElapsedTimer>
 #include <QEventLoop>
+#include <QTimer>
 
 class COEHostAliveMetricChecker : public QObject, public IMetricChecker
 {
     Q_OBJECT
 
 public:
-    COEHostAliveMetricChecker() = default;
+    COEHostAliveMetricChecker(int nTimeout = 2000)
+        : m_nTimeout( nTimeout )
+    {}
 
     // IMetricChecker interface
 public:
     MetricDataSPtr CheckMetric()
-    {
-        qint64 nDuration = MeasureResponseTime();
+    {   
+        Q_ASSERT( m_nTimeout > 0 );
+        qint64 nDuration = MeasureResponseTime( m_nTimeout );
         MetricDataSPtr pMetric = std::make_shared<CMetricData>("host_alive",
                                              nDuration,
                                              EMetricDataType::None,
@@ -31,7 +36,7 @@ public:
         return pMetric;
     }
 
-    qint64 MeasureResponseTime()
+    qint64 MeasureResponseTime( int nTimeoutMsecs )
     {
         NetworkAccessManagerSPtr pNetworkManager = CSendController::Instance().GetNetworkAccessManager().lock();
         Q_ASSERT(pNetworkManager);
@@ -49,23 +54,47 @@ public:
         Q_ASSERT( oUrl.isValid() );
         auto pReply = pNetworkManager->Get(QNetworkRequest( oUrl) );
 
+        QTimer oTimeoutTimer;
+        oTimeoutTimer.setSingleShot(true);
+
         QEventLoop loop;
+        connect(&oTimeoutTimer, SIGNAL(timeout()), &loop, SLOT(quit()));
         connect(pReply, SIGNAL(finished()), &loop, SLOT(quit()));
+        // start timeout timer
+        oTimeoutTimer.start(nTimeoutMsecs);
+        // start event loop
         loop.exec();
 
-        if( pReply->error() == QNetworkReply::NoError )
+        if(oTimeoutTimer.isActive())
         {
-            QByteArray aReply = pReply->readAll();
-            qDebug() << aReply;
+            oTimeoutTimer.stop();
+
+            // Handle reply
+            if( pReply->error() == QNetworkReply::NoError )
+            {
+                QByteArray aReply = pReply->readAll();
+                qDebug() << aReply;
+            }
+            else
+            {
+                throw CUnableCheckMetricException( "host_alive", pReply->errorString());
+            }
         }
         else
         {
-            throw CUnableCheckMetricException( "host_alive", pReply->errorString());
+           // timeout
+           disconnect(pReply, SIGNAL(finished()), &loop, SLOT(quit()));
+           pReply->abort();
+
+           throw CUnableCheckMetricException( "host_alive", "Time out!");
         }
 
         qint64 nElapsedTime = oTimer.elapsed();
         return nElapsedTime;
     }
+
+private:
+    int    m_nTimeout;
 };
 
 #include "oddeyeselfcheck.moc"
@@ -103,9 +132,13 @@ void OddeyeSelfCheck::Initialize()
 //        return dPingTime;
 //    } );
 
+    int nTimeoutMsec = ConfigSection().Value<double>("timeout_seconds", 5) * 1000;
+    if( nTimeoutMsec <= 0 )
+    {
+        throw CInvalidConfigValueException( ConfigSection().Value<QString>("timeout_seconds", QString("")) );
+    }
 
-
-    Base::AddMetricChecker( std::make_shared<COEHostAliveMetricChecker>() );
+    Base::AddMetricChecker( std::make_shared<COEHostAliveMetricChecker>(nTimeoutMsec) );
 }
 
 
