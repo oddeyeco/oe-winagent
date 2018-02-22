@@ -1,5 +1,6 @@
 #include "oeagentservice.h"
 #include "servicecontroller.h"
+#include "configurationmanager.h"
 #include <iostream>
 
 #include "agentinitializer.h"
@@ -20,22 +21,26 @@ void COEAgentService::start()
 {
     m_pControlServer->StartListening();
 
+    bool bStartAgent = ConfMgr.GetRegistrySettings().value( "autostart" , QVariant(false) ).toBool();
 
-    // Start
-    try
+    if( bStartAgent )
     {
-        CServiceController::Instance().Start();
-    }
-    catch(std::exception const& oExc)
-    {
-        std::cout << "OE-Agent start faield: Exception: " << oExc.what() << std::endl;
-        QString sErrorMessage = QString( "OE-Agent start faield: %1" ).arg( oExc.what() );
-        logMessage( sErrorMessage, QtService::Error );
-    }
-    catch( ... )
-    {
-        QString sErrorMessage = "OE-Agent start faield: Unknown exception";
-        logMessage( sErrorMessage, QtService::Error );
+        // Start
+        try
+        {
+            CServiceController::Instance().Start();
+        }
+        catch(std::exception const& oExc)
+        {
+            std::cout << "OE-Agent start faield: Exception: " << oExc.what() << std::endl;
+            QString sErrorMessage = QString( "OE-Agent start faield: %1" ).arg( oExc.what() );
+            logMessage( sErrorMessage, QtService::Error );
+        }
+        catch( ... )
+        {
+            QString sErrorMessage = "OE-Agent start faield: Unknown exception";
+            logMessage( sErrorMessage, QtService::Error );
+        }
     }
 }
 
@@ -43,6 +48,10 @@ void COEAgentService::stop()
 {
     try
     {
+        // save state
+        bool bAutostart = CServiceController::Instance().IsStarted();
+        ConfMgr.GetRegistrySettings().setValue( "autostart", QVariant(bAutostart) );
+
         m_pControlServer->StopListening();
         CServiceController::Instance().Stop();
     }

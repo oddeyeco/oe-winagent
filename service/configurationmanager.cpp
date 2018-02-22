@@ -12,6 +12,7 @@ char const* CConfigurationManager::s_szEnabledScriptsDirPath = "scripts_enabled/
 
 
 CConfigurationManager::CConfigurationManager()
+    : m_oRegistrySettings("oddeye_agent_global")
 {}
 
 CConfigurationManager &CConfigurationManager::Instance()
@@ -145,6 +146,11 @@ QString CConfigurationManager::GetAgentDirPath() const
 QString CConfigurationManager::GetConfigsDirPath() const
 {
     return GetAgentDirPath() + "/" + s_szConfigDirPath;
+}
+
+QSettings& CConfigurationManager::GetRegistrySettings()
+{
+    return m_oRegistrySettings;
 }
 
 bool CConfigurationManager::LoadConfigIfExists(const QString &sConfFilePath)

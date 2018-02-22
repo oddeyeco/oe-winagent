@@ -33,9 +33,12 @@ void CConsolController::ProcessArguments()
 {
     QStringList args = m_lstArgs;
 
-    if (args.size() > 1)
+    if (args.size() > 0)
     {
-        QString a =  args.at(1);
+        QString a =  args.at(0);
+        if( a.isEmpty() )
+            return;
+
         if (a == QLatin1String("-start") || a == QLatin1String("start"))
         {
             //printf("OddEye Agent is Starting\n");
@@ -63,11 +66,11 @@ void CConsolController::ProcessArguments()
         else  if (   a == QLatin1String("-h") || a == QLatin1String("-help")
                   || a == QLatin1String("h")  || a == QLatin1String("help") )
         {
-              printf("OddEye Agent Controller -[start|stop|r|status|v|q|h]\n"
+              printf("oe-terminal -[start|stop|r|status|v|q|h]\n"
                      "\t-start\t\t: Start OddEye Agent\n"
                      "\t-stop\t\t: Stop OddEye Agent\n"
                      "\t-r(estart)\t: Restart OddEye Agent\n"
-                     "\t-r(estart)\t: Query OddEye Agent status\n"
+                     "\t-status \t: Query OddEye Agent status\n"
                      "\t-v(ersion)\t: Print version information.\n"
                      "\t-q(uit)   \t: Quit terminal\n"
                      "\t-h(elp)   \t: Show this help\n");

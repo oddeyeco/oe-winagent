@@ -3,10 +3,14 @@
 
 #define MyAppName "OddEye Agent"
 #define MyAppVersion "0.5"
+#define MyAppPublisher "OddEye, Inc."
+#define MyAppURL "https://www.oddeye.co/"
+
 #define MyAppExeName "oe-tray-menu.exe"
 #define MyAppServiceName "agent-service.exe"
 #define MyAppTerminalName "oe-terminal.exe"
 #define OddEyeDirName "OddEye Agent"
+#define OddEyeDevDir "C:\Users\User\Documents\OE-Agent"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -18,10 +22,12 @@ AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
 DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
-OutputDir=C:\Users\Aram\Documents\OE-Agent\setup\output
-OutputBaseFilename=oe-agent-setup
+LicenseFile={#OddEyeDevDir}\src\setup\LICENSE.TXT
+OutputDir={#OddEyeDevDir}\setup\output\
+OutputBaseFilename=oe-agent-setup-x86
 Compression=lzma
 SolidCompression=yes
+AppMutex=oe_agent_sys_tray
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -34,20 +40,22 @@ Name: "{app}\scripts_available"
 Name: "{app}\scripts_enabled"
 
 [Files]
-Source: "..\build\Control\GuiControl\release\OEAgentControl.exe"; DestDir: "{app}"; Flags: ignoreversion;     DestName: {#MyAppExeName}
-Source: "..\build\Control\CuiControl\release\OEConsolController.exe"; DestDir: "{app}"; Flags: ignoreversion; DestName: {#MyAppTerminalName}        
-Source: "..\build\Service\release\OE-Agent.exe"; DestDir: "{app}"; Flags: ignoreversion;                      DestName: {#MyAppServiceName}
-Source: "C:\Users\Aram\Documents\OE-Agent\setup\bin\platforms\*";  DestDir: "{app}\platforms"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\Aram\Documents\OE-Agent\setup\bin\conf\*";       DestDir: "{app}\conf"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\Aram\Documents\OE-Agent\setup\bin\libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Aram\Documents\OE-Agent\setup\bin\libssl32.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Aram\Documents\OE-Agent\setup\bin\msvcp140.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Aram\Documents\OE-Agent\setup\bin\Qt5Core.dll";  DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Aram\Documents\OE-Agent\setup\bin\Qt5Gui.dll";   DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Aram\Documents\OE-Agent\setup\bin\Qt5Network.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Aram\Documents\OE-Agent\setup\bin\Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Aram\Documents\OE-Agent\setup\bin\ssleay32.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Aram\Documents\OE-Agent\setup\bin\vcruntime140.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#OddEyeDevDir}\src\control\build-OESystemTrayController-Desktop_Qt_5_5_0_MSVC2013_32bit-Release\release\OEAgentControl.exe"; DestDir: "{app}"; Flags: ignoreversion;     DestName: {#MyAppExeName}
+Source: "{#OddEyeDevDir}\src\control\build-OEConsolController-Desktop_Qt_5_5_0_MSVC2013_32bit-Release\release\OEConsolController.exe"; DestDir: "{app}"; Flags: ignoreversion; DestName: {#MyAppTerminalName}        
+Source: "{#OddEyeDevDir}\src\build-OEAgentService-Desktop_Qt_5_5_0_MSVC2013_32bit-Release\release\OE-Agent.exe"; DestDir: "{app}"; Flags: ignoreversion;                      DestName: {#MyAppServiceName}
+         
+Source: "{#OddEyeDevDir}\setup\bin\platforms\*";  DestDir: "{app}\platforms"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#OddEyeDevDir}\setup\bin\conf\*";       DestDir: "{app}\conf"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#OddEyeDevDir}\setup\bin\libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#OddEyeDevDir}\setup\bin\libssl32.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#OddEyeDevDir}\setup\bin\msvcp120.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#OddEyeDevDir}\setup\bin\msvcr120.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#OddEyeDevDir}\setup\bin\Qt5Core.dll";  DestDir: "{app}"; Flags: ignoreversion
+Source: "{#OddEyeDevDir}\setup\bin\Qt5Gui.dll";   DestDir: "{app}"; Flags: ignoreversion
+Source: "{#OddEyeDevDir}\setup\bin\Qt5Network.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#OddEyeDevDir}\setup\bin\Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#OddEyeDevDir}\setup\bin\ssleay32.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "C:\Users\Aram\Documents\OE-Agent\setup\bin\vcruntime140.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
@@ -55,10 +63,16 @@ Name: "{commonprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppServiceName}"; Parameters: -i
-Filename: "{app}\{#MyAppServiceName}";
+Filename: "{app}\{#MyAppServiceName}"; Parameters: -i; Flags: runhidden;
+Filename: "{app}\{#MyAppServiceName}"; Flags: runhidden;
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "explorer.exe"; Parameters: {app}\conf\; Description: "{#StringChange("Open configurations folder", '&', '&&')}"; Flags: nowait postinstall skipifsilent
 
 [UninstallRun]
-Filename: "{app}\{#MyAppServiceName}"; Parameters: -t
-Filename: "{app}\{#MyAppServiceName}"; Parameters: -u 
+Filename: "{app}\{#MyAppServiceName}"; Parameters: -t; Flags: runhidden;
+Filename: "{app}\{#MyAppServiceName}"; Parameters: -u; Flags: runhidden; 
+
+[Registry]
+;current user only
+Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "OddEye Agent Control"; ValueData: "{app}\{#MyAppExeName}"; 
+;Tasks:AutoRunRegistry;

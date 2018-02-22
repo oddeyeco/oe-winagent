@@ -113,7 +113,7 @@ void CGuiController::onNotification(const CMessage &oMsg)
 
     if( eEvent == ENotificationEvent::AgentStarted )
     {
-        m_pSystemTrayIcon->setToolTip( "AddEye agent is running" );
+        m_pSystemTrayIcon->setToolTip( "OddEye agent is running" );
         m_pactStop->setEnabled(true);
         m_pactRestart->setEnabled(true);
         m_pactStart->setEnabled(false);
@@ -121,7 +121,7 @@ void CGuiController::onNotification(const CMessage &oMsg)
 
     if( eEvent == ENotificationEvent::AgentStopped )
     {
-        m_pSystemTrayIcon->setToolTip( "AddEye agent is stopped!" );
+        m_pSystemTrayIcon->setToolTip( "OddEye agent is stopped!" );
         m_pactStop->setEnabled(false);
         m_pactRestart->setEnabled(false);
         m_pactStart->setEnabled(true);

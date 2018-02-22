@@ -39,6 +39,7 @@ public:
     QString GetAgentDirPath() const;
     QString GetConfigsDirPath() const;
 
+    QSettings& GetRegistrySettings();
 
 signals:
     void sigConfigsLoaded();
@@ -54,6 +55,7 @@ private:
 
     QStringList m_lstLoadableConfigs;
     CConfigSection m_oEnabledScriptsConfSection;
+    QSettings m_oRegistrySettings;
 
     // Constatns
     static char const* s_szConfigDirPath;

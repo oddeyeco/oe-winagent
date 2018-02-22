@@ -13,18 +13,30 @@ int main(int argc, char *argv[])
     // Process cmd arguments
     if( a.arguments().size() > 1 )
     {
-        oController.SetArguments( a.arguments() );
+        QStringList lstCmd = a.arguments();
+        lstCmd.removeFirst();
+
+        oController.SetArguments( lstCmd );
+        QTimer::singleShot( 0, &oController, SLOT(ProcessArguments()) );
+    }
+    else
+    {
+        oController.SetArguments( QStringList() << "-help");
         QTimer::singleShot( 0, &oController, SLOT(ProcessArguments()) );
     }
 
     QTextStream s(stdin);
-    std::cout << "OddEye Agent>";
+    //std::cout << "OddEye Agent>";
 
     while(true)
     {
         QString sValue = s.readLine();
         QStringList lstArgs = sValue.split( " ", QString::SkipEmptyParts );
-
+        if( lstArgs.isEmpty() )
+        {
+            std::cout << "OddEye Agent>";
+            continue;
+        }
         // check for quit
         if (lstArgs.first() == QLatin1String("-q") || lstArgs.first() == QLatin1String("-quit")
             || lstArgs.first() == QLatin1String("q") || lstArgs.first() == QLatin1String("quit"))
@@ -34,7 +46,7 @@ int main(int argc, char *argv[])
         }
 
         // prepend dummy arg
-        lstArgs.prepend( "dummy" );
+        //lstArgs.prepend( "dummy" );
 
         // Process Input
         oController.SetArguments( lstArgs );
