@@ -5,7 +5,8 @@
 
 CEngine::CEngine(QObject *pParent)
     : Base(pParent),
-      m_pTimer( nullptr )
+      m_pTimer( nullptr ),
+      m_nLastMetricsCount(0)
 {
     // setup windows performance data provider
     m_pDataProvider = std::make_shared<CWinPerformanceDataProvider>();
@@ -80,6 +81,11 @@ void CEngine::RemoveAllCheckers()
     m_setCheckers.clear();
 }
 
+int CEngine::GetLastMetricsCount() const
+{
+    return m_nLastMetricsCount;
+}
+
 bool CEngine::IsStarted()
 {
     if(m_pTimer && m_pTimer->isActive() )
@@ -91,6 +97,11 @@ bool CEngine::IsStarted()
 void CEngine::SetUpdateInterval(int nMsecs)
 {
     m_pTimer->setInterval(nMsecs);
+}
+
+int CEngine::GetUpdateInterval() const
+{
+    return m_pTimer->interval();
 }
 
 void CEngine::onTimerTik()
@@ -131,6 +142,7 @@ void CEngine::CollectMetrics()
     qint64 nElapsedOnDataCollection =  oTimer.elapsed();
     LOG_INFO( QString( "Metrics collected. Count: %1, Duration: %2 msec").arg(lstAllCollectedMetrics.size()).arg( nElapsedOnDataCollection) );
 
+    m_nLastMetricsCount = lstAllCollectedMetrics.size();
     // Notify
     emit sigMetricsCollected( lstAllCollectedMetrics );
 

@@ -84,16 +84,21 @@ void COEAgentControlServer::onReadyRead()
     if( !pClientSock )
         return;
 
-    QByteArray aCommand = pClientSock->readAll();
-    QJsonDocument oJsonDoc = QJsonDocument::fromJson( aCommand );
-    if( oJsonDoc.isEmpty() || !oJsonDoc.isObject() )
+    QString sAllData = pClientSock->readAll();
+    QStringList lstRequests = sAllData.split( "\r\n\r\n", QString::SkipEmptyParts );
+    for( QString& sData : lstRequests )
     {
-        Q_ASSERT(false);
-        return;
-    }
+        QByteArray aCommand = sData.toLatin1();
+        QJsonDocument oJsonDoc = QJsonDocument::fromJson( aCommand );
+        if( oJsonDoc.isEmpty() || !oJsonDoc.isObject() )
+        {
+            Q_ASSERT(false);
+            return;
+        }
 
-    QJsonObject oCommandJson = oJsonDoc.object();
-    ProcessCommandJson( oCommandJson, pClientSock );
+        QJsonObject oCommandJson = oJsonDoc.object();
+        ProcessCommandJson( oCommandJson, pClientSock );
+    }
 }
 
 void COEAgentControlServer::onSocketAboutToClose()
@@ -141,6 +146,11 @@ void COEAgentControlServer::NotifyToClient(QLocalSocket *pClientSock,
         oMsgJson["notification_type"] = ToString(oMsg.GetType());
     }
 
+    if( !oMsg.GetCommand().isEmpty() )
+    {
+        oMsgJson["command"] = oMsg.GetCommand();
+    }
+
     if( oMsg.GetEvent() != ENotificationEvent::NoEvent)
     {
         oMsgJson["notification_event"] = static_cast<qint32>(oMsg.GetEvent());
@@ -165,11 +175,12 @@ void COEAgentControlServer::NotifyToClient(QLocalSocket *pClientSock,
     pClientSock->waitForBytesWritten(500);
 }
 
-bool COEAgentControlServer::StartAgent(QLocalSocket *pRequestedClientSock)
+bool COEAgentControlServer::StartAgent(QLocalSocket *pRequestedClientSock, const QString &sCommand)
 {
     if( CServiceController::Instance().IsStarted() )
     {
         NotifyToClient(pRequestedClientSock, CMessage( ENotificationEvent::AgentStarted,
+                                                       sCommand,
                                                        "OddEye Agent is already running"));
         return true;
     }
@@ -186,6 +197,7 @@ bool COEAgentControlServer::StartAgent(QLocalSocket *pRequestedClientSock)
             QString sInfo = QString("\nConfigs Dir: %1\n"
                                       "Logs Dir: %2").arg( sConfigsDirPath, sLogsDirPath );
             NotifyToClient( pRequestedClientSock, CMessage( ENotificationEvent::AgentStarted,
+                                                            sCommand,
                                                             "OddEye Agent Started",
                                                             sInfo));
 
@@ -199,25 +211,26 @@ bool COEAgentControlServer::StartAgent(QLocalSocket *pRequestedClientSock)
             QString sMessageTitle = QString( "OE-Agent start faield: %1" ).arg( oExc.what() );
             NotifyToClient( pRequestedClientSock, CMessage("OE-Agent start faield",
                                                            oExc.what(),
-                                                           EMessageType::Error ) );
+                                                           EMessageType::Error,
+                                                           sCommand ) );
             LOG_ERROR("Control SERVER: StartAgent failed!" + std::string(oExc.what()));
             return false;
         }
         catch( ... )
         {
             QString sErrorMessage = "OE-Agent start faield: Unknown exception";
-            NotifyToClient( pRequestedClientSock, CMessage( sErrorMessage, EMessageType::Error ) );
+            NotifyToClient( pRequestedClientSock, CMessage( sErrorMessage, EMessageType::Error, "", ENotificationEvent::NoEvent, sCommand ) );
             LOG_ERROR("Control SERVER: StartAgent failed! Unknown exception");
             return false;
         }
     }
 }
 
-bool COEAgentControlServer::StopAgent(QLocalSocket *pRequestedClientSock)
+bool COEAgentControlServer::StopAgent(QLocalSocket *pRequestedClientSock, QString const& sCommand)
 {
     if( !CServiceController::Instance().IsStarted() )
     {
-        NotifyToClient(pRequestedClientSock, CMessage( ENotificationEvent::AgentStopped, "OddEye Agent is not running" ) );
+        NotifyToClient(pRequestedClientSock, CMessage( ENotificationEvent::AgentStopped, sCommand, "OddEye Agent is not running" ) );
         return true;
     }
     else
@@ -227,7 +240,7 @@ bool COEAgentControlServer::StopAgent(QLocalSocket *pRequestedClientSock)
         {
             CServiceController::Instance().Stop();
 
-            NotifyToClient( pRequestedClientSock, CMessage(ENotificationEvent::AgentStopped,"OddEye Agent Stopped"));
+            NotifyToClient( pRequestedClientSock, CMessage(ENotificationEvent::AgentStopped, sCommand, "OddEye Agent Stopped"));
             NotifyToAllClients( CMessage(ENotificationEvent::AgentStopped) );
             LOG_INFO("Control SERVER: StopAgent succedded!")
             return true;
@@ -236,21 +249,22 @@ bool COEAgentControlServer::StopAgent(QLocalSocket *pRequestedClientSock)
         {
             NotifyToClient( pRequestedClientSock, CMessage( "OE-Agent stop faield",
                                                             oExc.what(),
-                                                            EMessageType::Error ) );
+                                                            EMessageType::Error,
+                                                            sCommand) );
             LOG_ERROR("Control SERVER: StopAgent failed!" + std::string(oExc.what()) );
             return false;
         }
         catch( ... )
         {
             QString sErrorMessage = "OE-Agent stop faield: Unknown exception";
-            NotifyToClient( pRequestedClientSock, CMessage( sErrorMessage, EMessageType::Error ) );
+            NotifyToClient( pRequestedClientSock, CMessage( sErrorMessage, EMessageType::Error,"", ENotificationEvent::NoEvent, sCommand  ) );
             LOG_ERROR("Control SERVER: StopAgent failed! Unknown exception");
             return false;
         }
     }
 }
 
-bool COEAgentControlServer::RestartAgent(QLocalSocket *pRequestedClientSock)
+bool COEAgentControlServer::RestartAgent(QLocalSocket *pRequestedClientSock, QString const& sCommand)
 {    
     try
     {
@@ -259,6 +273,7 @@ bool COEAgentControlServer::RestartAgent(QLocalSocket *pRequestedClientSock)
         CServiceController::Instance().Start();
 
         NotifyToClient( pRequestedClientSock, CMessage(ENotificationEvent::AgentStarted,
+                                                       sCommand,
                                                        "OddEye Agent Restarted"));
         LOG_INFO("Control SERVER: RestartAgent succedded!");
         return true;
@@ -267,20 +282,21 @@ bool COEAgentControlServer::RestartAgent(QLocalSocket *pRequestedClientSock)
     {
         NotifyToClient( pRequestedClientSock, CMessage( "OE-Agent restart faield",
                                                         oExc.what(),
-                                                        EMessageType::Error ) );
+                                                        EMessageType::Error,
+                                                        sCommand ) );
         LOG_ERROR("Control SERVER: RestartAgent failed!" + std::string( oExc.what()) );
         return false;
     }
     catch( ... )
     {
         QString sErrorMessage = "OE-Agent restart faield: Unknown exception";
-        NotifyToClient( pRequestedClientSock, CMessage( sErrorMessage, EMessageType::Error ) );
+        NotifyToClient( pRequestedClientSock, CMessage( sErrorMessage, EMessageType::Error, "", ENotificationEvent::NoEvent, sCommand  ) );
         LOG_ERROR("Control SERVER: RestartAgent failed! Unknown exception");
         return false;
     }
 }
 
-bool COEAgentControlServer::SendStatus(QLocalSocket *pRequestedClientSock)
+bool COEAgentControlServer::SendStatus(QLocalSocket *pRequestedClientSock, QString const& sCommand)
 {
     try
     {
@@ -294,9 +310,11 @@ bool COEAgentControlServer::SendStatus(QLocalSocket *pRequestedClientSock)
         CConfigInfo oConfInfo;
         oConfInfo["conf_dir"] = sConfigsDirPath;
         oConfInfo["log_dir"] = sLogsDirPath;
+        oConfInfo["price_info"] = CServiceController::Instance().GetPriceInfo();
 
         CMessage oNotification(eEvent);
         oNotification.SetConfigInfo( oConfInfo );
+        oNotification.SetCommand(sCommand);
 
         NotifyToClient(pRequestedClientSock, oNotification);
         LOG_INFO("Control SERVER: SendStatus Succedded");
@@ -306,14 +324,15 @@ bool COEAgentControlServer::SendStatus(QLocalSocket *pRequestedClientSock)
     {
         NotifyToClient( pRequestedClientSock, CMessage( "Failed to check OE-Agent status",
                                                         oExc.what(),
-                                                        EMessageType::Error ) );
+                                                        EMessageType::Error,
+                                                        sCommand) );
         LOG_ERROR("Control SERVER: SendStatus failed!" + std::string( oExc.what()) );
         return false;
     }
     catch( ... )
     {
         QString sErrorMessage = "Failed to check OE-Agent status: Unknown exception";
-        NotifyToClient( pRequestedClientSock, CMessage( sErrorMessage, EMessageType::Error ) );
+        NotifyToClient( pRequestedClientSock, CMessage( sErrorMessage, EMessageType::Error, "", ENotificationEvent::NoEvent, sCommand ));
         LOG_ERROR("Control SERVER: SendStatus failed! Unknown exception");
         return false;
     }
@@ -326,20 +345,20 @@ void COEAgentControlServer::ProcessCommandJson(const QJsonObject &oCommand,
 
     if( sCommand.compare( "start", Qt::CaseInsensitive ) == 0 )
     {
-        StartAgent( pSenderSock );
+        StartAgent( pSenderSock, sCommand );
     }
     else if( sCommand.compare( "stop", Qt::CaseInsensitive ) == 0  )
     {
-        StopAgent( pSenderSock );
+        StopAgent( pSenderSock, sCommand );
     }
     else if( sCommand.compare( "restart", Qt::CaseInsensitive ) == 0  )
     {
         // Restart
-        RestartAgent(pSenderSock);
+        RestartAgent(pSenderSock, sCommand);
     }
     else if( sCommand.compare( "status", Qt::CaseInsensitive ) == 0  )
     {
         // Restart
-        SendStatus(pSenderSock);
+        SendStatus(pSenderSock, sCommand);
     }
 }

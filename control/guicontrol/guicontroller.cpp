@@ -18,7 +18,8 @@ CGuiController::CGuiController(QObject *pParent)
       m_pactStop(nullptr),
       m_pactRestart(nullptr),
       m_pactOpenConfDir(nullptr),
-      m_pactOpenLogsDir( nullptr )
+      m_pactOpenLogsDir( nullptr ),
+      m_sPriceInfo( "Pricing info not available" )
 {
     m_pSystemTrayIcon = std::make_unique<QSystemTrayIcon>();
     QMenu* pMenu = new QMenu();
@@ -111,22 +112,6 @@ void CGuiController::onNotification(const CMessage &oMsg)
 
     ENotificationEvent eEvent = oMsg.GetEvent();
 
-    if( eEvent == ENotificationEvent::AgentStarted )
-    {
-        m_pSystemTrayIcon->setToolTip( "OddEye agent is running" );
-        m_pactStop->setEnabled(true);
-        m_pactRestart->setEnabled(true);
-        m_pactStart->setEnabled(false);
-    }
-
-    if( eEvent == ENotificationEvent::AgentStopped )
-    {
-        m_pSystemTrayIcon->setToolTip( "OddEye agent is stopped!" );
-        m_pactStop->setEnabled(false);
-        m_pactRestart->setEnabled(false);
-        m_pactStart->setEnabled(true);
-    }
-
     if( !oMsg.GetConfigInfo().isEmpty() )
     {
         if( m_pactOpenConfDir->property( "clicked" ).toBool() )
@@ -142,6 +127,24 @@ void CGuiController::onNotification(const CMessage &oMsg)
             QString sLogsDirPath = oMsg.GetConfigInfo().value("log_dir").toString();
             ShowInGraphicalShell( sLogsDirPath );
         }
+
+        // set priceing info
+        QString sPriceInfo;
+        double dPriceInfo = oMsg.GetConfigInfo().value("price_info", -1).toDouble();
+        if( dPriceInfo < 0 )
+            sPriceInfo = "Pricing info not available";
+        else
+            sPriceInfo = QString("Monthly approximate price for this host is %1 USD").arg(QString::number(dPriceInfo, 'f', 2));
+
+        m_sPriceInfo = sPriceInfo;
+
+    }
+
+    SetStatus( eEvent );
+
+    if( oMsg.GetCommand() == "Restart" || oMsg.GetCommand() == "Start" )
+    {
+        AgentController.Status();
     }
 }
 
@@ -162,4 +165,31 @@ void CGuiController::ShowInGraphicalShell(const QString &pathIn)
     param += QDir::toNativeSeparators(pathIn);
     QString command = explorer + " " + param;
     QProcess::startDetached(command);
+}
+
+void CGuiController::SetStatus(ENotificationEvent eEvent)
+{
+    if( eEvent == ENotificationEvent::AgentStarted )
+    {
+        QString sStatus = "OddEye agent is running";
+        if( !m_sPriceInfo.isEmpty() )
+            sStatus.append( "\n" + m_sPriceInfo );
+
+        m_pSystemTrayIcon->setToolTip( sStatus );
+        m_pactStop->setEnabled(true);
+        m_pactRestart->setEnabled(true);
+        m_pactStart->setEnabled(false);
+    }
+
+    if( eEvent == ENotificationEvent::AgentStopped )
+    {
+        QString sStatus = "OddEye agent is stopped!";
+        if( !m_sPriceInfo.isEmpty() )
+            sStatus.append( "\n" + m_sPriceInfo );
+
+        m_pSystemTrayIcon->setToolTip( sStatus );
+        m_pactStop->setEnabled(false);
+        m_pactRestart->setEnabled(false);
+        m_pactStart->setEnabled(true);
+    }
 }

@@ -1,6 +1,7 @@
 #include "servicecontroller.h"
 #include "configurationmanager.h"
 #include "agentinitializer.h"
+#include "pricinginfoprovider.h"
 #include "upload/sendcontroller.h"
 
 #include <iostream>
@@ -20,7 +21,7 @@ void CServiceController::Start()
 {
     try
     {
-        // Reset Engine
+        // Create Engine if not exists
         if( !m_pEngine )
         {
             m_pEngine.reset( new CEngine() );
@@ -53,6 +54,17 @@ void CServiceController::Start()
         // Start Engine
         m_pEngine->Start();
         LOG_INFO( ":::AGENT STARTED:::" );
+
+        // Calculate aproximate price
+        m_oPriceInfoFetcher.SetMetricsCount( m_pEngine->GetLastMetricsCount() );
+        double dIntervalSec = double( m_pEngine->GetUpdateInterval() ) / 1000.;
+        m_oPriceInfoFetcher.SetUpdatesIntervalSec( dIntervalSec );
+        try {
+        m_oPriceInfoFetcher.CalculatePrice();
+        } catch(std::exception const& oEx)
+        {
+            LOG_ERROR( std::string("Calculate price failed on agent start: ") + oEx.what() );
+        }
     }
     catch( std::exception& oExc )
     {
@@ -89,4 +101,9 @@ bool CServiceController::IsStarted() const
         return true;
 
     return false;
+}
+
+double CServiceController::GetPriceInfo()
+{
+    return m_oPriceInfoFetcher.GetLastCalculatedPrice();
 }

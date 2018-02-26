@@ -92,12 +92,25 @@ bool CAgentControlClient::Connect()
         CMessage oMsg( "Failed to connect OddEye Agent Service",
                        sMessage,
                        EMessageType::Error,
+                       "",
                        ENotificationEvent::AgentStopped );
         emit sigNotification( oMsg );
         return false;
     }
 
     return true;
+}
+
+void CAgentControlClient::SendData(const QByteArray &aData)
+{
+    if( aData.isEmpty() )
+        return;
+
+    Q_ASSERT(m_pServerSocket);
+
+    // send terminated
+    m_pServerSocket->write( aData + "\r\n\r\n" );
+    m_pServerSocket->waitForBytesWritten(500);
 }
 
 
@@ -150,8 +163,13 @@ void CAgentControlClient::onReadyRead()
             oMsg.SetConfigInfo( oConfInfo );
         }
 
+        if( oJsonObj.contains("command") )
+        {
+            QString sCommand = oJsonObj["command"].toString();
+            oMsg.SetCommand(sCommand);
+        }
+
         // notify
         emit sigNotification( oMsg );
-
     }
 }

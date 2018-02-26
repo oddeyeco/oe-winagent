@@ -10,12 +10,14 @@ class CConsolController : public QObject
     Q_OBJECT
     using Base = QObject;
 public:
-    CConsolController( QObject* pParent = nullptr );
+    CConsolController( bool bRunEventLoop,
+                       QObject* pParent = nullptr );
     ~CConsolController();
 
 public slots:
     void SetArguments( QStringList lstArgs );
     void ProcessArguments();
+    void Quit();
 
 private slots:
     void onNotification( CMessage const& oMsg );

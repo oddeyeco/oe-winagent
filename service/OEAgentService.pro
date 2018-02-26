@@ -52,7 +52,8 @@ SOURCES += main.cpp \
     servicecontroller.cpp \
     oeagentcontrolserver.cpp \
     ../common/message.cpp \
-    upload/networkaccessmanager.cpp
+    upload/networkaccessmanager.cpp \
+    pricinginfoprovider.cpp
 
 include(../3rdparty/qtservice/src/qtservice.pri)
 
@@ -91,4 +92,5 @@ HEADERS += \
     servicecontroller.h \
     oeagentcontrolserver.h \
     ../common/message.h \
-    upload/networkaccessmanager.h
+    upload/networkaccessmanager.h \
+    pricinginfoprovider.h

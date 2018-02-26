@@ -12,14 +12,14 @@ QString CAgentInitialzier::s_sDefaultLogDir = "tmp/oddeye_log";
 void CAgentInitialzier::InitializeLogger()
 {
     // log_dir
-    QString sLogsDirPath = ConfMgr.GetMainConfiguration().Value<QString>( "SelfConfig/log_dir", s_sDefaultLogDir );
+    QString sLogsDirPath = ConfMgr.GetMainConfiguration().GetValueAsPath( "SelfConfig/log_dir", s_sDefaultLogDir );
     if( sLogsDirPath.isEmpty() )
     {
         throw CInvalidConfigValueException( "log_dir is empty" );
     }
 
-    if( sLogsDirPath.startsWith( "\\" ) || sLogsDirPath.startsWith("/") )
-        sLogsDirPath.prepend( ConfMgr.GetAgentDirPath() );
+//    if( sLogsDirPath.startsWith( "\\" ) || sLogsDirPath.startsWith("/") )
+//        sLogsDirPath.prepend( ConfMgr.GetAgentDirPath() );
 
     Logger::getInstance().setLogsFolderPath( sLogsDirPath );
 

@@ -1,4 +1,5 @@
 #include "configuration.h"
+#include "configurationmanager.h"
 
 #include <QFileInfo>
 #include <QDebug>
@@ -27,6 +28,18 @@ CConfigSection CConfiguraion::GetSection(const QString &sSectionName)
     endGroup();
 
     return oRes;
+}
+
+QString CConfiguraion::GetValueAsPath(const QString &sKey, const QString &sDefaultVal)
+{
+    QString sPath = Value<QString>( sKey, sDefaultVal );
+    sPath.replace("\\", "/");
+
+    if( sPath.startsWith( "\\" ) || sPath.startsWith("/") )
+        sPath.prepend( ConfMgr.GetAgentDirPath() );
+
+    return sPath;
+
 }
 
 QStringList CConfiguraion::GetAllSectionNames() const

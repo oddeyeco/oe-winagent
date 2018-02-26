@@ -13,6 +13,7 @@ class Logger
 {
 public:
     static Logger& getInstance();
+    ~Logger();
 
     void error( const std::string &prefix, std::string msg );
     void warning( const std::string &prefix, std::string msg );

@@ -2,28 +2,33 @@
 #include <QTimer>
 #include "consolcontroller.h"
 #include <iostream>
-
+#include <thread>
 
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    CConsolController oController;
 
     // Process cmd arguments
     if( a.arguments().size() > 1 )
     {
+        CConsolController oController(false);
+
         QStringList lstCmd = a.arguments();
         lstCmd.removeFirst();
 
         oController.SetArguments( lstCmd );
-        QTimer::singleShot( 0, &oController, SLOT(ProcessArguments()) );
+        oController.ProcessArguments();
+        //QTimer::singleShot( 0, &oController, SLOT(ProcessArguments()) );
+        std::this_thread::sleep_for( std::chrono::milliseconds(200) );
+        qApp->quit();
+        return 0;
     }
-    else
-    {
-        oController.SetArguments( QStringList() << "-help");
-        QTimer::singleShot( 0, &oController, SLOT(ProcessArguments()) );
-    }
+
+    CConsolController oController(true);
+    oController.SetArguments( QStringList() << "-help");
+    QTimer::singleShot( 0, &oController, SLOT(ProcessArguments()) );
+
 
     QTextStream s(stdin);
     //std::cout << "OddEye Agent>";

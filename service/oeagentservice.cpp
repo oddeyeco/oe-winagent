@@ -21,7 +21,11 @@ void COEAgentService::start()
 {
     m_pControlServer->StartListening();
 
-    bool bStartAgent = ConfMgr.GetRegistrySettings().value( "autostart" , QVariant(false) ).toBool();
+    bool bStartAgent  = false;
+    if(ConfMgr.GetRegistrySettings().contains( "autostart" ))
+    {
+        bStartAgent = ConfMgr.GetRegistrySettings().value( "autostart" , QVariant(false) ).toBool();
+    }
 
     if( bStartAgent )
     {

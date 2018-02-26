@@ -28,15 +28,18 @@ public:
     inline CMessage( QString const& sTitle,
                      QString const& sMessage = QString(),
                      EMessageType eType = EMessageType::Information,
-                     ENotificationEvent eEvent = ENotificationEvent::NoEvent );
+                     QString const& sCommand = QString(),
+                     ENotificationEvent eEvent = ENotificationEvent::NoEvent);
     inline CMessage( QString const& sTitle,
                      EMessageType eType,
                      QString const& sMessage = QString(),
-                     ENotificationEvent eEvent = ENotificationEvent::NoEvent );
+                     ENotificationEvent eEvent = ENotificationEvent::NoEvent,
+                     QString const& sCommand = QString());
     inline CMessage( ENotificationEvent eEvent,
+                     QString const& sCommand = QString(),
                      QString const& sTitle = QString(),
                      QString const& sMessage = QString(),
-                     EMessageType eType = EMessageType::Information );
+                     EMessageType eType = EMessageType::Information);
 
 public:
     inline QString GetTitle() const;
@@ -52,23 +55,28 @@ public:
     inline ENotificationEvent GetEvent() const;
     inline void SetEvent( ENotificationEvent eEvent );
 
+    inline QString GetCommand() const;
+    inline void SetCommand( QString const& sCommand );
+
     inline CConfigInfo GetConfigInfo() const;
     inline void SetConfigInfo( CConfigInfo const& oInfo );
 
 private:
     // Content
-    QString m_sTitle;
-    QString m_sMessage;
-    EMessageType m_eType;
-    ENotificationEvent m_eEvent;
-    CConfigInfo m_oConfInfo;
+    QString             m_sTitle;
+    QString             m_sMessage;
+    EMessageType        m_eType;
+    ENotificationEvent  m_eEvent;
+    QString             m_sCommand;
+    CConfigInfo         m_oConfInfo;
 };
 
-CMessage::CMessage(const QString &sTitle, const QString &sMessage, EMessageType eType, ENotificationEvent eEvent)
+CMessage::CMessage(const QString &sTitle, const QString &sMessage, EMessageType eType, QString const& sCommand, ENotificationEvent eEvent)
     : m_sTitle(sTitle),
       m_sMessage(sMessage),
       m_eType(eType),
-      m_eEvent( eEvent )
+      m_eEvent( eEvent ),
+      m_sCommand( sCommand )
 {
 }
 
@@ -131,6 +139,16 @@ void CMessage::SetEvent(ENotificationEvent eEvent)
     m_eEvent = eEvent;
 }
 
+QString CMessage::GetCommand() const
+{
+    return m_sCommand;
+}
+
+void CMessage::SetCommand(const QString &sCommand)
+{
+    m_sCommand = sCommand;
+}
+
 CConfigInfo CMessage::GetConfigInfo() const
 {
     return m_oConfInfo;
@@ -144,25 +162,27 @@ void CMessage::SetConfigInfo(const CConfigInfo &oInfo)
 inline CMessage::CMessage(const QString &sTitle,
                           EMessageType eType,
                           const QString &sMessage,
-                          ENotificationEvent eEvent)
+                          ENotificationEvent eEvent,
+                          QString const& sCommand)
     : m_sTitle(sTitle),
       m_sMessage(sMessage),
       m_eType(eType),
-      m_eEvent(eEvent)
+      m_eEvent(eEvent),
+      m_sCommand(sCommand)
 {
-
 }
 
 CMessage::CMessage(ENotificationEvent eEvent,
+                   QString const& sCommand,
                    const QString &sTitle,
                    const QString &sMessage,
                    EMessageType eType)
     : m_sTitle(sTitle),
       m_sMessage(sMessage),
       m_eType(eType),
-      m_eEvent(eEvent)
+      m_eEvent(eEvent),
+      m_sCommand( sCommand )
 {
-
 }
 
 inline QString ToString( EMessageType eType )

@@ -27,6 +27,7 @@ signals:
 
 protected:
     bool Connect();
+    void SendData( QByteArray const& aData );
 
 private slots:
     void onSocketError();

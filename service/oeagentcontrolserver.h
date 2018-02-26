@@ -20,10 +20,10 @@ public:
     //
     //  Controls
     //
-    bool StartAgent( QLocalSocket* pRequestedClientSock );
-    bool StopAgent( QLocalSocket* pRequestedClientSock );
-    bool RestartAgent( QLocalSocket* pRequestedClientSock );
-    bool SendStatus( QLocalSocket* pRequestedClientSock );
+    bool StartAgent( QLocalSocket* pRequestedClientSock, QString const& sCommand = QString() );
+    bool StopAgent( QLocalSocket* pRequestedClientSock, QString const& sCommand = QString() );
+    bool RestartAgent( QLocalSocket* pRequestedClientSock, QString const& sCommand = QString() );
+    bool SendStatus( QLocalSocket* pRequestedClientSock, QString const& sCommand = QString() );
 
 private slots:
     void onNewConnection();

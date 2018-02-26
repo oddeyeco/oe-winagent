@@ -12,7 +12,7 @@ char const* CConfigurationManager::s_szEnabledScriptsDirPath = "scripts_enabled/
 
 
 CConfigurationManager::CConfigurationManager()
-    : m_oRegistrySettings("oddeye_agent_global")
+    : m_oRegistrySettings("OddEyeAgent")
 {}
 
 CConfigurationManager &CConfigurationManager::Instance()
@@ -59,7 +59,7 @@ void CConfigurationManager::LoadConfigurations()
     QDir oEnabledScriptsDir( s_szEnabledScriptsDirPath );
     if( oEnabledScriptsDir.exists() )
     {
-        QStringList lstScriptsFileList = oEnabledScriptsDir.entryList(QStringList() << "*.bat");
+        QStringList lstScriptsFileList = oEnabledScriptsDir.entryList(QStringList() << "checker_*.*");
         if( lstScriptsFileList.size() > 0 )
         {
             QStringList lstScriptsFileAbsoloutPaths;

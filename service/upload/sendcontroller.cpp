@@ -92,11 +92,9 @@ void CSendController::SetupOEClients()
     m_pOECacheUploader->SetHostName( sHostName );
 
     // set cache dir
-    QString sCacheDir = ConfMgr.GetMainConfiguration().Value<QString>( "SelfConfig/tmpdir" );
+    QString sCacheDir = ConfMgr.GetMainConfiguration().GetValueAsPath( "SelfConfig/tmpdir", /*"/tmp/oddeye_tmp"*/ QString() );
     if( sCacheDir.isEmpty() )
         throw CInvalidConfigException("tempdir is missing");
-    if( sCacheDir.startsWith( "\\" ) || sCacheDir.startsWith("/") )
-        sCacheDir.prepend( ConfMgr.GetAgentDirPath() );
 
     QDir oCacheDir(sCacheDir);
     if(!oCacheDir.exists())

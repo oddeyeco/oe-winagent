@@ -14,8 +14,9 @@ class COEHostAliveMetricChecker : public QObject, public IMetricChecker
     Q_OBJECT
 
 public:
-    COEHostAliveMetricChecker(int nTimeout = 2000)
-        : m_nTimeout( nTimeout )
+    COEHostAliveMetricChecker(QString const& sURL, int nTimeout = 2000)
+        : m_sURL(sURL),
+          m_nTimeout( nTimeout )
     {}
 
     // IMetricChecker interface
@@ -42,15 +43,17 @@ public:
         Q_ASSERT(pNetworkManager);
         if( !pNetworkManager )
         {
+            LOG_ERROR("Internal error: Network Access Manager is NULL");
             throw CUnableCheckMetricException( "host_alive", "Network Access Manager is NULL" );
-            LOG_ERROR("Internal error: Network Access Manager is NULL")
         }
 
         // Start timer
         QElapsedTimer oTimer;
         oTimer.start();
 
-        QUrl oUrl = QUrl("https://api.oddeye.co/ok.txt");
+        Q_ASSERT( !m_sURL.isEmpty() );
+
+        QUrl oUrl = QUrl(m_sURL);
         Q_ASSERT( oUrl.isValid() );
         auto pReply = pNetworkManager->Get(QNetworkRequest( oUrl) );
 
@@ -95,6 +98,7 @@ public:
 
 private:
     int    m_nTimeout;
+    QString m_sURL;
 };
 
 #include "oddeyeselfcheck.moc"
@@ -132,13 +136,15 @@ void OddeyeSelfCheck::Initialize()
 //        return dPingTime;
 //    } );
 
-    int nTimeoutMsec = ConfigSection().Value<double>("timeout_seconds", 5) * 1000;
-    if( nTimeoutMsec <= 0 )
-    {
-        throw CInvalidConfigValueException( ConfigSection().Value<QString>("timeout_seconds", QString("")) );
-    }
+//    int nTimeoutMsec = ConfigSection().Value<double>("timeout_seconds", 5) * 1000;
+//    if( nTimeoutMsec <= 0 )
+//    {
+//        throw CInvalidConfigValueException( ConfigSection().Value<QString>("timeout_seconds", QString("")) );
+//    }
 
-    Base::AddMetricChecker( std::make_shared<COEHostAliveMetricChecker>(nTimeoutMsec) );
+    QString sURL = ConfigSection().Value<QString>( "url", "https://api.oddeye.co/ok.txt" );
+
+    Base::AddMetricChecker( std::make_shared<COEHostAliveMetricChecker>(sURL, 5000) );
 }
 
 

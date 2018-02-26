@@ -31,8 +31,9 @@ public:
     T Value( QString const& sKey );
     template <typename T>
     T Value( QString const& sKey, T const& tDefaultVal );
-};
 
+    QString GetValueAsPath( QString const& sKey, QString const& sDefaultVal );
+};
 // usefull type definitions
 using ConfigSPtr = std::shared_ptr<CConfiguraion>;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,5 +134,4 @@ T CConfiguraion::Value(const QString &sKey, T const& tDefaultVal )
     }
     return vtVal.value<T>();
 }
-
 #endif // CONFIGURATION_H

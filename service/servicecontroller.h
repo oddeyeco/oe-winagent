@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "engine.h"
+#include "pricinginfoprovider.h"
 #include "upload/sendcontroller.h"
 
 using EngineUPtr = std::unique_ptr<CEngine>;
@@ -31,6 +32,7 @@ public:
     void Stop();
 
     bool IsStarted() const;
+    double GetPriceInfo();
 
 signals:
     void sigStarted();
@@ -43,7 +45,7 @@ private:
     //
     EngineUPtr         m_pEngine;
     //SendControllerUPtr m_pSendController;
-
+    CPricingInfoProvider m_oPriceInfoFetcher;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 

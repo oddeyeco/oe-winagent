@@ -2,15 +2,17 @@
 #include <QDebug>
 #include <iostream>
 
-CConsolController::CConsolController(QObject* pParent)
+CConsolController::CConsolController(bool bRunEventLoop, QObject* pParent)
     : Base( pParent ),
       m_pThread(nullptr)
 {
     m_pThread = new QThread(this);
 
-    AgentController.moveToThread( m_pThread );
-    this->moveToThread( m_pThread );
-
+    if( bRunEventLoop )
+    {
+        AgentController.moveToThread( m_pThread );
+        this->moveToThread( m_pThread );
+    }
     // connect
     connect( &AgentController, &CAgentControlClient::sigNotification,
              this,             &CConsolController::onNotification );
@@ -20,8 +22,7 @@ CConsolController::CConsolController(QObject* pParent)
 
 CConsolController::~CConsolController()
 {
-    m_pThread->quit();
-    m_pThread->wait();
+    Quit();
 }
 
 void CConsolController::SetArguments(QStringList lstArgs)
@@ -84,6 +85,18 @@ void CConsolController::ProcessArguments()
     }
 }
 
+void CConsolController::Quit()
+{
+    // connect
+    disconnect( &AgentController, &CAgentControlClient::sigNotification,
+             this,             &CConsolController::onNotification );
+    if( m_pThread )
+    {
+        m_pThread->quit();
+        m_pThread->wait(100);
+    }
+}
+
 void CConsolController::onNotification(const CMessage &oMsg)
 {
     if( oMsg.IsEmpty() )
@@ -111,6 +124,19 @@ void CConsolController::onNotification(const CMessage &oMsg)
             sEventText.append(oMsg.GetConfigInfo().value("conf_dir").toString());
             sEventText.append("\nLogs Dir: ");
             sEventText.append(oMsg.GetConfigInfo().value("log_dir").toString());
+
+            {
+                // set priceing info
+                QString sPriceInfo;
+                double dPriceInfo = oMsg.GetConfigInfo().value("price_info", -1).toDouble();
+                if( dPriceInfo < 0 )
+                    sPriceInfo = "Pricing info not available";
+                else
+                    sPriceInfo = QString("Monthly approximate price for this host is %1 USD").arg(QString::number(dPriceInfo, 'f', 2));
+
+                sEventText.append( "\n" + sPriceInfo );
+            }
+
             break;
         case ENotificationEvent::AgentStopped:
             sEventText = "OddEye Agent is stopped";
@@ -125,6 +151,11 @@ void CConsolController::onNotification(const CMessage &oMsg)
             std::cout << sEventText.toStdString() << std::endl;
             std::cout << "OddEye Agent>";
         }
+
+
+
+
+
     }
 }
 

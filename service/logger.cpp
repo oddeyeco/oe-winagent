@@ -31,12 +31,22 @@ Logger& Logger::getInstance()
     return logger;
 }
 
+Logger::~Logger()
+{
+    ConfMgr.GetRegistrySettings().setValue("logs_file_open_datetime", _logs_file_open_datetime);
+}
+
 Logger::Logger()
     : _nLogRotateSeconds(3600),
       _nBackupFileCount(24),
       _bDebugLoggingEnabled(false)
 {
-    // TODO: log_dir vs log_file
+    if(  !ConfMgr.GetRegistrySettings().contains( "logs_file_open_datetime" ) )
+    {
+        ConfMgr.GetRegistrySettings().setValue("logs_file_open_datetime", QDateTime::currentDateTime());
+    }
+
+    _logs_file_open_datetime = ConfMgr.GetRegistrySettings().value( "logs_file_open_datetime" ).toDateTime();
 }
 
 void Logger::error(const std::string &prefix, std::string msg)
@@ -84,7 +94,20 @@ void Logger::setLogsFolderPath(const QString &sFolderPath)
         logs_dir.mkpath(_logs_folder_path);
     }
 
-    _init_log_file(QDateTime::currentDateTime());
+    _init_log_file(_logs_file_open_datetime);
+    /*
+    QDateTime current_datetime = QDateTime::currentDateTime();
+    qint64 nActualSecondsLeft = _logs_file_open_datetime.secsTo( current_datetime );
+    if ( nActualSecondsLeft >= _nLogRotateSeconds )
+    {
+        _init_log_file( current_datetime );
+    }
+    else
+    {
+
+    }*/
+
+
 }
 
 void Logger::SetDebugLoggingEnabled(bool bEnabled)
@@ -125,7 +148,7 @@ bool Logger::_prepare_logs_file()
         return false;
 
     const auto current_datetime = QDateTime::currentDateTime();
-    qint64 nActualSecondsLeft = _logs_file_open_datetime.secsTo( current_datetime);
+    qint64 nActualSecondsLeft = _logs_file_open_datetime.secsTo( current_datetime );
 
     if ( nActualSecondsLeft >= _nLogRotateSeconds )
     {

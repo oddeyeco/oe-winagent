@@ -32,6 +32,8 @@ private slots:
     void onNotification( CMessage const& oMsg );
 
     void ShowInGraphicalShell(const QString &pathIn);
+    void SetStatus( ENotificationEvent eEvent );
+
 private:
     // Content
     SystemTrayIconUPtr  m_pSystemTrayIcon;
@@ -40,6 +42,7 @@ private:
     QAction*            m_pactRestart;
     QAction*            m_pactOpenConfDir;
     QAction*            m_pactOpenLogsDir;
+    QString             m_sPriceInfo;
 };
 
 #endif // AGENTCONTROLLER_H

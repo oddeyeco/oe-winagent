@@ -28,10 +28,13 @@ public slots:
     void Start();
     void Stop();
     void SetUpdateInterval(int nMsecs);
+    int  GetUpdateInterval() const;
 
     void AddChecker( IMetricsCategoryCheckerSPtr pChecker );
     void RemoveChecker( IMetricsCategoryCheckerSPtr pChecker );
     void RemoveAllCheckers();
+
+    int  GetLastMetricsCount()  const;
 
 public:
     bool IsStarted();
@@ -48,9 +51,10 @@ private:
 
 private:
     // Content
-    QTimer*                        m_pTimer;
+    QTimer*                                m_pTimer;
     std::set<IMetricsCategoryCheckerSPtr>  m_setCheckers;
-    WinPerformanceDataProviderSPtr m_pDataProvider;
+    WinPerformanceDataProviderSPtr         m_pDataProvider;
+    int                                    m_nLastMetricsCount;
 };
 ////////////////////////////////////////////////////////////////////////////////////////
 

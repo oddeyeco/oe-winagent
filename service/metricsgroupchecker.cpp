@@ -22,6 +22,14 @@ MetricDataList CMetricsGroupChecker::CheckMetrics()
         }
         catch( std::exception const& oErr )
         {
+            if( QString(oErr.what()).contains( "negative denominator" ) )
+            {
+                // This is common exception and could sometimes appeare base on enviroment
+                // So just Skip it
+                LOG_DEBUG( QString("Excpetion: Metric checking failed: %1").arg( oErr.what() ).toStdString() );
+                continue;
+            }
+
             auto pBasicChecker = dynamic_cast<CBasicMetricChecker*>(pCurrentChecker.get());
             if( pBasicChecker )
             {

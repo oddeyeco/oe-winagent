@@ -170,7 +170,7 @@ QJsonObject CBasicOddEyeClient::CreateMetricJson(MetricDataSPtr pSingleMetric)
     QJsonObject oMetricJson;
     oMetricJson["metric"] = pSingleMetric->GetName();
     oMetricJson["reaction"] = pSingleMetric->GetReaction();
-    oMetricJson["timestamp"] = QString::number( pSingleMetric->GetTime().toTime_t() );
+    oMetricJson["timestamp"] = QString::number( pSingleMetric->GetTime().toUTC().toTime_t() );
     oMetricJson["value"] = pSingleMetric->GetValue().toString();
 
     QJsonObject oTagsJson;
@@ -203,7 +203,7 @@ QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(MetricSeverityDescriptorS
     QJsonObject oMetricJson;
     oMetricJson["metric"] = pDescriptor->GetMetricName();
     oMetricJson["reaction"] = 0;
-    oMetricJson["timestamp"] = QString::number( pDescriptor->GetTime().toTime_t() );
+    oMetricJson["timestamp"] = QString::number( pDescriptor->GetTime().toUTC().toTime_t() );
 
     QVariant vtValue;
     QString sStatus;
@@ -258,7 +258,7 @@ QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(const QString &sMessage,
     QJsonObject oMetricJson;
     oMetricJson["metric"] = sMetricName;
     oMetricJson["reaction"] = -2;
-    oMetricJson["timestamp"] = QString::number( QDateTime::currentDateTime().toTime_t() );
+    oMetricJson["timestamp"] = QString::number( QDateTime::currentDateTime().toUTC().toTime_t() );
 
     QJsonObject oTagsJson;
     oTagsJson["cluster"] = m_sClusterName;
