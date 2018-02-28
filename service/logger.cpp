@@ -117,6 +117,8 @@ void Logger::SetDebugLoggingEnabled(bool bEnabled)
 
 QString Logger::GetLogDirPath() const
 {
+    if( _logs_folder_path.isEmpty() )
+        return QString();
     QDir logs_dir(_logs_folder_path);
     return logs_dir.absolutePath();
 }

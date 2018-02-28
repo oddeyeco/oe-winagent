@@ -88,7 +88,7 @@ void COddEyeCacheUploader::UploadHead()
     QFile oFile( sFilePath );
     if( !oFile.open( QIODevice::ReadOnly ) )
     {
-        LOG_DEBUG("Failed to open file: " + sFilePath.toStdString());
+        LOG_DEBUG( "Failed to open file: " + sFilePath );
         DequeueHead();
     }
 
@@ -117,7 +117,7 @@ void COddEyeCacheUploader::DequeueHead()
     // remove file
     if( !oFile.remove() )
     {
-        LOG_DEBUG("Failed to remove file: " + sFilePath.toStdString());
+        LOG_DEBUG("Failed to remove file: " + sFilePath);
     }
 
     if( m_qUploadingFiles.isEmpty() )

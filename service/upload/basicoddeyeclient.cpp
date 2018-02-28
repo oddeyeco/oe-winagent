@@ -171,7 +171,13 @@ QJsonObject CBasicOddEyeClient::CreateMetricJson(MetricDataSPtr pSingleMetric)
     oMetricJson["metric"] = pSingleMetric->GetName();
     oMetricJson["reaction"] = pSingleMetric->GetReaction();
     oMetricJson["timestamp"] = QString::number( pSingleMetric->GetTime().toUTC().toTime_t() );
-    oMetricJson["value"] = pSingleMetric->GetValue().toString();
+
+    bool bOk = false;
+    double dValue = pSingleMetric->GetValue().toDouble(&bOk);
+    if( bOk )
+        oMetricJson["value"] = dValue;
+    else
+        oMetricJson["value"] = pSingleMetric->GetValue().toString();
 
     QJsonObject oTagsJson;
     oTagsJson["cluster"] = m_sClusterName;
@@ -223,7 +229,7 @@ QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(MetricSeverityDescriptorS
         sStatus = "ERROR";
     }
 
-    oMetricJson["value"] = vtValue.toString();
+    oMetricJson["value"] = vtValue.toInt();
 
     QJsonObject oTagsJson;
     oTagsJson["cluster"] = m_sClusterName;
@@ -253,7 +259,6 @@ QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(const QString &sMessage,
                                                        QVariant vtMetricValue)
 {
     Q_ASSERT( !sMessage.isEmpty() );
-
 
     QJsonObject oMetricJson;
     oMetricJson["metric"] = sMetricName;
@@ -286,7 +291,7 @@ QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(const QString &sMessage,
         vtMetricValue = 0;
     }
 
-    oMetricJson["value"] = vtMetricValue.toString();
+    oMetricJson["value"] = vtMetricValue.toInt();
     oMetricJson["status"] = sStatus;
     oMetricJson["message"] = sMessage;
 

@@ -26,7 +26,7 @@ MetricDataList CMetricsGroupChecker::CheckMetrics()
             {
                 // This is common exception and could sometimes appeare base on enviroment
                 // So just Skip it
-                LOG_DEBUG( QString("Excpetion: Metric checking failed: %1").arg( oErr.what() ).toStdString() );
+                LOG_DEBUG( QString("Excpetion: Metric checking failed: %1").arg( oErr.what() ) );
                 continue;
             }
 

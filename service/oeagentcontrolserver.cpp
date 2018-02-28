@@ -189,6 +189,8 @@ bool COEAgentControlServer::StartAgent(QLocalSocket *pRequestedClientSock, const
         // Start
         try
         {
+            LOG_INFO("Control SERVER: StartAgent started");
+
             CServiceController::Instance().Start();
 
             // collect info about agent to notify
@@ -238,6 +240,7 @@ bool COEAgentControlServer::StopAgent(QLocalSocket *pRequestedClientSock, QStrin
         // Stop
         try
         {
+            LOG_INFO("Control SERVER: StopAgent started");
             CServiceController::Instance().Stop();
 
             NotifyToClient( pRequestedClientSock, CMessage(ENotificationEvent::AgentStopped, sCommand, "OddEye Agent Stopped"));
@@ -268,6 +271,7 @@ bool COEAgentControlServer::RestartAgent(QLocalSocket *pRequestedClientSock, QSt
 {    
     try
     {
+        LOG_INFO("Control SERVER: RestartAgent started");
         if( CServiceController::Instance().IsStarted() )
             CServiceController::Instance().Stop();
         CServiceController::Instance().Start();
@@ -300,6 +304,7 @@ bool COEAgentControlServer::SendStatus(QLocalSocket *pRequestedClientSock, QStri
 {
     try
     {
+        LOG_INFO("Control SERVER: SendStatus started");
         // Notify Status
         ENotificationEvent eEvent = CServiceController::Instance().IsStarted()?
                     ENotificationEvent::AgentStarted : ENotificationEvent::AgentStopped;

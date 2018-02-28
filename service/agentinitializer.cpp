@@ -18,9 +18,6 @@ void CAgentInitialzier::InitializeLogger()
         throw CInvalidConfigValueException( "log_dir is empty" );
     }
 
-//    if( sLogsDirPath.startsWith( "\\" ) || sLogsDirPath.startsWith("/") )
-//        sLogsDirPath.prepend( ConfMgr.GetAgentDirPath() );
-
     Logger::getInstance().setLogsFolderPath( sLogsDirPath );
 
     // log_rotate_seconds

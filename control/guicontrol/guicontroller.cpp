@@ -125,7 +125,16 @@ void CGuiController::onNotification(const CMessage &oMsg)
         {
             m_pactOpenLogsDir->setProperty("clicked", false );
             QString sLogsDirPath = oMsg.GetConfigInfo().value("log_dir").toString();
-            ShowInGraphicalShell( sLogsDirPath );
+            if( sLogsDirPath.isEmpty() )
+            {
+                QMessageBox::information(nullptr,
+                                     tr("Unable to find logs folder"),
+                                     tr("The agent must be started to show the logs folder"));
+            }
+            else
+            {
+                ShowInGraphicalShell( sLogsDirPath );
+            }
         }
 
         // set priceing info

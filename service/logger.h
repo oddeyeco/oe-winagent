@@ -62,7 +62,7 @@ private:
 #define __PREFIX__ std::string( std::string( __FILENAME__ ) + "(" + std::string( __FUNCTION__ ) + ")" )
 
 #define LOG_VERBOSE( __MSG__ ) { }
-#define LOG_DEBUG( __MSG__ ) { Logger::getInstance().debug( std::string( __PREFIX__ ), std::string( __MSG__ ) ) ; }
+#define LOG_DEBUG( __MSG__ ) { Logger::getInstance().debug( /*std::string( __PREFIX__ )*/"", QString( __MSG__ ).toStdString() ) ; }
 #define LOG_INFO( __MSG__ ) { Logger::getInstance().info( /*std::string( __PREFIX__ )*/"", QString( __MSG__ ).toStdString() ) ; }
 #define LOG_WARNING( __MSG__ ) { Logger::getInstance().warning( std::string( /*__PREFIX__*/"" ), std::string( __MSG__ ) ); }
 #define LOG_ERROR( __MSG__ ) { Logger::getInstance().error( std::string( /*__PREFIX__*/ "" ), std::string( __MSG__ ) ); }
