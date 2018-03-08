@@ -7,6 +7,7 @@
 #include <QString>
 #include <pdh.h>
 #include <memory>
+#include <QVector>
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ///
@@ -32,6 +33,7 @@ public:
     static QString GetErrorDescription( PDH_STATUS nStatusCode );
     static QStringList ExpandCounterPath( QString const& sCounterPathWildcard );
     static QStringList GetObjectInstanceNames(QString const& sObjectName );
+    static QVector<QString> GetAllAvailableCounterPaths();
 
     static std::unique_ptr<wchar_t[]> ToWCharArray( QString const& sText );
 

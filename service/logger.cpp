@@ -162,6 +162,8 @@ bool Logger::_prepare_logs_file()
 
 void Logger::_init_log_file(const QDateTime &oLogFileDateTime)
 {
+    QMutexLocker oLocker( &m_oMutex );
+
     const auto filename = oLogFileDateTime.toString("dd-MM-yyyy_HH-mm-ss") + ".txt";
     if (_logs_file.isOpen())
     {

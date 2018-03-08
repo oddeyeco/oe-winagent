@@ -190,7 +190,6 @@ bool COEAgentControlServer::StartAgent(QLocalSocket *pRequestedClientSock, const
         try
         {
             LOG_INFO("Control SERVER: StartAgent started");
-
             CServiceController::Instance().Start();
 
             // collect info about agent to notify

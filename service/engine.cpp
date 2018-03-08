@@ -61,8 +61,8 @@ void CEngine::AddChecker(IMetricsCategoryCheckerSPtr pChecker)
         catch( std::exception const& oExc )
         {
             CMessage oMessage("Metric checker initialization failed",
-                              QString( "Checker - %1" ).arg( pChecker->metaObject()?
-                                                             pChecker->metaObject()->className() : "" ),
+                              QString( "Checker - %1, Error: %2" ).arg( pChecker->metaObject()?
+                                                             pChecker->metaObject()->className() : "" ).arg( oExc.what() ),
                               EMessageType::Warning);
 
             LOG_ERROR( oMessage.FullText().toStdString() );

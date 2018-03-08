@@ -53,7 +53,8 @@ SOURCES += main.cpp \
     oeagentcontrolserver.cpp \
     ../common/message.cpp \
     upload/networkaccessmanager.cpp \
-    pricinginfoprovider.cpp
+    pricinginfoprovider.cpp \
+    checkers/dot_net_clr.cpp
 
 include(../3rdparty/qtservice/src/qtservice.pri)
 
@@ -93,4 +94,5 @@ HEADERS += \
     oeagentcontrolserver.h \
     ../common/message.h \
     upload/networkaccessmanager.h \
-    pricinginfoprovider.h
+    pricinginfoprovider.h \
+    checkers/dot_net_clr.h

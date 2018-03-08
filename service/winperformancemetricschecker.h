@@ -45,6 +45,13 @@ protected:
                                                                    QString const& sInstanceType = QString(),
                                                                    ValueModifierFunc funcMetricModifier = nullptr );
 
+    static QString MakeMetricNameFromCounterPath( QString sCounterPath,
+                                                  EMetricDataType* pGessedMetricDataType = nullptr,
+                                                  QString* pInstanceName = nullptr);
+
+private:
+    static QString NormalizeAsName( QString sText );
+
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

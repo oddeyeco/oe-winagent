@@ -11,7 +11,12 @@ CConfiguraion::CConfiguraion(const QString &sIniFileName)
 
 QString CConfiguraion::GetName() const
 {
-    QString sName = QFileInfo( Base::fileName() ).baseName();
+    QString sFilePath = Base::fileName();
+    QString sFileName = QFileInfo( sFilePath ).fileName();
+    int nIdx = sFileName.lastIndexOf( "." );
+    QString sName = sFileName.left( nIdx );
+
+   // QString sName = QFileInfo( sFileName ).baseName();
     return sName;
 }
 

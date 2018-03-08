@@ -143,8 +143,12 @@ IMetricsCategoryCheckerSPtr CAgentInitialzier::CreateCheckerByConfigName(QString
 
 QString CAgentInitialzier::SimplifyName(QString sName)
 {
+    sName.replace(".", " Dot ");
+
     QString sSimplifiedName = sName.simplified().toLower();
     sSimplifiedName.replace(' ', '_');
+
+
 
     return sSimplifiedName;
 }

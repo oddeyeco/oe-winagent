@@ -1,4 +1,6 @@
 #include "winperformancemetricschecker.h"
+#include "winpdhexception.h"
+#include "upload/basicoddeyeclient.h"
 
 CWinPerformanceMetricsChecker::CWinPerformanceMetricsChecker(QObject *pParent)
     : Base( pParent )
@@ -75,6 +77,44 @@ PerformanceCounterCheckersList CWinPerformanceMetricsChecker::AddPerformanceCoun
     }
 
     return lstAddedCheckers;
+}
+
+QString CWinPerformanceMetricsChecker::MakeMetricNameFromCounterPath(QString sCounterPath, EMetricDataType *pGessedMetricDataType, QString *pInstanceName)
+{
+    sCounterPath.replace( ".NET", "Dot NET", Qt::CaseInsensitive );
+
+    QStringList lstPathSections = sCounterPath.split( "\\", QString::SkipEmptyParts );
+    if( lstPathSections.size() < 2 )
+        throw CWinPDHException( QString("Invalid counter path: %1").arg(sCounterPath));
+
+    QString sCounterType = lstPathSections.at( lstPathSections.size() - 2 ).trimmed().simplified();
+    QString sCounterName = lstPathSections.at( lstPathSections.size() - 1 ).trimmed().simplified();
+
+    //
+    // process CounterType string
+    //
+    int nBracketIdx = sCounterType.indexOf( "(" );
+    if( nBracketIdx >= 0 )
+    {
+        // fetch instance name
+        QString sInstanceName = sCounterType.mid(nBracketIdx + 1);
+        sInstanceName.remove(sInstanceName.size() - 1, 1);
+        // remove instance name from counter type string
+        sCounterType.remove( nBracketIdx, sCounterType.size() - nBracketIdx );
+        if( pInstanceName )
+            *pInstanceName = sInstanceName;
+    }
+    QString sMetricPartA = NormalizeAsName( sCounterType );
+
+
+//"# GC Handles"
+//    "# of Pinned Objects"
+    //    AddPerformanceCounterChecker("dot_net_clr_memory_", "\\.NET CLR Memory(_Global_)\\"
+}
+
+QString CWinPerformanceMetricsChecker::NormalizeAsName(QString sText)
+{
+    return CBasicOddEyeClient::NormailzeAsOEName(sText);
 }
 
 PerformanceCounterCheckerSPtr CWinPerformanceMetricsChecker::AddPerformanceCounterChecker(  const QString &sMetricName,

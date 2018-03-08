@@ -1,5 +1,5 @@
-#ifndef COMMONEXCEPTIONS_H
-#define COMMONEXCEPTIONS_H
+#ifndef CWINPDHEXCEPTION_H
+#define CWINPDHEXCEPTION_H
 
 #include "exception.h"
 #include "winperformancedataprovider.h"
@@ -20,4 +20,4 @@ public:
 ////////////////////////////////////////////////////////////////
 
 
-#endif // COMMONEXCEPTIONS_H
+#endif // CWINPDHEXCEPTION_H

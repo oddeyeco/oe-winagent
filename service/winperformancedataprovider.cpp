@@ -1,5 +1,7 @@
 #include "winperformancedataprovider.h"
 #include "winpdhexception.h"
+#include "logger.h"
+
 #include <pdhmsg.h>
 
 #include <QStringList>
@@ -264,6 +266,90 @@ QStringList CWinPerformanceDataProvider::GetObjectInstanceNames(const QString &s
         free( pwsInstanceListBuffer );
 
     return lstInstanceNames;
+}
+
+QVector<QString> CWinPerformanceDataProvider::GetAllAvailableCounterPaths()
+{
+#define WIN32_LEAN_AND_MEAN 1
+
+    PDH_STATUS Status;
+
+    DWORD lenObjectList = 0;
+
+    // Get the size to alloc
+    Status = PdhEnumObjects(0, 0, 0, &lenObjectList, PERF_DETAIL_WIZARD, false);
+    if (Status != PDH_MORE_DATA) {
+        throw CWinPDHException( "Unable to retrieve available counter paths", Status );
+    }
+
+    //		wprintf(L"Allocation of %u bytes for objectList \n", len * sizeof(_TCHAR));
+    PZZTSTR objectList = (PZZTSTR)malloc(lenObjectList * sizeof(wchar_t));
+
+    Status = PdhEnumObjects(0, 0, objectList, &lenObjectList, PERF_DETAIL_WIZARD, false);
+    if (Status != ERROR_SUCCESS) {
+       throw CWinPDHException( "Unable to retrieve available counter paths", Status );
+    }
+
+
+    QVector<QString> aCounterPaths;
+
+    for (PZZWSTR objectListCurrent = objectList; *objectListCurrent != 0; objectListCurrent += wcslen(objectListCurrent) + 1) {
+        DWORD lenCounterList = 0;
+        DWORD lenInstanceList = 0;
+
+        Status = PdhEnumObjectItems(0, 0, objectListCurrent, 0, &lenCounterList, 0, &lenInstanceList, PERF_DETAIL_WIZARD, true);
+        if (Status != PDH_MORE_DATA) {
+            LOG_DEBUG(QString("Unable to retrieve available counter paths (1): %1").arg( GetErrorDescription(Status) ));
+            continue;
+        }
+
+        //		wprintf(L"Allocation of %u bytes for counterList \n", lenCounterList * sizeof(_TCHAR));
+        PZZWSTR counterList = (PZZWSTR)malloc(lenCounterList * sizeof(wchar_t));
+        //		wprintf(L"Allocation of %u bytes for instanceList \n", lenInstanceList * sizeof(_TCHAR));
+        PZZWSTR instanceList = (PZZWSTR)malloc(lenInstanceList * sizeof(wchar_t));
+
+        Status = PdhEnumObjectItems(0, 0, objectListCurrent, counterList, &lenCounterList, instanceList, &lenInstanceList, PERF_DETAIL_WIZARD, true);
+        if (Status != ERROR_SUCCESS) {
+            LOG_DEBUG(QString("Unable to retrieve available counter paths (2): %1").arg( GetErrorDescription(Status) ));
+            continue;
+        }
+
+        if (lenInstanceList == 0) {
+            // Walk the counters list. The list can contain one
+            // or more null-terminated strings. The list is terminated
+            // using two null-terminator characters.
+            for (PZZWSTR counterListCurrent = counterList; *counterListCurrent != 0; counterListCurrent += wcslen(counterListCurrent) + 1)
+            {
+                QString sObjectListCurrent = QString::fromWCharArray( objectListCurrent );
+                QString sCounterListCurrent = QString::fromWCharArray( counterListCurrent );
+                aCounterPaths.append( QString("\\%1\\%2").arg( sObjectListCurrent , sCounterListCurrent ) );
+            }
+        }
+        else {
+            // Same as before, but both
+            for (PZZWSTR instanceListCurrent = instanceList; *instanceListCurrent != 0; instanceListCurrent += wcslen(instanceListCurrent) + 1) {
+                for (PZZWSTR counterListCurrent = counterList; *counterListCurrent != 0; counterListCurrent += wcslen(counterListCurrent) + 1)
+                {
+                    QString sObjectListCurrent = QString::fromWCharArray( objectListCurrent );
+                    QString sInstanceListCurrent = QString::fromWCharArray( instanceListCurrent );
+                    QString sCounterListCurrent = QString::fromWCharArray( counterListCurrent );
+
+                    aCounterPaths.append( QString("\\%1(%2)\\%3").arg(sObjectListCurrent, sInstanceListCurrent, sCounterListCurrent) );
+                    //wprintf(L"\\%s(%s)\\%s\n", objectListCurrent, instanceListCurrent, counterListCurrent);
+                }
+            }
+        }
+
+        //		wprintf(L"Free of counterList \n");
+        free(counterList);
+
+        //		wprintf(L"Free of instanceList \n");
+        free(instanceList);
+    }
+
+    free(objectList);
+
+    return aCounterPaths;
 }
 
 std::unique_ptr<wchar_t[]> CWinPerformanceDataProvider::ToWCharArray(const QString &sText)
