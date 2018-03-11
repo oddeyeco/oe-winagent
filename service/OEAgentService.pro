@@ -54,7 +54,8 @@ SOURCES += main.cpp \
     ../common/message.cpp \
     upload/networkaccessmanager.cpp \
     pricinginfoprovider.cpp \
-    checkers/dot_net_clr.cpp
+    checkers/dot_net.cpp \
+    checkers/hyper_v.cpp
 
 include(../3rdparty/qtservice/src/qtservice.pri)
 
@@ -95,4 +96,5 @@ HEADERS += \
     ../common/message.h \
     upload/networkaccessmanager.h \
     pricinginfoprovider.h \
-    checkers/dot_net_clr.h
+    checkers/dot_net.h \
+    checkers/hyper_v.h

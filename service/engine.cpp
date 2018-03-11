@@ -65,7 +65,8 @@ void CEngine::AddChecker(IMetricsCategoryCheckerSPtr pChecker)
                                                              pChecker->metaObject()->className() : "" ).arg( oExc.what() ),
                               EMessageType::Warning);
 
-            LOG_ERROR( oMessage.FullText().toStdString() );
+            QString sMsg = oMessage.FullText();
+            LOG_ERROR( sMsg.toStdString() );
             emit sigNotify( oMessage );
         }
     }

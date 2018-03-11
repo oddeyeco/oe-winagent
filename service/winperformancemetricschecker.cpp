@@ -79,8 +79,11 @@ PerformanceCounterCheckersList CWinPerformanceMetricsChecker::AddPerformanceCoun
     return lstAddedCheckers;
 }
 
-QString CWinPerformanceMetricsChecker::MakeMetricNameFromCounterPath(QString sCounterPath, EMetricDataType *pGessedMetricDataType, QString *pInstanceName)
+QString CWinPerformanceMetricsChecker::MakeMetricNameFromCounterPath(QString sCounterPath,
+                                                                     EMetricDataType *pGuessedMetricDataType,
+                                                                     QString *pInstanceName)
 {
+    sCounterPath.replace( "ASP.NET", "ASP NET", Qt::CaseInsensitive );
     sCounterPath.replace( ".NET", "Dot NET", Qt::CaseInsensitive );
 
     QStringList lstPathSections = sCounterPath.split( "\\", QString::SkipEmptyParts );
@@ -106,10 +109,58 @@ QString CWinPerformanceMetricsChecker::MakeMetricNameFromCounterPath(QString sCo
     }
     QString sMetricPartA = NormalizeAsName( sCounterType );
 
+    //
+    //  process CounterName string
+    //
 
-//"# GC Handles"
-//    "# of Pinned Objects"
-    //    AddPerformanceCounterChecker("dot_net_clr_memory_", "\\.NET CLR Memory(_Global_)\\"
+    // pre-fits
+    sCounterName.replace( "I/O", "IO" );
+    sCounterName.replace("Read/Write", "Read Write");
+    sCounterName.replace('&', " and ");
+    sCounterName.replace(">=", " Gr or Eq ");
+    sCounterName.replace("<=", " Sm or Eq ");
+    sCounterName.replace("=", " Eq ");
+    sCounterName.replace(">", " Gr ");
+    sCounterName.replace("<", " Sm ");
+
+    EMetricDataType eGuessedType = EMetricDataType::None;
+    if( sCounterName.contains("# of ") )
+    {
+        sCounterName.remove( "# of " );
+        eGuessedType = EMetricDataType::Counter;
+    }
+    else if( sCounterName.contains("#") )
+    {
+        sCounterName.remove( "#" );
+        eGuessedType = EMetricDataType::Counter;
+    }
+    else if( sCounterName.contains( "%" ) )
+    {
+        sCounterName.remove( "%" );
+        eGuessedType = EMetricDataType::Percent;
+    }
+
+    // check if rated metric
+    int nSlashIdx = sCounterName.lastIndexOf( '/' );
+    if( nSlashIdx > 0 )
+    {
+        QString sAfterSlash = sCounterName.mid( nSlashIdx + 1 );
+        QStringList lstAfterSlashWords = sAfterSlash.split(' ', QString::SkipEmptyParts);
+        if( lstAfterSlashWords.size() <= 1)
+        {
+            // this is rated metric
+            sCounterName.remove( nSlashIdx, sCounterName.size() - nSlashIdx );
+            eGuessedType = EMetricDataType::Rate;
+        }
+    }
+
+    QString sMetricPartB = NormalizeAsName( sCounterName );
+    if( pGuessedMetricDataType )
+        *pGuessedMetricDataType = eGuessedType;
+
+
+    QString sMetricName = sMetricPartA + "_" + sMetricPartB;
+    return sMetricName;
 }
 
 QString CWinPerformanceMetricsChecker::NormalizeAsName(QString sText)
@@ -143,3 +194,26 @@ PerformanceCounterCheckerSPtr CWinPerformanceMetricsChecker::AddPerformanceCount
     Base::AddMetricChecker( pChecker );
     return pChecker;
 }
+
+PerformanceCounterCheckerSPtr CWinPerformanceMetricsChecker::AddPerformanceCounterChecker( QString sPerfCounterPath,
+                                                                                           const QString &sMetricType,
+                                                                                           QString sMetricName)
+{
+    sPerfCounterPath = sPerfCounterPath.trimmed();
+    Q_ASSERT(!sPerfCounterPath.isEmpty());
+
+    EMetricDataType eDataType;
+    QString sInstanceName;
+
+    QString sMakedMetricName = MakeMetricNameFromCounterPath( sPerfCounterPath, &eDataType, &sInstanceName );
+    if( sMetricName.isEmpty() )
+        sMetricName = sMakedMetricName;
+
+
+    Q_ASSERT(!sMetricName.isEmpty());
+    if( sMetricName.isEmpty() )
+        throw CWinPDHException( QString("Metric name is empty!") );
+
+    return AddPerformanceCounterChecker( sMetricName, sPerfCounterPath, eDataType, sMetricType, 0, -1, -1, "Instance", sInstanceName );
+}
+

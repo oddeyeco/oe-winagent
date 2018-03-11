@@ -144,6 +144,7 @@ IMetricsCategoryCheckerSPtr CAgentInitialzier::CreateCheckerByConfigName(QString
 QString CAgentInitialzier::SimplifyName(QString sName)
 {
     sName.replace(".", " Dot ");
+    sName.replace("-", " ");
 
     QString sSimplifiedName = sName.simplified().toLower();
     sSimplifiedName.replace(' ', '_');

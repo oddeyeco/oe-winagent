@@ -2,11 +2,7 @@
 
 const int MBSize = 1048576;
 
-SystemDiskStats::SystemDiskStats(QObject *pParent)
-    : Base(pParent)
-{}
-
-void SystemDiskStats::Initialize()
+INIT_METRIC_CHECKER(SystemDiskStats)
 {
     double dConfHighVal = -1;
     double dConfSevereVal = -1;

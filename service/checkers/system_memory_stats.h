@@ -3,20 +3,6 @@
 
 #include "../winperformancemetricschecker.h"
 
-class SystemMemoryStats : public CWinPerformanceMetricsChecker
-{
-    DECLARE_MERTIC_CHECKER(SystemMemoryStats)
-    using Base = CWinPerformanceMetricsChecker;
-
-public:
-    SystemMemoryStats();
-
-
-    // IMetricsCategoryChecker interface
-public:
-    void Initialize() override;
-};
-
-REGISTER_METRIC_CHECKER( SystemMemoryStats )
+DECLARE_PERF_COUNTER_METRIC_CHECKER(SystemMemoryStats)
 
 #endif // SystemMemoryStats_H

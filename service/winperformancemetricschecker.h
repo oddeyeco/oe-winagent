@@ -30,6 +30,12 @@ protected:
                                                                 QString const& sInstanceName = QString(),
                                                                 ValueModifierFunc funcMetricModifier = nullptr );
 
+    PerformanceCounterCheckerSPtr  AddPerformanceCounterChecker( QString sPerfCounterPath,
+                                                                 QString const& sMetricType,
+                                                                 QString sMetricName = QString() );
+
+
+
     // Creates CPerformanceCounterChecker instance and addes to checkers list.
     // if bCreateMultipleCheckersByInstanceNames is TRUE then creates multiple checkers
     // acording to Counter Instance Names using specified Counter Object
@@ -45,14 +51,34 @@ protected:
                                                                    QString const& sInstanceType = QString(),
                                                                    ValueModifierFunc funcMetricModifier = nullptr );
 
-    static QString MakeMetricNameFromCounterPath( QString sCounterPath,
-                                                  EMetricDataType* pGessedMetricDataType = nullptr,
+    static QString MakeMetricNameFromCounterPath(QString sCounterPath,
+                                                  EMetricDataType* pGuessedMetricDataType = nullptr,
                                                   QString* pInstanceName = nullptr);
 
 private:
     static QString NormalizeAsName( QString sText );
 
 };
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//  Useful Macros
+//
+#define DECLARE_PERF_COUNTER_METRIC_CHECKER(_class_)       \
+    class _class_ : public CWinPerformanceMetricsChecker   \
+    {                                                      \
+        DECLARE_MERTIC_CHECKER(_class_)                    \
+        using Base = CWinPerformanceMetricsChecker;        \
+    public:                                                \
+        _class_(QObject* pParent = nullptr) : Base(pParent) {}               \
+    public:                                                \
+        void Initialize() override;                        \
+    };                                                     \
+REGISTER_METRIC_CHECKER( _class_ )
+
+#define INIT_METRIC_CHECKER(_class_) void _class_::Initialize()
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

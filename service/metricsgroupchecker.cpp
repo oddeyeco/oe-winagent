@@ -22,27 +22,25 @@ MetricDataList CMetricsGroupChecker::CheckMetrics()
         }
         catch( std::exception const& oErr )
         {
+            auto pBasicChecker = dynamic_cast<CBasicMetricChecker*>(pCurrentChecker.get());
+            QString sMsg = pBasicChecker? QString("Excpetion: Metric %1 : %2 %3 - check failed: %4")
+                                          .arg( pBasicChecker->GetMetricName() )
+                                          .arg( pBasicChecker->GetInstanceType() )
+                                          .arg( pBasicChecker->GetInstanceType() )
+                                          .arg( oErr.what() )
+                                        :
+                                          QString("Excpetion: Metric checking failed: %1").arg( oErr.what() );
+
             if( QString(oErr.what()).contains( "negative denominator" ) )
             {
                 // This is common exception and could sometimes appeare base on enviroment
                 // So just Skip it
-                LOG_DEBUG( QString("Excpetion: Metric checking failed: %1").arg( oErr.what() ) );
+
+                LOG_DEBUG( sMsg );
                 continue;
             }
 
-            auto pBasicChecker = dynamic_cast<CBasicMetricChecker*>(pCurrentChecker.get());
-            if( pBasicChecker )
-            {
-                LOG_ERROR( QString("Excpetion: Metric %1 : %2 %3 - check failed: ")
-                           .arg( pBasicChecker->GetMetricName() )
-                           .arg( pBasicChecker->GetInstanceType() )
-                           .arg( pBasicChecker->GetInstanceType() )
-                           .toStdString() + oErr.what())
-            }
-            else
-            {
-                LOG_ERROR( QString("Excpetion: Metric checking failed: %1").arg( oErr.what() ).toStdString() )
-            }
+            LOG_ERROR( sMsg.toStdString() );
         }
     }
 

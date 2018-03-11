@@ -1,13 +1,6 @@
 #include "system_memory_stats.h"
 
-
-SystemMemoryStats::SystemMemoryStats()
-{
-
-}
-
-
-void SystemMemoryStats::Initialize()
+INIT_METRIC_CHECKER(SystemMemoryStats)
 {
     double dConfHighVal = -1;
     double dConfSevereVal = -1;

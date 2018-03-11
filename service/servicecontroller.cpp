@@ -29,7 +29,13 @@ void CServiceController::Start()
         }
 
         // Register Loadable Configs
-        ConfMgr.RegisterLoadableConfigs( QStringList() << "system" << "oddeye" << ".net_clr" );
+        ConfMgr.RegisterLoadableConfigs( QStringList()
+                                         << "system"
+                                         << "oddeye"
+                                         << ".net"
+                                         << "hyper-v"
+
+                                         );
         // Load Configurations
         ConfMgr.LoadConfigurations();
 

@@ -1,11 +1,6 @@
 #include "system_network_stats.h"
 
-SystemNetworkStats::SystemNetworkStats(QObject *pParent)
-    : Base(pParent)
-{
-}
-
-void SystemNetworkStats::Initialize()
+INIT_METRIC_CHECKER(SystemNetworkStats)
 {
 //    double dConfHighVal = -1;
 //    double dConfSevereVal = -1;
@@ -60,9 +55,18 @@ void SystemNetworkStats::Initialize()
         // All Interfaces - No Filter
         return;
 
+    // decl lambda
+    auto lmContainesOneOf = [](const QString &sSourceString, const QStringList &lstLexems)
+                            {
+                                for( QString const& sLex : lstLexems )
+                                    if( sSourceString.contains(sLex, Qt::CaseInsensitive) )
+                                        return true;
+                                return false;
+                            };
+
     for( PerformanceCounterCheckerSPtr pCurrentChecker : lstAll )
     {
-        if(  !ContainesOneOf( pCurrentChecker->GetInstanceName(), lstAllowedInterface ) )
+        if(  !lmContainesOneOf( pCurrentChecker->GetInstanceName(), lstAllowedInterface ) )
         {
             // remove checker
             Base::RemoveMetricChecker( pCurrentChecker );
@@ -70,15 +74,3 @@ void SystemNetworkStats::Initialize()
     }
 
 }
-
-bool SystemNetworkStats::ContainesOneOf(const QString &sSourceString, const QStringList &lstLexems) const
-{
-    for( QString const& sLex : lstLexems )
-    {
-        if( sSourceString.contains(sLex, Qt::CaseInsensitive) )
-            return true;
-    }
-
-    return false;
-}
-
