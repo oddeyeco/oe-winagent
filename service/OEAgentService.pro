@@ -55,7 +55,9 @@ SOURCES += main.cpp \
     upload/networkaccessmanager.cpp \
     pricinginfoprovider.cpp \
     checkers/dot_net.cpp \
-    checkers/hyper_v.cpp
+    checkers/hyper_v.cpp \
+    checkers/sql_server.cpp \
+    checkers/system_extended_metrics.cpp
 
 include(../3rdparty/qtservice/src/qtservice.pri)
 
@@ -97,4 +99,6 @@ HEADERS += \
     upload/networkaccessmanager.h \
     pricinginfoprovider.h \
     checkers/dot_net.h \
-    checkers/hyper_v.h
+    checkers/hyper_v.h \
+    checkers/sql_server.h \
+    checkers/system_extended_metrics.h

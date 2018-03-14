@@ -5,9 +5,9 @@
 //
 INIT_METRIC_CHECKER(DotNetClrJit)
 {
-    AddPerformanceCounterChecker("dot_net_clr_il_bytes_jitted", "\\.NET CLR Jit(_Global_)\\# of IL Bytes Jitted", EMetricDataType::Counter, "DotNet" );
-    AddPerformanceCounterChecker("dot_net_clr_methods_jitted", "\\.NET CLR Jit(_Global_)\\# of Methods Jitted", EMetricDataType::Counter, "DotNet" );
-    AddPerformanceCounterChecker("dot_net_clr_time_in_jit", "\\.NET CLR Jit(_Global_)\\% Time in Jit", EMetricDataType::Percent, "DotNet" );
+    AddPerformanceCounterChecker("dot_net_clr_il_bytes_jitted",       "\\.NET CLR Jit(_Global_)\\# of IL Bytes Jitted", EMetricDataType::Counter, "DotNet" );
+    AddPerformanceCounterChecker("dot_net_clr_methods_jitted",        "\\.NET CLR Jit(_Global_)\\# of Methods Jitted", EMetricDataType::Counter, "DotNet" );
+    AddPerformanceCounterChecker("dot_net_clr_time_in_jit",           "\\.NET CLR Jit(_Global_)\\% Time in Jit", EMetricDataType::Percent, "DotNet" );
     AddPerformanceCounterChecker("dot_net_clr_standard_jit_failures", "\\.NET CLR Jit(_Global_)\\Standard Jit Failures", EMetricDataType::Counter, "DotNet" );
     AddPerformanceCounterChecker("dot_net_clr_total_il_bytes_jitted", "\\.NET CLR Jit(_Global_)\\Total # of IL Bytes Jitted", EMetricDataType::Counter, "DotNet" );
 
@@ -123,42 +123,42 @@ INIT_METRIC_CHECKER(DotNetAspNet)
 
 INIT_METRIC_CHECKER(DotNetAspNetApplications)
 {
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\% Managed Processor Time (estimated)    ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Anonymous Requests/Sec                  ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Application Lifetime Events/Sec         ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Cache % Machine Memory Limit Used       ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Cache % Machine Memory Limit Used Base  ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Cache API Entries                       ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Cache Total Hit Ratio Base              ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Compilations Total                      ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Error Events Raised                     ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Errors During Compilation               ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Errors During Execution                 ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Errors Unhandled During Execution       ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Errors Unhandled During Execution/Sec   ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Events Raised/Sec                       ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Forms Authentication Success            ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Infrastructure Error Events Raised/Sec  ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Managed Memory Used (estimated)         ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Output Cache Entries                    ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Output Cache Hit Ratio                  ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Pipeline Instance Count                 ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Request Bytes In Total (WebSockets)     ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Request Bytes Out Total                 ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Request Bytes Out Total (WebSockets)    ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Request Error Events Raised/Sec         ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Request Events Raised/Sec               ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Request Execution Time                  ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Requests Executing                      ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Requests Executing (WebSockets)         ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Requests Failed (WebSockets)            ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Requests In Application Queue           ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Requests Succeeded (WebSockets)         ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Session State Server connections total  ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Sessions Active                         ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Transactions Aborted                    ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Transactions Committed                  ", "ASPNet");
-    AddPerformanceCounterChecker( "\\ASP.NET Applications(_Total_)\\Transactions Total                      ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\% Managed Processor Time (estimated)    ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Anonymous Requests/Sec                  ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Application Lifetime Events/Sec         ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Cache % Machine Memory Limit Used       ", "ASPNet");
+    //AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Cache % Machine Memory Limit Used Base", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Cache API Entries                       ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Cache Total Hit Ratio                   ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Compilations Total                      ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Error Events Raised                     ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Errors During Compilation               ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Errors During Execution                 ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Errors Unhandled During Execution       ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Errors Unhandled During Execution/Sec   ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Events Raised/Sec                       ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Forms Authentication Success            ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Infrastructure Error Events Raised/Sec  ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Managed Memory Used (estimated)         ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Output Cache Entries                    ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Output Cache Hit Ratio                  ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Pipeline Instance Count                 ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Request Bytes In Total (WebSockets)     ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Request Bytes Out Total                 ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Request Bytes Out Total (WebSockets)    ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Request Error Events Raised/Sec         ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Request Events Raised/Sec               ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Request Execution Time                  ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Requests Executing                      ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Requests Executing (WebSockets)         ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Requests Failed (WebSockets)            ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Requests In Application Queue           ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Requests Succeeded (WebSockets)         ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Session State Server connections total  ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Sessions Active                         ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Transactions Aborted                    ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Transactions Committed                  ", "ASPNet");
+    AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Transactions Total                      ", "ASPNet");
 }
 
 INIT_METRIC_CHECKER(DotNetAspNetStateService)

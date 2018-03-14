@@ -34,7 +34,7 @@ void CServiceController::Start()
                                          << "oddeye"
                                          << ".net"
                                          << "hyper-v"
-
+                                         << "sql_server"
                                          );
         // Load Configurations
         ConfMgr.LoadConfigurations();

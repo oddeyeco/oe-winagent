@@ -17,7 +17,8 @@ PerformanceCounterCheckersList CWinPerformanceMetricsChecker::AddPerformanceCoun
                                                                                        bool bCreateMultipleCheckersByInstanceNames,
                                                                                        const QString &sInstanceObjectName,
                                                                                        const QString &sInstanceType,
-                                                                                       ValueModifierFunc funcMetricModifier)
+                                                                                       ValueModifierFunc funcMetricModifier,
+                                                                                       QStringList lstAllowedInstanceNames )
 {
     QList<PerformanceCounterCheckerSPtr> lstAddedCheckers;
 
@@ -55,10 +56,18 @@ PerformanceCounterCheckersList CWinPerformanceMetricsChecker::AddPerformanceCoun
         if( lstExpandedCounterPaths.size() != lstInstanceNames.size() )
             throw CCheckerInitializationException( QString("Failed to fetch per %1 information for metric %2").arg(sInstanceType.toLower(), sMetricName) );
 
+        bool bAllInstancesAreAllowed = lstAllowedInstanceNames.isEmpty()? true : ContainesOneOf( "all", lstAllowedInstanceNames );
+
         for( int i = 0; i < lstExpandedCounterPaths.size(); ++i )
         {
             QString sCurrentCounterPath = lstExpandedCounterPaths[i];
             QString sCurrentInstanceName = lstInstanceNames[i];
+
+            if( !bAllInstancesAreAllowed && !ContainesOneOf(sCurrentInstanceName, lstAllowedInstanceNames) )
+            {
+                // skip checker
+                continue;
+            }
 
             // create checkers
             auto pChecker = AddPerformanceCounterChecker(  sMetricName,
@@ -79,9 +88,32 @@ PerformanceCounterCheckersList CWinPerformanceMetricsChecker::AddPerformanceCoun
     return lstAddedCheckers;
 }
 
+PerformanceCounterCheckersList CWinPerformanceMetricsChecker::AddPerformanceCounterCheckerEx(QString sPerfCounterPath,
+                                                                                             const QString &sMetricType,
+                                                                                             QStringList lstAllowedInstances,
+                                                                                             QString sMetricName)
+{
+    sPerfCounterPath = sPerfCounterPath.trimmed();
+    Q_ASSERT(!sPerfCounterPath.isEmpty());
+
+    EMetricDataType eDataType;
+    QString sCounterTypeName;
+    QString sMakedMetricName = MakeMetricNameFromCounterPath( sPerfCounterPath, &eDataType, nullptr, &sCounterTypeName );
+    if( sMetricName.isEmpty() )
+        sMetricName = sMakedMetricName;
+
+
+    Q_ASSERT(!sMetricName.isEmpty());
+    if( sMetricName.isEmpty() )
+        throw CWinPDHException( QString("Metric name is empty!") );
+
+    return AddPerformanceCounterCheckerEx( sMetricName, sPerfCounterPath, eDataType, sMetricType, 0, -1, -1, true, sCounterTypeName, "Instance", nullptr, lstAllowedInstances );
+}
+
 QString CWinPerformanceMetricsChecker::MakeMetricNameFromCounterPath(QString sCounterPath,
                                                                      EMetricDataType *pGuessedMetricDataType,
-                                                                     QString *pInstanceName)
+                                                                     QString *pInstanceName,
+                                                                     QString *psCounterType)
 {
     sCounterPath.replace( "ASP.NET", "ASP NET", Qt::CaseInsensitive );
     sCounterPath.replace( ".NET", "Dot NET", Qt::CaseInsensitive );
@@ -107,6 +139,12 @@ QString CWinPerformanceMetricsChecker::MakeMetricNameFromCounterPath(QString sCo
         if( pInstanceName )
             *pInstanceName = sInstanceName;
     }
+
+    if( psCounterType )
+    {
+        *psCounterType = sCounterType.left( nBracketIdx );
+    }
+
     QString sMetricPartA = NormalizeAsName( sCounterType );
 
     //
@@ -163,6 +201,14 @@ QString CWinPerformanceMetricsChecker::MakeMetricNameFromCounterPath(QString sCo
     return sMetricName;
 }
 
+bool CWinPerformanceMetricsChecker::ContainesOneOf(const QString &sSourceString, const QStringList &lstLexems)
+{
+    for( QString const& sLex : lstLexems )
+        if( sSourceString.contains(sLex, Qt::CaseInsensitive) )
+            return true;
+    return false;
+}
+
 QString CWinPerformanceMetricsChecker::NormalizeAsName(QString sText)
 {
     return CBasicOddEyeClient::NormailzeAsOEName(sText);
@@ -197,7 +243,7 @@ PerformanceCounterCheckerSPtr CWinPerformanceMetricsChecker::AddPerformanceCount
 
 PerformanceCounterCheckerSPtr CWinPerformanceMetricsChecker::AddPerformanceCounterChecker( QString sPerfCounterPath,
                                                                                            const QString &sMetricType,
-                                                                                           QString sMetricName)
+                                                                                           QString sMetricName )
 {
     sPerfCounterPath = sPerfCounterPath.trimmed();
     Q_ASSERT(!sPerfCounterPath.isEmpty());

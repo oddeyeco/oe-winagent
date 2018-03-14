@@ -42,7 +42,7 @@ void CAgentInitialzier::InitializeEngine(CEngine *pEngine)
         Q_ASSERT(false);
         return;
     }
-    LOG_INFO( "OE engine init started" );
+    LOG_INFO( "-------- OE Engine INIT started --------" );
 
     // Setup Main Settings
     double dUpdateSecs = ConfMgr.GetMainConfiguration().Value<double>("SelfConfig/check_period_seconds", 1);
@@ -116,8 +116,8 @@ void CAgentInitialzier::InitializeEngine(CEngine *pEngine)
 
 }
 
-IMetricsCategoryCheckerSPtr CAgentInitialzier::CreateCheckerByConfigName(QString const& sConfigName,
-                                                                  QString const& sSectionName)
+IMetricsCategoryCheckerSPtr CAgentInitialzier::CreateCheckerByConfigName( QString const& sConfigName,
+                                                                          QString const& sSectionName )
 {
     Q_ASSERT(!sConfigName.isEmpty());
     Q_ASSERT(!sSectionName.isEmpty());
@@ -148,8 +148,6 @@ QString CAgentInitialzier::SimplifyName(QString sName)
 
     QString sSimplifiedName = sName.simplified().toLower();
     sSimplifiedName.replace(' ', '_');
-
-
 
     return sSimplifiedName;
 }

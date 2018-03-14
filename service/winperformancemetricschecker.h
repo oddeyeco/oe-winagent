@@ -39,7 +39,7 @@ protected:
     // Creates CPerformanceCounterChecker instance and addes to checkers list.
     // if bCreateMultipleCheckersByInstanceNames is TRUE then creates multiple checkers
     // acording to Counter Instance Names using specified Counter Object
-    PerformanceCounterCheckersList AddPerformanceCounterCheckerEx( QString const& sMetricName,
+    PerformanceCounterCheckersList AddPerformanceCounterCheckerEx(QString const& sMetricName,
                                                                    QString const& sCounterPathOrWildcard,
                                                                    EMetricDataType eMetricDataType,
                                                                    const QString &sMetricType,
@@ -49,11 +49,20 @@ protected:
                                                                    bool    bCreateMultipleCheckersByInstanceNames = false,
                                                                    QString const& sInstanceObjectName = QString(),
                                                                    QString const& sInstanceType = QString(),
-                                                                   ValueModifierFunc funcMetricModifier = nullptr );
+                                                                   ValueModifierFunc funcMetricModifier = nullptr,
+                                                                   QStringList lstAllowedInstanceNames = QStringList());
+    // Creates Multiple Checkers By Allowed Instance Names
+    PerformanceCounterCheckersList  AddPerformanceCounterCheckerEx( QString sPerfCounterPath,
+                                                                    QString const& sMetricType,
+                                                                    QStringList lstAllowedInstances,
+                                                                    QString sMetricName = QString() );
 
     static QString MakeMetricNameFromCounterPath(QString sCounterPath,
                                                   EMetricDataType* pGuessedMetricDataType = nullptr,
-                                                  QString* pInstanceName = nullptr);
+                                                  QString* pInstanceName = nullptr,
+                                                  QString* psCounterType = nullptr );
+
+    static bool ContainesOneOf( const QString &sSourceString, const QStringList &lstLexems );
 
 private:
     static QString NormalizeAsName( QString sText );
