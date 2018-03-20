@@ -41,6 +41,9 @@ public:
 
     QSettings& GetRegistrySettings();
 
+    void RegisterChecker(QString const& sCheckerName);
+    QStringList GetAllRegisteredCheckers() const;
+
 signals:
     void sigConfigsLoaded();
     void sigConfigsUnloaded();
@@ -56,6 +59,8 @@ private:
     QStringList m_lstLoadableConfigs;
     CConfigSection m_oEnabledScriptsConfSection;
     QSettings m_oRegistrySettings;
+
+    QStringList m_lstAllRegisteredCheckers;
 
     // Constatns
     static char const* s_szConfigDirPath;

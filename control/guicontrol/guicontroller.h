@@ -25,6 +25,8 @@ private slots:
     void onStopClicked();
     void onRestartClicked();
 
+    void onDumpPerformanceCounters();
+
     void onOpenFolder();
 
     void onExitClicked();

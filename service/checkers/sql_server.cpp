@@ -1,6 +1,6 @@
 #include "sql_server.h"
 
-INIT_METRIC_CHECKER(SqlServerAccessMethods)
+INIT_METRIC_CHECKER(SqlServerAccessMethods, "SQLServer:Access Methods")
 {
     AddPerformanceCounterChecker("\\SQLServer:Access Methods\\Forwarded Records/sec  ", "SQLServer");
     AddPerformanceCounterChecker("\\SQLServer:Access Methods\\FreeSpace Scans/sec    ", "SQLServer");
@@ -11,7 +11,7 @@ INIT_METRIC_CHECKER(SqlServerAccessMethods)
     AddPerformanceCounterChecker("\\SQLServer:Access Methods\\Pages Allocated/sec    ", "SQLServer");
 }
 
-INIT_METRIC_CHECKER(SqlServerAvailabilityReplica)
+INIT_METRIC_CHECKER(SqlServerAvailabilityReplica, "SQLServer:Availability Replica")
 {
     AddPerformanceCounterChecker("\\SQLServer:Availability Replica(_Total)\\Bytes Received from Replica/sec", "SQLServer");
     AddPerformanceCounterChecker("\\SQLServer:Availability Replica(_Total)\\Bytes Sent to Replica/sec      ", "SQLServer");
@@ -24,7 +24,7 @@ INIT_METRIC_CHECKER(SqlServerAvailabilityReplica)
     AddPerformanceCounterChecker("\\SQLServer:Availability Replica(_Total)\\Sends to Transport/sec         ", "SQLServer");
 }
 
-INIT_METRIC_CHECKER(SqlServerBufferManager)
+INIT_METRIC_CHECKER(SqlServerBufferManager, "SQLServer:Buffer Manager")
 {
     AddPerformanceCounterChecker("\\SQLServer:Buffer Manager\\Background writer pages/sec", "SQLServer");
     AddPerformanceCounterChecker("\\SQLServer:Buffer Manager\\Buffer cache hit ratio     ", "SQLServer");
@@ -41,7 +41,7 @@ INIT_METRIC_CHECKER(SqlServerBufferManager)
     AddPerformanceCounterChecker("\\SQLServer:Buffer Manager\\Target pages               ", "SQLServer");
 }
 
-INIT_METRIC_CHECKER(SqlServerBufferNode)
+INIT_METRIC_CHECKER(SqlServerBufferNode, "SQLServer:Buffer Node")
 {
     // All instances
     AddPerformanceCounterCheckerEx( "\\SQLServer:Buffer Node(*)\\Database pages             ", "SQLServer", QStringList() << "all");
@@ -49,12 +49,12 @@ INIT_METRIC_CHECKER(SqlServerBufferNode)
     AddPerformanceCounterCheckerEx( "\\SQLServer:Buffer Node(*)\\Page life expectancy       ", "SQLServer", QStringList() << "all");
 }
 
-INIT_METRIC_CHECKER(SqlServerClr)
+INIT_METRIC_CHECKER(SqlServerClr, "SQLServer:CLR")
 {
     AddPerformanceCounterChecker("\\SQLServer:CLR\\CLR Execution", "SQLServer");
 }
 
-INIT_METRIC_CHECKER(SqlServerDatabaseReplica)
+INIT_METRIC_CHECKER(SqlServerDatabaseReplica, "SQLServer:Database Replica")
 {
     AddPerformanceCounterChecker("\\SQLServer:Database Replica(_Total)\\File Bytes Received/sec", "SQLServer");
     AddPerformanceCounterChecker("\\SQLServer:Database Replica(_Total)\\Log Bytes Received/sec ", "SQLServer");
@@ -62,7 +62,7 @@ INIT_METRIC_CHECKER(SqlServerDatabaseReplica)
     AddPerformanceCounterChecker("\\SQLServer:Database Replica(_Total)\\Transaction Delay      ", "SQLServer");
 }
 
-INIT_METRIC_CHECKER(SqlServerDatabases)
+INIT_METRIC_CHECKER(SqlServerDatabases, "SQLServer:Databases")
 {
     QStringList lstAllowedItems = ConfigSection().Value<QStringList>("databases", QStringList() << "total" );
     if( lstAllowedItems.contains("total", Qt::CaseInsensitive) )
@@ -79,7 +79,7 @@ INIT_METRIC_CHECKER(SqlServerDatabases)
     }
 }
 
-INIT_METRIC_CHECKER(SqlServerGeneralStatistics)
+INIT_METRIC_CHECKER(SqlServerGeneralStatistics, "SQLServer:General Statistics")
 {
     AddPerformanceCounterChecker("\\SQLServer:General Statistics\\Logins/sec                      ", "SQLServer");
     AddPerformanceCounterChecker("\\SQLServer:General Statistics\\Logouts/sec                     ", "SQLServer");
@@ -89,7 +89,7 @@ INIT_METRIC_CHECKER(SqlServerGeneralStatistics)
     AddPerformanceCounterChecker("\\SQLServer:General Statistics\\User Connections                ", "SQLServer");
 }
 
-INIT_METRIC_CHECKER(SqlServerLocks)
+INIT_METRIC_CHECKER(SqlServerLocks, "SQLServer:Locks")
 {
     AddPerformanceCounterChecker("\\SQLServer:Locks(_Total)\\Average Wait Time (ms)         ", "SQLServer");
     AddPerformanceCounterChecker("\\SQLServer:Locks(_Total)\\Lock Requests/sec              ", "SQLServer");
@@ -98,7 +98,7 @@ INIT_METRIC_CHECKER(SqlServerLocks)
     AddPerformanceCounterChecker("\\SQLServer:Locks(_Total)\\Number of Deadlocks/sec        ", "SQLServer");
 }
 
-INIT_METRIC_CHECKER(SqlServerMemoryManager)
+INIT_METRIC_CHECKER(SqlServerMemoryManager, "SQLServer:Memory Manager")
 {
     AddPerformanceCounterChecker("\\SQLServer:Memory Manager\\Database Cache Memory (KB) ", "SQLServer");
     AddPerformanceCounterChecker("\\SQLServer:Memory Manager\\Free Memory (KB)           ", "SQLServer");
@@ -111,14 +111,14 @@ INIT_METRIC_CHECKER(SqlServerMemoryManager)
     AddPerformanceCounterChecker("\\SQLServer:Memory Manager\\Total Server Memory (KB)   ", "SQLServer");
 }
 
-INIT_METRIC_CHECKER(SqlServerPlanCache)
+INIT_METRIC_CHECKER(SqlServerPlanCache, "SQLServer:Plan Cache")
 {
     AddPerformanceCounterChecker("\\SQLServer:Plan Cache(_Total)\\Cache Object Counts ", "SQLServer");
     AddPerformanceCounterChecker("\\SQLServer:Plan Cache(_Total)\\Cache Objects in use", "SQLServer");
     AddPerformanceCounterChecker("\\SQLServer:Plan Cache(_Total)\\Cache Pages         ", "SQLServer");
 }
 
-INIT_METRIC_CHECKER(SqlServerQueryExecution)
+INIT_METRIC_CHECKER(SqlServerQueryExecution, "SQLServer:Query Execution")
 {
     AddPerformanceCounterChecker("\\SQLServer:Query Execution\\Local data access/sec     ", "SQLServer");
     AddPerformanceCounterChecker("\\SQLServer:Query Execution\\Rem Req Cache Hit Ratio   ", "SQLServer");
@@ -126,19 +126,19 @@ INIT_METRIC_CHECKER(SqlServerQueryExecution)
     AddPerformanceCounterChecker("\\SQLServer:Query Execution\\Remote resend requests/sec", "SQLServer");
 }
 
-INIT_METRIC_CHECKER(SqlServerSqlErrors)
+INIT_METRIC_CHECKER(SqlServerSqlErrors, "SQLServer:SQL Errors")
 {
     AddPerformanceCounterChecker("\\SQLServer:SQL Errors(_Total)\\Errors/sec", "SQLServer");
 }
 
-INIT_METRIC_CHECKER(SqlServerSqlStatistics)
+INIT_METRIC_CHECKER(SqlServerSqlStatistics, "SQLServer:SQL Statistics")
 {
     AddPerformanceCounterChecker("\\SQLServer:SQL Statistics\\Batch Requests/sec     ", "SQLServer");
     AddPerformanceCounterChecker("\\SQLServer:SQL Statistics\\SQL Compilations/sec   ", "SQLServer");
     AddPerformanceCounterChecker("\\SQLServer:SQL Statistics\\SQL Re-Compilations/sec", "SQLServer");
 }
 
-INIT_METRIC_CHECKER(SqlServerTransactions)
+INIT_METRIC_CHECKER(SqlServerTransactions, "SQLServer:Transactions")
 {
     AddPerformanceCounterChecker("\\SQLServer:Transactions\\Free Space in tempdb (KB)       ", "SQLServer");
     AddPerformanceCounterChecker("\\SQLServer:Transactions\\Longest Transaction Running Time", "SQLServer");
@@ -147,13 +147,13 @@ INIT_METRIC_CHECKER(SqlServerTransactions)
     AddPerformanceCounterChecker("\\SQLServer:Transactions\\Update conflict ratio           ", "SQLServer");
 }
 
-INIT_METRIC_CHECKER(SqlServerUserSettable)
+INIT_METRIC_CHECKER(SqlServerUserSettable, "SQLServer:User Settable")
 {
     QStringList lstAllowedItems = ConfigSection().Value<QStringList>("counters", QStringList() << "all" );
     AddPerformanceCounterCheckerEx("\\SQLServer:User Settable(*)\\Query", "SQLServer", lstAllowedItems);
 }
 
-INIT_METRIC_CHECKER(SqlServerWaitStatistics)
+INIT_METRIC_CHECKER(SqlServerWaitStatistics, "SQLServer:Wait Statistics")
 {
     QStringList lstFilter = QStringList() << "Average";
 

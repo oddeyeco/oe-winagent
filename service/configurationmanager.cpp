@@ -153,6 +153,18 @@ QSettings& CConfigurationManager::GetRegistrySettings()
     return m_oRegistrySettings;
 }
 
+void CConfigurationManager::RegisterChecker(const QString &sCheckerName)
+{
+    if( sCheckerName.isEmpty() )
+        return;
+    m_lstAllRegisteredCheckers.append(sCheckerName);
+}
+
+QStringList CConfigurationManager::GetAllRegisteredCheckers() const
+{
+    return m_lstAllRegisteredCheckers;
+}
+
 bool CConfigurationManager::LoadConfigIfExists(const QString &sConfFilePath)
 {
     if( sConfFilePath.isEmpty() )

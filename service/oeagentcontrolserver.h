@@ -24,6 +24,7 @@ public:
     bool StopAgent( QLocalSocket* pRequestedClientSock, QString const& sCommand = QString() );
     bool RestartAgent( QLocalSocket* pRequestedClientSock, QString const& sCommand = QString() );
     bool SendStatus( QLocalSocket* pRequestedClientSock, QString const& sCommand = QString() );
+    bool DumpAvailablePerformanceCounters( QLocalSocket* pRequestedClientSock, QString const& sCommand = QString() );
 
 private slots:
     void onNewConnection();

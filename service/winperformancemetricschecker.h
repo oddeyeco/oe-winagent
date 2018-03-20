@@ -3,6 +3,7 @@
 
 #include "metricsgroupchecker.h"
 #include "checkers/performanceounterhecker.h"
+#include "performancecounterinfodumper.h"
 
 using PerformanceCounterCheckersList = QList<PerformanceCounterCheckerSPtr>;
 
@@ -16,6 +17,12 @@ class CWinPerformanceMetricsChecker : public CMetricsGroupChecker
 
 public:
     CWinPerformanceMetricsChecker(QObject* pParent = nullptr);
+
+public:
+    static QString MakeMetricNameFromCounterPath( QString sCounterPath,
+                                                  EMetricDataType* pGuessedMetricDataType = nullptr,
+                                                  QString* pInstanceName = nullptr,
+                                                  QString* psCounterType = nullptr );
 
 protected:
     // Creates CPerformanceCounterChecker instance and addes to checkers list
@@ -57,11 +64,6 @@ protected:
                                                                     QStringList lstAllowedInstances,
                                                                     QString sMetricName = QString() );
 
-    static QString MakeMetricNameFromCounterPath(QString sCounterPath,
-                                                  EMetricDataType* pGuessedMetricDataType = nullptr,
-                                                  QString* pInstanceName = nullptr,
-                                                  QString* psCounterType = nullptr );
-
     static bool ContainesOneOf( const QString &sSourceString, const QStringList &lstLexems );
 
 private:
@@ -87,7 +89,8 @@ private:
     };                                                     \
 REGISTER_METRIC_CHECKER( _class_ )
 
-#define INIT_METRIC_CHECKER(_class_) void _class_::Initialize()
+#define INIT_METRIC_CHECKER(_class_, _perf_obj_name_)   ADD_COUNTERS_DUMP_FILTER(_class_, _perf_obj_name_) \
+void _class_::Initialize()
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

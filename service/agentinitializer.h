@@ -11,12 +11,15 @@ public:
     static IMetricsCategoryCheckerSPtr CreateCheckerByConfigName( QString const& sConfigName,
                                                                   QString const& sSectionName);
 
+    static QString MakeCheckerName( QString const& sDirtyName );
+
 private:
     // helpers
     static QString SimplifyName( QString sName );
     static QString ToCamelCase(const QString& s);
     static QString MakeCheckerName( QString const& sConfigName,
                                     QString const& sSectionName );
+
 
 private:
     // content

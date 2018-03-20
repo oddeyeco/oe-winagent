@@ -1,6 +1,6 @@
 #include "system_memory_stats.h"
 
-INIT_METRIC_CHECKER(SystemMemoryStats)
+INIT_METRIC_CHECKER(SystemMemoryStats, "Memory")
 {
     double dConfHighVal = -1;
     double dConfSevereVal = -1;

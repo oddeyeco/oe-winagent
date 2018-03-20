@@ -32,6 +32,9 @@ CGuiController::CGuiController(QObject *pParent)
     m_pactOpenLogsDir = pMenu->addAction( "Open Logs Folder", this, SLOT(onOpenFolder()));
 
     pMenu->addSeparator();
+    pMenu->addAction( "Dump Available Performance Counters", this, SLOT(onDumpPerformanceCounters()));
+
+    pMenu->addSeparator();
     auto pactExit = pMenu->addAction( "Exit", this, SLOT(onExitClicked()) );
 
     //
@@ -67,6 +70,11 @@ void CGuiController::onStopClicked()
 void CGuiController::onRestartClicked()
 {
     AgentController.Restart();
+}
+
+void CGuiController::onDumpPerformanceCounters()
+{
+    AgentController.DumpPerfCounters();
 }
 
 void CGuiController::onOpenFolder()
@@ -111,6 +119,12 @@ void CGuiController::onNotification(const CMessage &oMsg)
     }
 
     ENotificationEvent eEvent = oMsg.GetEvent();
+
+//    if( eEvent == ENotificationEvent::CountersInfoDumped )
+//    {
+//        QString sDumpFilePath = oMsg.GetConfigInfo().value("dump_file_path").toString();
+//        m_pSystemTrayIcon->showMessage( oMsg.GetTitle(), oMsg.GetMessage(), eMessageType);
+//    }
 
     if( !oMsg.GetConfigInfo().isEmpty() )
     {

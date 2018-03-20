@@ -1,19 +1,19 @@
 #include "system_extended_metrics.h"
 
-INIT_METRIC_CHECKER(SystemGpuAdapterMemory)
+INIT_METRIC_CHECKER(SystemGpuAdapterMemory, "GPU Adapter Memory")
 {
     QStringList lstAllowedItems = ConfigSection().Value<QStringList>("instances", QStringList() << "all" );
     AddPerformanceCounterCheckerEx("\\GPU Adapter Memory(*)\\Total Committed", "System", lstAllowedItems);
 }
 
-INIT_METRIC_CHECKER(SystemGpuEngine)
+INIT_METRIC_CHECKER(SystemGpuEngine, "GPU Engine")
 {
     QStringList lstAllowedItems = ConfigSection().Value<QStringList>("instances", QStringList() << "all" );
     AddPerformanceCounterCheckerEx("\\GPU Engine(*)\\Running Time          ", "System", lstAllowedItems);
     AddPerformanceCounterCheckerEx("\\GPU Engine(*)\\Utilization Percentage", "System", lstAllowedItems);
 }
 
-INIT_METRIC_CHECKER(SystemGpuProcessMemory)
+INIT_METRIC_CHECKER(SystemGpuProcessMemory, "GPU Process Memory")
 {
     QStringList lstAllowedItems = ConfigSection().Value<QStringList>("instances", QStringList() << "all" );
 
@@ -23,7 +23,7 @@ INIT_METRIC_CHECKER(SystemGpuProcessMemory)
     AddPerformanceCounterCheckerEx("\\GPU Process Memory(*)\\Shared Usage   ", "System", lstAllowedItems);
 }
 
-INIT_METRIC_CHECKER(SystemRemoteFxRootGpuManagement)
+INIT_METRIC_CHECKER(SystemRemoteFxRootGpuManagement, "RemoteFX Root GPU Management")
 {
     QStringList lstAllowedItems = ConfigSection().Value<QStringList>("instances", QStringList() << "all" );
 
@@ -32,7 +32,7 @@ INIT_METRIC_CHECKER(SystemRemoteFxRootGpuManagement)
     AddPerformanceCounterCheckerEx("\\RemoteFX Root GPU Management(*)\\VRAM: Reserved % per GPU       ", "System", lstAllowedItems);
 }
 
-INIT_METRIC_CHECKER(SystemRemoteFxSynth3dVscVmDevice)
+INIT_METRIC_CHECKER(SystemRemoteFxSynth3dVscVmDevice, "RemoteFX Synth3D VSC VM Device")
 {
     AddPerformanceCounterChecker("\\RemoteFX Synth3D VSC VM Device\\Number of connected VMT channels       ", "System");
     AddPerformanceCounterChecker("\\RemoteFX Synth3D VSC VM Device\\Number of created VMT channels         ", "System");
@@ -43,7 +43,7 @@ INIT_METRIC_CHECKER(SystemRemoteFxSynth3dVscVmDevice)
     AddPerformanceCounterChecker("\\RemoteFX Synth3D VSP\\Number of created VM devices                     ", "System");
 }
 
-INIT_METRIC_CHECKER(SystemNumaNodeMemory)
+INIT_METRIC_CHECKER(SystemNumaNodeMemory, "NUMA Node Memory")
 {
     AddPerformanceCounterChecker("\\NUMA Node Memory(_Total)\\Available MBytes            ", "System");
     AddPerformanceCounterChecker("\\NUMA Node Memory(_Total)\\Free & Zero Page List MBytes", "System");
@@ -51,13 +51,13 @@ INIT_METRIC_CHECKER(SystemNumaNodeMemory)
     AddPerformanceCounterChecker("\\NUMA Node Memory(_Total)\\Total MBytes                ", "System");
 }
 
-INIT_METRIC_CHECKER(SystemPagingFile)
+INIT_METRIC_CHECKER(SystemPagingFile, "Paging File")
 {
     AddPerformanceCounterChecker("\\Paging File(_Total)\\% Usage     ", "System");
     AddPerformanceCounterChecker("\\Paging File(_Total)\\% Usage Peak", "System");
 }
 
-INIT_METRIC_CHECKER(SystemSecuritySystemWideStatistics)
+INIT_METRIC_CHECKER(SystemSecuritySystemWideStatistics, "Security System-Wide Statistics")
 {
     AddPerformanceCounterChecker("\\Security System-Wide Statistics\\Active Schannel Session Cache Entries                   ", "System");
     AddPerformanceCounterChecker("\\Security System-Wide Statistics\\Digest Authentications                                  ", "System");

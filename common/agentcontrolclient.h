@@ -22,6 +22,7 @@ public slots:
     void Stop();
     void Restart();
     void Status();
+    void DumpPerfCounters();
 signals:
     void sigNotification( CMessage const& oMsg );
 

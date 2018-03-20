@@ -49,7 +49,7 @@ INIT_METRIC_CHECKER(DotNetClrJit)
 //  DotNetClrLocksAndThreads
 //
 
-INIT_METRIC_CHECKER(DotNetClrLocksAndThreads)
+INIT_METRIC_CHECKER(DotNetClrLocksAndThreads, ".NET CLR LocksAndThreads")
 {
     AddPerformanceCounterChecker("dot_net_clr_current_logical_threads_count",  "\\.NET CLR LocksAndThreads(_Global_)\\# of current logical Threads",  EMetricDataType::Counter, "DotNet" );
     AddPerformanceCounterChecker("dot_net_clr_current_physical_threads_count", "\\.NET CLR LocksAndThreads(_Global_)\\# of current physical Threads", EMetricDataType::Counter, "DotNet" );
@@ -59,7 +59,7 @@ INIT_METRIC_CHECKER(DotNetClrLocksAndThreads)
     AddPerformanceCounterChecker("dot_net_clr_total_count_of_contentions",     "\\.NET CLR LocksAndThreads(_Global_)\\Total # of Contentions",        EMetricDataType::Counter, "DotNet" );
 }
 
-INIT_METRIC_CHECKER(DotNetClrMemory)
+INIT_METRIC_CHECKER(DotNetClrMemory, ".NET CLR Memory")
 {
     AddPerformanceCounterChecker("\\.NET CLR Memory(_Global_)\\# Bytes in all Heaps",                    "DotNet");
     AddPerformanceCounterChecker("\\.NET CLR Memory(_Global_)\\# GC Handles",                            "DotNet");
@@ -86,7 +86,7 @@ INIT_METRIC_CHECKER(DotNetClrMemory)
     AddPerformanceCounterChecker("\\.NET CLR Memory(_Global_)\\Promoted Memory from Gen 1",              "DotNet");
 }
 
-INIT_METRIC_CHECKER(DotNetClrRemoting)
+INIT_METRIC_CHECKER(DotNetClrRemoting, ".NET CLR Remoting")
 {
     AddPerformanceCounterChecker("\\.NET CLR Remoting(_Global_)\\Channels"                          , "DotNet");
     AddPerformanceCounterChecker("\\.NET CLR Remoting(_Global_)\\Context Proxies"                   , "DotNet");
@@ -97,7 +97,7 @@ INIT_METRIC_CHECKER(DotNetClrRemoting)
     AddPerformanceCounterChecker("\\.NET CLR Remoting(_Global_)\\Total Remote Calls"                , "DotNet");
 }
 
-INIT_METRIC_CHECKER(DotNetAspNet)
+INIT_METRIC_CHECKER(DotNetAspNet, "ASP.NET")
 {
     AddPerformanceCounterChecker("\\ASP.NET\\Application Restarts"              , "ASPNet");
     AddPerformanceCounterChecker("\\ASP.NET\\Applications Running"              , "ASPNet");
@@ -121,7 +121,7 @@ INIT_METRIC_CHECKER(DotNetAspNet)
     AddPerformanceCounterChecker("\\ASP.NET\\Worker Processes Running"          , "ASPNet");
 }
 
-INIT_METRIC_CHECKER(DotNetAspNetApplications)
+INIT_METRIC_CHECKER(DotNetAspNetApplications, "ASP.NET Applications")
 {
     AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\% Managed Processor Time (estimated)    ", "ASPNet");
     AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Anonymous Requests/Sec                  ", "ASPNet");
@@ -161,7 +161,7 @@ INIT_METRIC_CHECKER(DotNetAspNetApplications)
     AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Transactions Total                      ", "ASPNet");
 }
 
-INIT_METRIC_CHECKER(DotNetAspNetStateService)
+INIT_METRIC_CHECKER(DotNetAspNetStateService, "ASP.NET State Service")
 {
     AddPerformanceCounterChecker("\\ASP.NET State Service\\State Server Sessions Abandoned", "ASPNet");
     AddPerformanceCounterChecker("\\ASP.NET State Service\\State Server Sessions Active"   , "ASPNet");

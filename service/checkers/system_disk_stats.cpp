@@ -2,7 +2,7 @@
 
 const int MBSize = 1048576;
 
-INIT_METRIC_CHECKER(SystemDiskStats)
+INIT_METRIC_CHECKER(SystemDiskStats, "LogicalDisk")
 {
     double dConfHighVal = -1;
     double dConfSevereVal = -1;

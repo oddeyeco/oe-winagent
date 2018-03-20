@@ -16,7 +16,8 @@ enum class ENotificationEvent : qint32
 {
     NoEvent = 0,
     AgentStarted,
-    AgentStopped
+    AgentStopped,
+    CountersInfoDumped
 };
 
 using CConfigInfo = QMap<QString, QVariant>;

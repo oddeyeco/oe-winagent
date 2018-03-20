@@ -8,6 +8,7 @@
 
 #include "agentinitializer.h"
 #include "configurationmanager.h"
+#include "performancecounterinfodumper.h"
 
 COEAgentControlServer::COEAgentControlServer(QObject* pParent )
     : Base(pParent)
@@ -342,6 +343,44 @@ bool COEAgentControlServer::SendStatus(QLocalSocket *pRequestedClientSock, QStri
     }
 }
 
+bool COEAgentControlServer::DumpAvailablePerformanceCounters(QLocalSocket *pRequestedClientSock, const QString &sCommand)
+{
+    // Start
+    try
+    {
+        LOG_INFO("Control SERVER: DumpAvailableCounters started");
+
+        CServiceController::Instance().DumpPerformanceCountersInfo();
+
+        QString sDumpFilePath = CPerformanceCounterInfoDumper::Instance().GetDumpFilePath();
+        QString sInfo = QString("\Dump file path: %1").arg( sDumpFilePath );
+        NotifyToClient( pRequestedClientSock, CMessage( ENotificationEvent::CountersInfoDumped,
+                                                        sCommand,
+                                                        "Available Performance Counters Info Dumped",
+                                                        sInfo));
+
+        LOG_INFO("Control SERVER: DumpAvailableCounters succedded!")
+        return true;
+    }
+    catch(std::exception const& oExc)
+    {
+        QString sMessageTitle = QString( "Failed to dump available performance counters: %1" ).arg( oExc.what() );
+        NotifyToClient( pRequestedClientSock, CMessage("OE-Agent start faield",
+                                                       oExc.what(),
+                                                       EMessageType::Error,
+                                                       sCommand ) );
+        LOG_ERROR("Control SERVER: DumpAvailablePerformanceCounters Failed!: " + std::string(oExc.what()));
+        return false;
+    }
+    catch( ... )
+    {
+        QString sErrorMessage = "DumpAvailablePerformanceCounters Failed!: Unknown exception";
+        NotifyToClient( pRequestedClientSock, CMessage( sErrorMessage, EMessageType::Error, "", ENotificationEvent::NoEvent, sCommand ) );
+        LOG_ERROR("Control SERVER: StartAgent failed! Unknown exception");
+        return false;
+    }
+}
+
 void COEAgentControlServer::ProcessCommandJson(const QJsonObject &oCommand,
                                                QLocalSocket* pSenderSock)
 {
@@ -364,5 +403,10 @@ void COEAgentControlServer::ProcessCommandJson(const QJsonObject &oCommand,
     {
         // Restart
         SendStatus(pSenderSock, sCommand);
+    }
+    else if( sCommand.compare( "dump_perf_counters", Qt::CaseInsensitive ) == 0  )
+    {
+        // Restart
+        DumpAvailablePerformanceCounters(pSenderSock, sCommand);
     }
 }

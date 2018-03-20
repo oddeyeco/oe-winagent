@@ -141,6 +141,13 @@ IMetricsCategoryCheckerSPtr CAgentInitialzier::CreateCheckerByConfigName( QStrin
     return nullptr;
 }
 
+//bool CAgentInitialzier::IsMetricsCheckerAvailable(const QString &sDirtyCheckerName)
+//{
+//    QString sCheckerClassName = MakeCheckerName(sDirtyCheckerName);
+//    int nTypeID = QMetaType::type(sCheckerClassName.toLatin1());
+//    return nTypeID != QMetaType::UnknownType;
+//}
+
 QString CAgentInitialzier::SimplifyName(QString sName)
 {
     sName.replace(".", " Dot ");
@@ -157,6 +164,12 @@ QString CAgentInitialzier::MakeCheckerName(const QString &sConfigName, const QSt
     QString sCheckerClassName = SimplifyName(sConfigName)
             + "_" + SimplifyName(sSectionName);
     return ToCamelCase( sCheckerClassName );
+}
+
+QString CAgentInitialzier::MakeCheckerName(const QString &sDirtyName)
+{
+     QString sCheckerClassName = SimplifyName(sDirtyName);
+     return ToCamelCase( sCheckerClassName );
 }
 
 QString CAgentInitialzier::ToCamelCase(const QString &s)

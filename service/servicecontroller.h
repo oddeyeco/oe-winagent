@@ -30,6 +30,7 @@ public:
     //
     void Start();
     void Stop();
+    void DumpPerformanceCountersInfo();
 
     bool IsStarted() const;
     double GetPriceInfo();

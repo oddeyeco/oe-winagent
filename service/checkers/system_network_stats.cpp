@@ -1,6 +1,6 @@
 #include "system_network_stats.h"
 
-INIT_METRIC_CHECKER(SystemNetworkStats)
+INIT_METRIC_CHECKER(SystemNetworkStats, "Network Interface")
 {
 //    double dConfHighVal = -1;
 //    double dConfSevereVal = -1;

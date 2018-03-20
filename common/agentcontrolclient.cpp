@@ -70,6 +70,18 @@ void CAgentControlClient::Status()
     }
 }
 
+void CAgentControlClient::DumpPerfCounters()
+{
+    if( Connect() )
+    {
+        QJsonObject oCommandJson;
+        oCommandJson["Command"] = "dump_perf_counters";
+
+        m_pServerSocket->write( QJsonDocument( oCommandJson ).toJson() );
+        m_pServerSocket->waitForBytesWritten(500);
+    }
+}
+
 bool CAgentControlClient::Connect()
 {
     Q_ASSERT(m_pServerSocket);

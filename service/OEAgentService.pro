@@ -57,7 +57,10 @@ SOURCES += main.cpp \
     checkers/dot_net.cpp \
     checkers/hyper_v.cpp \
     checkers/sql_server.cpp \
-    checkers/system_extended_metrics.cpp
+    checkers/system_extended_metrics.cpp \
+    checkers/advanced_network.cpp \
+    performancecountersinfoprovider.cpp \
+    performancecounterinfodumper.cpp
 
 include(../3rdparty/qtservice/src/qtservice.pri)
 
@@ -101,4 +104,7 @@ HEADERS += \
     checkers/dot_net.h \
     checkers/hyper_v.h \
     checkers/sql_server.h \
-    checkers/system_extended_metrics.h
+    checkers/system_extended_metrics.h \
+    checkers/advanced_network.h \
+    performancecountersinfoprovider.h \
+    performancecounterinfodumper.h

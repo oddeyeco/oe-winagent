@@ -1,6 +1,6 @@
 #include "system_cpu_stats.h"
 
-INIT_METRIC_CHECKER(SystemCpuStats)
+INIT_METRIC_CHECKER(SystemCpuStats, "Processor")
 {
     double dConfHighVal   = -1;
     double dConfSevereVal = -1;

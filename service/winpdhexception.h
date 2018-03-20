@@ -17,6 +17,13 @@ public:
         : CException("Performance data collection error: " + sMsg + " : "
                      + CWinPerformanceDataProvider::GetErrorDescription(nStatusCode)) {}
 };
+
+class CWinCounterRetrieveException : public CException
+{
+public:
+    inline CWinCounterRetrieveException(QString sDetails)
+        : CException("Failed to retrieve performance counters info: " + sDetails) {}
+};
 ////////////////////////////////////////////////////////////////
 
 

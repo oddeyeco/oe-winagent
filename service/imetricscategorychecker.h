@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include "metricdata.h"
-#include "configuration.h"
+#include "configurationmanager.h"
 #include "winperformancedataprovider.h"
 #include "macros.h"
 #include "logger.h"

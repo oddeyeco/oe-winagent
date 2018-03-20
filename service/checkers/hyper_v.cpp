@@ -1,6 +1,6 @@
 #include "hyper_v.h"
 
-INIT_METRIC_CHECKER(HyperVDynamicMemoryBalancer)
+INIT_METRIC_CHECKER(HyperVDynamicMemoryBalancer, "Hyper-V Dynamic Memory Balancer")
 {
     AddPerformanceCounterChecker("\\Hyper-V Dynamic Memory Balancer(System Balancer)\\Available Memory                 ", "HyperV");
     AddPerformanceCounterChecker("\\Hyper-V Dynamic Memory Balancer(System Balancer)\\Average Pressure                 ", "HyperV");
@@ -8,7 +8,7 @@ INIT_METRIC_CHECKER(HyperVDynamicMemoryBalancer)
     //AddPerformanceCounterChecker("\\Hyper-V Dynamic Memory Integration Service\\Maximum Memory, Mbytes"                 , "HyperV");
 }
 
-INIT_METRIC_CHECKER(HyperVHypervisor)
+INIT_METRIC_CHECKER(HyperVHypervisor, "Hyper-V Hypervisor")
 {
     AddPerformanceCounterChecker( "\\Hyper-V Hypervisor\\HypervisorStartupCost     ", "HyperV");
     AddPerformanceCounterChecker( "\\Hyper-V Hypervisor\\Logical Processors        ", "HyperV");
@@ -20,7 +20,7 @@ INIT_METRIC_CHECKER(HyperVHypervisor)
     AddPerformanceCounterChecker( "\\Hyper-V Hypervisor\\Virtual Processors        ", "HyperV");
 }
 
-INIT_METRIC_CHECKER(HyperVHypervisorLogicalProcessor)
+INIT_METRIC_CHECKER(HyperVHypervisorLogicalProcessor, "Hyper-V Hypervisor Logical Processor")
 {
     AddPerformanceCounterChecker( "\\Hyper-V Hypervisor Logical Processor(_Total)\\% C2 Time                           ", "HyperV");
     AddPerformanceCounterChecker( "\\Hyper-V Hypervisor Logical Processor(_Total)\\% Guest Run Time                    ", "HyperV");
@@ -37,7 +37,7 @@ INIT_METRIC_CHECKER(HyperVHypervisorLogicalProcessor)
     AddPerformanceCounterChecker( "\\Hyper-V Hypervisor Logical Processor(_Total)\\Total Interrupts/sec                ", "HyperV");
 }
 
-INIT_METRIC_CHECKER(HyperVHypervisorRootPartition)
+INIT_METRIC_CHECKER(HyperVHypervisorRootPartition, "Hyper-V Hypervisor Root Partition")
 {
     AddPerformanceCounterChecker( "\\Hyper-V Hypervisor Root Partition(_Total)\\1G device pages                  ", "HyperV");
     AddPerformanceCounterChecker( "\\Hyper-V Hypervisor Root Partition(_Total)\\1G GPA pages                     ", "HyperV");
@@ -67,7 +67,7 @@ INIT_METRIC_CHECKER(HyperVHypervisorRootPartition)
     AddPerformanceCounterChecker( "\\Hyper-V Hypervisor Root Partition(_Total)\\Virtual TLB Pages                ", "HyperV");
 }
 
-INIT_METRIC_CHECKER(HyperVHypervisorRootVirtualProcessor)
+INIT_METRIC_CHECKER(HyperVHypervisorRootVirtualProcessor, Hyper-V Hypervisor Root Virtual Processor)
 {
     AddPerformanceCounterChecker( "\\Hyper-V Hypervisor Root Virtual Processor(_Total)\\% Hypervisor Run Time                            ", "HyperV");
     AddPerformanceCounterChecker( "\\Hyper-V Hypervisor Root Virtual Processor(_Total)\\% Remote Run Time                                ", "HyperV");
@@ -80,20 +80,20 @@ INIT_METRIC_CHECKER(HyperVHypervisorRootVirtualProcessor)
     AddPerformanceCounterChecker( "\\Hyper-V Hypervisor Root Virtual Processor(_Total)\\Virtual Processor Hypercalls/sec                 ", "HyperV");
 }
 
-INIT_METRIC_CHECKER(HyperVVirtualMachineBus)
+INIT_METRIC_CHECKER(HyperVVirtualMachineBus, "Hyper-V Virtual Machine Bus")
 {
     AddPerformanceCounterChecker("\\Hyper-V Virtual Machine Bus\\Interrupts Received/sec", "HyperV");
     AddPerformanceCounterChecker("\\Hyper-V Virtual Machine Bus\\Interrupts Sent/sec    ", "HyperV");
     AddPerformanceCounterChecker("\\Hyper-V Virtual Machine Bus\\Throttle Events        ", "HyperV");
 }
 
-INIT_METRIC_CHECKER(HyperVVirtualMachineHealthSummary)
+INIT_METRIC_CHECKER(HyperVVirtualMachineHealthSummary, "Hyper-V Virtual Machine Health Summary")
 {
     AddPerformanceCounterChecker("\\Hyper-V Virtual Machine Health Summary\\Health Critical", "HyperV");
     AddPerformanceCounterChecker("\\Hyper-V Virtual Machine Health Summary\\Health Ok      ", "HyperV");
 }
 
-INIT_METRIC_CHECKER(HyperVVirtualNetworkAdapter)
+INIT_METRIC_CHECKER(HyperVVirtualNetworkAdapter, "Hyper-V Virtual Network Adapter")
 {
     QStringList lstAllowedItems = ConfigSection().Value<QStringList>("adapters", QStringList() << "all" );
 
@@ -103,7 +103,7 @@ INIT_METRIC_CHECKER(HyperVVirtualNetworkAdapter)
     AddPerformanceCounterCheckerEx("\\Hyper-V Virtual Network Adapter(*)\\IPsec offload Bytes Sent/sec           ", "HyperV", lstAllowedItems);
 }
 
-INIT_METRIC_CHECKER(HyperVVirtualStorageDevice)
+INIT_METRIC_CHECKER(HyperVVirtualStorageDevice, "Hyper-V Virtual Storage Device")
 {
     QStringList lstAllowedItems = ConfigSection().Value<QStringList>("storages", QStringList() << "all" );
 
@@ -121,7 +121,7 @@ INIT_METRIC_CHECKER(HyperVVirtualStorageDevice)
     AddPerformanceCounterCheckerEx("\\Hyper-V Virtual Storage Device(*)\\Write Count                  ", "HyperV", lstAllowedItems);
 }
 
-INIT_METRIC_CHECKER(HyperVVirtualSwitch)
+INIT_METRIC_CHECKER(HyperVVirtualSwitch, "Hyper-V Virtual Switch")
 {
     QStringList lstAllowedItems = ConfigSection().Value<QStringList>("switches", QStringList() << "all" );
 
@@ -141,7 +141,7 @@ INIT_METRIC_CHECKER(HyperVVirtualSwitch)
     AddPerformanceCounterCheckerEx("\\Hyper-V Virtual Switch(*)\\Purged Mac Addresses/sec               ", "HyperV", lstAllowedItems);
 }
 
-INIT_METRIC_CHECKER(HyperVVmVidNumaNode)
+INIT_METRIC_CHECKER(HyperVVmVidNumaNode, "Hyper-V VM Vid Numa Node")
 {
     QStringList lstAllowedItems = ConfigSection().Value<QStringList>("instances", QStringList() << "all" );
     AddPerformanceCounterCheckerEx("\\Hyper-V VM Vid Numa Node(*)\\PageCount     ", "HyperV", lstAllowedItems);

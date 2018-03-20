@@ -2,6 +2,7 @@
 #include "configurationmanager.h"
 #include "agentinitializer.h"
 #include "pricinginfoprovider.h"
+#include "performancecounterinfodumper.h"
 #include "upload/sendcontroller.h"
 
 #include <iostream>
@@ -9,6 +10,8 @@
 CServiceController::CServiceController(QObject *pParent)
     : QObject(pParent)
 {
+    QString sDumpDir = ConfMgr.GetAgentDirPath() + "/perf_counters_available/";
+    CPerformanceCounterInfoDumper::Instance().SetDumpDirPath( sDumpDir );
 }
 
 CServiceController &CServiceController::Instance()
@@ -99,6 +102,25 @@ void CServiceController::Stop()
     LOG_INFO( "___AGENT_STOPPED___" );
 
     emit sigStopped();
+}
+
+void CServiceController::DumpPerformanceCountersInfo()
+{
+    try
+    {
+        CPerformanceCounterInfoDumper::Instance().DumpCountersInfo();
+    }
+    catch( std::exception& oExc )
+    {
+        LOG_ERROR( std::string("Performance Counters Info Dump Failed: ") + oExc.what() );
+        std::cout << "Performance Counters Info Dump Failed: " << oExc.what() << std::endl;
+        // rethrow
+        throw oExc;
+    }
+    catch( ... )
+    {
+        LOG_ERROR( std::string("Performance Counters Info Dump Failed: Unknown Exception") );
+    }
 }
 
 bool CServiceController::IsStarted() const
