@@ -1,4 +1,7 @@
 #include "engine.h"
+#include "commonexceptions.h"
+#include "upload/sendcontroller.h"
+
 #include <QDebug>
 #include <QElapsedTimer>
 #include <iostream>
@@ -58,6 +61,18 @@ void CEngine::AddChecker(IMetricsCategoryCheckerSPtr pChecker)
             pChecker->Initialize();
             m_setCheckers.insert(pChecker);
         }
+//        catch( CFailedToAddCounterException const& oExc )
+//        {
+//            LOG_ERROR( QString("Metric data source not found: Metric: %1").arg(oExc.GetMetricName()).toStdString() );
+//            LOG_DEBUG( QString("Metric %1: %2").arg( oExc.GetMetricName(), oExc.GetMessage() ) );
+//            // sned scpecial message
+//            SendController.SendSeverityMessage( oExc.GetMetricName(),
+//                                                EMetricDataSeverity::Severe,
+//                                                oExc.GetMessage(), 0,
+//                                                oExc.GetInstanceType(),
+//                                                oExc.GetInstanceName() );
+
+//        }
         catch( std::exception const& oExc )
         {
             CMessage oMessage("Metric checker initialization failed",

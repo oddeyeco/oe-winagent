@@ -37,7 +37,11 @@ void CServiceController::Start()
                                          << "oddeye"
                                          << ".net"
                                          << "hyper-v"
+                                         << "advanced_network"
                                          << "sql_server"
+                                         << "utility"
+                                         << "vmware"
+                                         << "advanced_perf_counters_enabled"
                                          );
         // Load Configurations
         ConfMgr.LoadConfigurations();
@@ -68,8 +72,9 @@ void CServiceController::Start()
         m_oPriceInfoFetcher.SetMetricsCount( m_pEngine->GetLastMetricsCount() );
         double dIntervalSec = double( m_pEngine->GetUpdateInterval() ) / 1000.;
         m_oPriceInfoFetcher.SetUpdatesIntervalSec( dIntervalSec );
-        try {
-        m_oPriceInfoFetcher.CalculatePrice();
+        try
+        {
+            m_oPriceInfoFetcher.CalculatePrice();
         } catch(std::exception const& oEx)
         {
             LOG_ERROR( std::string("Calculate price failed on agent start: ") + oEx.what() );

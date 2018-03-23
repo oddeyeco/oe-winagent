@@ -57,9 +57,9 @@ INIT_METRIC_CHECKER(SystemPagingFile, "Paging File")
     AddPerformanceCounterChecker("\\Paging File(_Total)\\% Usage Peak", "System");
 }
 
-INIT_METRIC_CHECKER(SystemSecuritySystemWideStatistics, "Security System-Wide Statistics")
+INIT_METRIC_CHECKER(SystemSecuritySystemWideStatistics, )
 {
-    AddPerformanceCounterChecker("\\Security System-Wide Statistics\\Active Schannel Session Cache Entries                   ", "System");
+    AddPerformanceCounterChecker("\\Security System-Wide StatisticsSecurity System-Wide Statistics\\Active Schannel Session Cache Entries                   ", "System");
     AddPerformanceCounterChecker("\\Security System-Wide Statistics\\Digest Authentications                                  ", "System");
     AddPerformanceCounterChecker("\\Security System-Wide Statistics\\Forwarded Kerberos Requests                             ", "System");
     AddPerformanceCounterChecker("\\Security System-Wide Statistics\\KDC armored AS Requests                                 ", "System");

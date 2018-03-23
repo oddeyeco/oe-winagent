@@ -15,7 +15,7 @@ public:
     void SetDumpDirPath(QString const& sPath);
     QString GetDumpFilePath() const;
 
-    void AddtoFilter( QString const& sFilter );
+    void AddToFilter(QString sFilter );
 
 private:
     bool ContainesOneOf(const QString &sSourceString, const QStringList &lstLexems);

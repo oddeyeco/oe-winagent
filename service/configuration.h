@@ -26,6 +26,7 @@ public:
     QString GetName() const;
     QStringList GetAllSectionNames() const;
     CConfigSection GetSection( QString const& sSectionName );
+    CConfigSection GetRootSection();
 
     template <typename T>
     T Value( QString const& sKey );

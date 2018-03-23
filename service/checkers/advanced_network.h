@@ -1,7 +1,6 @@
 #ifndef ADVANCED_NETWORK_H
 #define ADVANCED_NETWORK_H
 
-
 #include <winperformancemetricschecker.h>
 
 DECLARE_PERF_COUNTER_METRIC_CHECKER(AdvancedNetworkDns64Global)

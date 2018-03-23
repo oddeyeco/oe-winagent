@@ -35,7 +35,13 @@ public:
 public slots:
     // Main Interface
     void SendMetricsData( MetricDataList const& lstMetrics );
-    void SendMessage( QString const& sMessage, EMessageType eType );
+    void SendSeverityMessage( MetricSeverityDescriptorSPtr pSeverityDescriptor );
+    void SendSeverityMessage( QString const& sMetricName,
+                              EMetricDataSeverity eSeverity,
+                              QString const& sMessage,
+                              double dAlertDurationHint = 0,
+                              QString const& sInstanceType = QString(),
+                              QString const& sInstanceName = QString() );
 
     NetworkAccessManagerWPtr GetNetworkAccessManager();
 
@@ -60,6 +66,7 @@ private:
     std::atomic<bool>        m_bIsReady;
 };
 
+#define SendController CSendController::Instance()
 
 
 //using SendControllerSPtr = std::shared_ptr<CSendController>;

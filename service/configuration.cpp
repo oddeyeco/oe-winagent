@@ -35,6 +35,19 @@ CConfigSection CConfiguraion::GetSection(const QString &sSectionName)
     return oRes;
 }
 
+CConfigSection CConfiguraion::GetRootSection()
+{
+    CConfigSection oRes( GetName() );
+
+    QStringList lstSectionKeys = Base::childKeys();
+    for( auto& sKey : lstSectionKeys )
+    {
+        oRes.insert( sKey, Base::value(sKey) );
+    }
+
+    return oRes;
+}
+
 QString CConfiguraion::GetValueAsPath(const QString &sKey, const QString &sDefaultVal)
 {
     QString sPath = Value<QString>( sKey, sDefaultVal );

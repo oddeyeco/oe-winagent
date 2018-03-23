@@ -54,6 +54,11 @@ void CConsolController::ProcessArguments()
         {
             AgentController.Restart();
         }
+        else if (a == QLatin1String("-d") || a == QLatin1String("-dump")
+                 || a == QLatin1String("d") || a == QLatin1String("dump"))
+        {
+            AgentController.DumpPerfCounters();
+        }
         else if (a == QLatin1String("-status") || a == QLatin1String("status") )
         {
             AgentController.Status();
@@ -71,6 +76,7 @@ void CConsolController::ProcessArguments()
                      "\t-start\t\t: Start OddEye Agent\n"
                      "\t-stop\t\t: Stop OddEye Agent\n"
                      "\t-r(estart)\t: Restart OddEye Agent\n"
+                     "\t-d(ump) \t: Dump advanced metrics list\n"
                      "\t-status \t: Query OddEye Agent status\n"
                      "\t-v(ersion)\t: Print version information.\n"
                      "\t-q(uit)   \t: Quit terminal\n"

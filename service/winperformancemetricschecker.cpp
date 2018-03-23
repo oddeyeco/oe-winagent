@@ -1,6 +1,12 @@
 #include "winperformancemetricschecker.h"
 #include "winpdhexception.h"
 #include "upload/basicoddeyeclient.h"
+#include "upload/sendcontroller.h"
+#include "logger.h"
+
+#ifdef GetMessage
+#   undef GetMessage
+#endif
 
 CWinPerformanceMetricsChecker::CWinPerformanceMetricsChecker(QObject *pParent)
     : Base( pParent )
@@ -27,6 +33,10 @@ PerformanceCounterCheckersList CWinPerformanceMetricsChecker::AddPerformanceCoun
         // complete counter path
         QString sFilledCounterPathOrWildcard = sCounterPathOrWildcard.arg("(_Total)");
 
+        // fetch instance name
+        QString sInstanceName;
+        MakeMetricNameFromCounterPath( sFilledCounterPathOrWildcard, nullptr, &sInstanceName );
+
         auto pChecker = AddPerformanceCounterChecker(  sMetricName,
                                                        sFilledCounterPathOrWildcard,
                                                        eMetricDataType,
@@ -35,7 +45,7 @@ PerformanceCounterCheckersList CWinPerformanceMetricsChecker::AddPerformanceCoun
                                                        dHighValue,
                                                        dSevereValue,
                                                        sInstanceType,
-                                                       "",
+                                                       sInstanceName,
                                                        funcMetricModifier );
 
         lstAddedCheckers.append( pChecker );
@@ -225,20 +235,36 @@ PerformanceCounterCheckerSPtr CWinPerformanceMetricsChecker::AddPerformanceCount
                                                                                             const QString &sInstanceName,
                                                                                             ValueModifierFunc funcMetricModifier)
 {
-    // create checker
-    auto pChecker = std::make_shared<CPerformanceCounterChecker>( sMetricName,
-                                                                  sCurrentCounterPath,
-                                                                  eMetricDataType,
-                                                                  sMetricType,
-                                                                  PerfDataProvider(),
-                                                                  nReaction,
-                                                                  dHighValue,
-                                                                  dSevereValue,
-                                                                  sInstanceType,
-                                                                  sInstanceName,
-                                                                  funcMetricModifier );
-    Base::AddMetricChecker( pChecker );
-    return pChecker;
+    try
+    {
+        // create checker
+        auto pChecker = std::make_shared<CPerformanceCounterChecker>( sMetricName,
+                                                                      sCurrentCounterPath,
+                                                                      eMetricDataType,
+                                                                      sMetricType,
+                                                                      PerfDataProvider(),
+                                                                      nReaction,
+                                                                      dHighValue,
+                                                                      dSevereValue,
+                                                                      sInstanceType,
+                                                                      sInstanceName,
+                                                                      funcMetricModifier );
+        Base::AddMetricChecker( pChecker );
+        return pChecker;
+    }
+    catch( CFailedToAddCounterException const& oExc )
+    {
+        LOG_ERROR( QString("Metric data source not found: Metric: %1").arg(oExc.GetMetricName()).toStdString() );
+        LOG_DEBUG( QString("Metric %1: %2").arg( oExc.GetMetricName(), oExc.GetMessage() ) );
+        // sned scpecial message
+        SendController.SendSeverityMessage( oExc.GetMetricName(),
+                                            EMetricDataSeverity::Severe,
+                                            oExc.GetMessage(), 0,
+                                            oExc.GetInstanceType(),
+                                            oExc.GetInstanceName() );
+
+        return nullptr;
+    }
 }
 
 PerformanceCounterCheckerSPtr CWinPerformanceMetricsChecker::AddPerformanceCounterChecker( QString sPerfCounterPath,

@@ -205,7 +205,9 @@ bool COEAgentControlServer::StartAgent(QLocalSocket *pRequestedClientSock, const
 
             NotifyToAllClients( CMessage(ENotificationEvent::AgentStarted) );
 
-            LOG_INFO("Control SERVER: StartAgent succedded!")
+            LOG_INFO("Control SERVER: StartAgent succedded!");
+
+            ConfMgr.GetRegistrySettings().setValue( "autostart", QVariant(true) );
             return true;
         }
         catch(std::exception const& oExc)
@@ -245,7 +247,8 @@ bool COEAgentControlServer::StopAgent(QLocalSocket *pRequestedClientSock, QStrin
 
             NotifyToClient( pRequestedClientSock, CMessage(ENotificationEvent::AgentStopped, sCommand, "OddEye Agent Stopped"));
             NotifyToAllClients( CMessage(ENotificationEvent::AgentStopped) );
-            LOG_INFO("Control SERVER: StopAgent succedded!")
+            LOG_INFO("Control SERVER: StopAgent succedded!");
+            ConfMgr.GetRegistrySettings().setValue( "autostart", QVariant(false) );
             return true;
         }
         catch(std::exception const& oExc)
@@ -280,6 +283,7 @@ bool COEAgentControlServer::RestartAgent(QLocalSocket *pRequestedClientSock, QSt
                                                        sCommand,
                                                        "OddEye Agent Restarted"));
         LOG_INFO("Control SERVER: RestartAgent succedded!");
+        ConfMgr.GetRegistrySettings().setValue( "autostart", QVariant(true) );
         return true;
     }
     catch(std::exception const& oExc)
@@ -356,7 +360,7 @@ bool COEAgentControlServer::DumpAvailablePerformanceCounters(QLocalSocket *pRequ
         QString sInfo = QString("\Dump file path: %1").arg( sDumpFilePath );
         NotifyToClient( pRequestedClientSock, CMessage( ENotificationEvent::CountersInfoDumped,
                                                         sCommand,
-                                                        "Available Performance Counters Info Dumped",
+                                                        "Available performance counters info dumped",
                                                         sInfo));
 
         LOG_INFO("Control SERVER: DumpAvailableCounters succedded!")
@@ -364,8 +368,8 @@ bool COEAgentControlServer::DumpAvailablePerformanceCounters(QLocalSocket *pRequ
     }
     catch(std::exception const& oExc)
     {
-        QString sMessageTitle = QString( "Failed to dump available performance counters: %1" ).arg( oExc.what() );
-        NotifyToClient( pRequestedClientSock, CMessage("OE-Agent start faield",
+        QString sMessageTitle = QString( oExc.what() );
+        NotifyToClient( pRequestedClientSock, CMessage("Failed to dump available performance counters!",
                                                        oExc.what(),
                                                        EMessageType::Error,
                                                        sCommand ) );
@@ -374,9 +378,9 @@ bool COEAgentControlServer::DumpAvailablePerformanceCounters(QLocalSocket *pRequ
     }
     catch( ... )
     {
-        QString sErrorMessage = "DumpAvailablePerformanceCounters Failed!: Unknown exception";
+        QString sErrorMessage = "Failed to dump available performance counters!: Unknown exception";
         NotifyToClient( pRequestedClientSock, CMessage( sErrorMessage, EMessageType::Error, "", ENotificationEvent::NoEvent, sCommand ) );
-        LOG_ERROR("Control SERVER: StartAgent failed! Unknown exception");
+        LOG_ERROR("Control SERVER: DumpAvailableCounters failed! Unknown exception");
         return false;
     }
 }

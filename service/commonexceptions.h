@@ -76,4 +76,34 @@ public:
 };
 ////////////////////////////////////////////////////////////////
 
+
+////////////////////////////////////////////////////////////////
+class CFailedToAddCounterException : public CException
+{
+    using Base = CException;
+public:
+    CFailedToAddCounterException( QString const& sMessage,
+                                  QString const& sMetricName,
+                                  QString const& sCounterPath,
+                                  QString const& sInstanceType,
+                                  QString const& sInstanceName)
+        : Base(sMessage),
+          m_sMetricName(sMetricName),
+          m_sCounterPath( sCounterPath ),
+          m_sInstanceType(sInstanceType),
+          m_sInstanceName(sInstanceName)
+    {}
+
+public:
+    QString GetMetricName() const { return m_sMetricName; }
+    QString GetInstanceType() const { return m_sInstanceType; }
+    QString GetInstanceName() const { return m_sInstanceName; }
+
+private:
+    QString m_sMetricName;
+    QString m_sCounterPath;
+    QString m_sInstanceType;
+    QString m_sInstanceName;
+};
+////////////////////////////////////////////////////////////////
 #endif // COMMONEXCEPTIONS_H

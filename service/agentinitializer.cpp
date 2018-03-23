@@ -63,6 +63,28 @@ void CAgentInitialzier::InitializeEngine(CEngine *pEngine)
 
         // Create checkers for specified sections
         QStringList lstSections = pCurrentConfig->GetAllSectionNames();
+        if( lstSections.isEmpty() )
+        {
+            IMetricsCategoryCheckerSPtr pChecker = CreateCheckerByConfigName( pCurrentConfig->GetName() );
+            QString sCheckerName = MakeCheckerName( pCurrentConfig->GetName() );
+            if( pChecker )
+            {
+                LOG_INFO( "Checker loaded: " + sCheckerName );
+                pChecker->metaObject()->className();
+
+                // Pass config section to checker
+                auto&& oSection = pCurrentConfig->GetRootSection();
+                pChecker->SetConfigSection( oSection );
+                pEngine->AddChecker(pChecker);
+            }
+            else
+            {
+                LOG_INFO( "Checker NOT found: " + sCheckerName );
+                qDebug() << "Checker NOT found!";
+                // TODO
+            }
+        }
+
         for( QString sSectionName : lstSections )
         {
             // Check if checker enabled or not
@@ -120,7 +142,7 @@ IMetricsCategoryCheckerSPtr CAgentInitialzier::CreateCheckerByConfigName( QStrin
                                                                           QString const& sSectionName )
 {
     Q_ASSERT(!sConfigName.isEmpty());
-    Q_ASSERT(!sSectionName.isEmpty());
+    //Q_ASSERT(!sSectionName.isEmpty());
 
     // make checker class name from config section name
     QString sCheckerClassName = MakeCheckerName(sConfigName, sSectionName);
@@ -162,15 +184,15 @@ QString CAgentInitialzier::SimplifyName(QString sName)
 QString CAgentInitialzier::MakeCheckerName(const QString &sConfigName, const QString &sSectionName)
 {
     QString sCheckerClassName = SimplifyName(sConfigName)
-            + "_" + SimplifyName(sSectionName);
+            + (sSectionName.isEmpty()? "" : "_" + SimplifyName(sSectionName) );
     return ToCamelCase( sCheckerClassName );
 }
 
-QString CAgentInitialzier::MakeCheckerName(const QString &sDirtyName)
-{
-     QString sCheckerClassName = SimplifyName(sDirtyName);
-     return ToCamelCase( sCheckerClassName );
-}
+//QString CAgentInitialzier::MakeCheckerName(const QString &sDirtyName)
+//{
+//     QString sCheckerClassName = SimplifyName(sDirtyName);
+//     return ToCamelCase( sCheckerClassName );
+//}
 
 QString CAgentInitialzier::ToCamelCase(const QString &s)
 {

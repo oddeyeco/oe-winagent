@@ -33,6 +33,8 @@ public:
     void SendSpecialMessage(const QString &sMetricName,
                             const QString &sMessage,
                             EMessageType eType);
+    void SendSpecialMessage(MetricSeverityDescriptorSPtr pDescriptor );
+
 
     void SetClusterName( QString const& sClusterName );
     void SetGroupName( QString const& sGroupName );

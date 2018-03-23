@@ -3,7 +3,7 @@
 //
 //  DotNetClrJit
 //
-INIT_METRIC_CHECKER(DotNetClrJit)
+INIT_METRIC_CHECKER(DotNetClrJit, ".NET CLR Jit")
 {
     AddPerformanceCounterChecker("dot_net_clr_il_bytes_jitted",       "\\.NET CLR Jit(_Global_)\\# of IL Bytes Jitted", EMetricDataType::Counter, "DotNet" );
     AddPerformanceCounterChecker("dot_net_clr_methods_jitted",        "\\.NET CLR Jit(_Global_)\\# of Methods Jitted", EMetricDataType::Counter, "DotNet" );
@@ -127,9 +127,11 @@ INIT_METRIC_CHECKER(DotNetAspNetApplications, "ASP.NET Applications")
     AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Anonymous Requests/Sec                  ", "ASPNet");
     AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Application Lifetime Events/Sec         ", "ASPNet");
     AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Cache % Machine Memory Limit Used       ", "ASPNet");
+
     //AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Cache % Machine Memory Limit Used Base", "ASPNet");
     AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Cache API Entries                       ", "ASPNet");
     AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Cache Total Hit Ratio                   ", "ASPNet");
+
     AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Compilations Total                      ", "ASPNet");
     AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Error Events Raised                     ", "ASPNet");
     AddPerformanceCounterChecker( "\\ASP.NET Applications(__Total__)\\Errors During Compilation               ", "ASPNet");

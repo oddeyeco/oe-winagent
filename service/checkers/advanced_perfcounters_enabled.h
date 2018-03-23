@@ -1,0 +1,8 @@
+#ifndef ADVANCED_PERFCOUNTERS_ENABLED_H
+#define ADVANCED_PERFCOUNTERS_ENABLED_H
+
+#include <winperformancemetricschecker.h>
+
+DECLARE_PERF_COUNTER_METRIC_CHECKER(AdvancedPerfCountersEnabled)
+
+#endif // ADVANCED_PERFCOUNTERS_ENABLED_H

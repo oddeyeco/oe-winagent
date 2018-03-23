@@ -23,7 +23,7 @@ class _filter_registrar_##_checker_class_                                       
 public:                                                                     \
     _filter_registrar_##_checker_class_()                                                 \
     {                                                                       \
-        CPerformanceCounterInfoDumper::Instance().AddtoFilter(#_filter_);    \
+        CPerformanceCounterInfoDumper::Instance().AddToFilter(#_filter_);    \
     }                                                                       \
 };                                                                          \
 static _filter_registrar_##_checker_class_ _obj_filter_##_checker_class_;                                \

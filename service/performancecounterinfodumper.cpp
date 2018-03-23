@@ -10,6 +10,10 @@
 
 CPerformanceCounterInfoDumper::CPerformanceCounterInfoDumper()
 {
+    AddToFilter( "Process" );
+    AddToFilter( "Thread" );
+    AddToFilter( "Database ==> TableClasses" );
+    AddToFilter( "Database ==> Instances" );
 }
 
 CPerformanceCounterInfoDumper &CPerformanceCounterInfoDumper::Instance()
@@ -31,6 +35,8 @@ void CPerformanceCounterInfoDumper::DumpCountersInfo()
     }
 
     QTextStream out(&oFile);
+
+    out << "Metric, Description" << "\r\n\r\n";
 
     QStringList a = m_setFilter.toList();
 
@@ -54,7 +60,7 @@ void CPerformanceCounterInfoDumper::DumpCountersInfo()
         {
             if( oObject.lstInstances.isEmpty() )
             {
-                QString sPath = QString("\\%1\\%2").arg(oObject.sName).arg(oObject.lstCounters[j].sPath);
+                QString sPath = QString("\\\\%1\\\\%2").arg(oObject.sName).arg(oObject.lstCounters[j].sPath);
                 QString sMetricName = CWinPerformanceMetricsChecker::MakeMetricNameFromCounterPath( sPath );
                 out << sMetricName <<" = " << sPath << "," << oObject.lstCounters[j].sDescription << "\r\n";
             }
@@ -63,7 +69,7 @@ void CPerformanceCounterInfoDumper::DumpCountersInfo()
                 for( QString sInstanceName : oObject.lstInstances )
                 {
 
-                    QString sPath = QString("\\%1(%3)\\%2")
+                    QString sPath = QString("\\\\%1(%3)\\\\%2")
                             .arg(oObject.sName,
                                  oObject.lstCounters[j].sPath,
                                  sInstanceName)
@@ -94,8 +100,15 @@ QString CPerformanceCounterInfoDumper::GetDumpFilePath() const
     return m_sDumpFileName;
 }
 
-void CPerformanceCounterInfoDumper::AddtoFilter(const QString &sFilter)
+void CPerformanceCounterInfoDumper::AddToFilter( QString sFilter)
 {
+    if( sFilter.startsWith("\"") )
+        sFilter.remove(0, 1);
+
+    if( sFilter.endsWith("\"") )
+        sFilter.remove(sFilter.size() - 1, 1);
+
+
     if( sFilter.isEmpty() )
         return;
     m_setFilter.insert(sFilter);

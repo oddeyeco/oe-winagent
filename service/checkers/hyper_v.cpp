@@ -5,6 +5,7 @@ INIT_METRIC_CHECKER(HyperVDynamicMemoryBalancer, "Hyper-V Dynamic Memory Balance
     AddPerformanceCounterChecker("\\Hyper-V Dynamic Memory Balancer(System Balancer)\\Available Memory                 ", "HyperV");
     AddPerformanceCounterChecker("\\Hyper-V Dynamic Memory Balancer(System Balancer)\\Average Pressure                 ", "HyperV");
     AddPerformanceCounterChecker("\\Hyper-V Dynamic Memory Balancer(System Balancer)\\System Current Pressure          ", "HyperV");
+
     //AddPerformanceCounterChecker("\\Hyper-V Dynamic Memory Integration Service\\Maximum Memory, Mbytes"                 , "HyperV");
 }
 

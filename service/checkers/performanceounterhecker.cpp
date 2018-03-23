@@ -1,5 +1,5 @@
 #include "performanceounterhecker.h"
-
+#include "commonexceptions.h"
 
 CPerformanceCounterChecker::CPerformanceCounterChecker(QString const& sMetricName,
                                                        const QString & sCounterPath,
@@ -21,7 +21,15 @@ CPerformanceCounterChecker::CPerformanceCounterChecker(QString const& sMetricNam
     Q_ASSERT( !sCounterPath.isEmpty() );
     Q_ASSERT( pDataProvider );
     // convert qstring to wchar_t
-    m_hCounter = m_pDataProvider->AddCounter( CWinPerformanceDataProvider::ToWCharArray( sCounterPath ).get() );
+    try
+    {
+        m_hCounter = m_pDataProvider->AddCounter( CWinPerformanceDataProvider::ToWCharArray( sCounterPath ).get() );
+    }
+    catch(std::exception& e)
+    {
+        // rethrow
+        throw CFailedToAddCounterException( e.what(), sMetricName, sCounterPath, sInstanceType, sInstanceName );
+    }
 }
 
 CPerformanceCounterChecker::~CPerformanceCounterChecker()

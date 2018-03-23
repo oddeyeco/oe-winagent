@@ -51,6 +51,36 @@ CSendController::~CSendController()
     m_pCacheUploaderThread->wait();
 }
 
+void CSendController::SendMetricsData(const MetricDataList &lstMetrics)
+{
+    Q_ASSERT(m_pOEClient);
+    if( m_pOEClient )
+        m_pOEClient->SendMetrics( lstMetrics );
+}
+
+void CSendController::SendSeverityMessage(MetricSeverityDescriptorSPtr pSeverityDescriptor)
+{
+    Q_ASSERT( m_pOEClient );
+    m_pOEClient->SendSpecialMessage( pSeverityDescriptor );
+}
+
+void CSendController::SendSeverityMessage(const QString &sMetricName,
+                                          EMetricDataSeverity eSeverity,
+                                          const QString &sMessage,
+                                          double dAlertDurationHint,
+                                          const QString &sInstanceType,
+                                          const QString &sInstanceName)
+{
+    MetricSeverityDescriptorSPtr pDescriptor = std::make_shared<CMetricSeverityDescriptor>(sMetricName,
+                                                                                           QDateTime::currentDateTime(),
+                                                                                           eSeverity,
+                                                                                           dAlertDurationHint,
+                                                                                           sMessage,
+                                                                                           sInstanceType,
+                                                                                           sInstanceName);
+    SendSeverityMessage( pDescriptor );
+}
+
 void CSendController::SetupOEClients()
 {
     m_pOECacheUploader->SetUpdateInterval( 2000 );
@@ -67,7 +97,7 @@ void CSendController::SetupOEClients()
 
     // set OddEye Uuid
     QByteArray aUuid = ConfMgr.GetMainConfiguration().Value<QByteArray>("TSDB/uuid");
-    if( aUuid.isEmpty() )
+    if( aUuid.isEmpty() || aUuid.startsWith("xxxxxxxx") )
         throw CInvalidConfigException("OddEye UUID is missing");
     m_pOEClient->SetUuid( aUuid );
     m_pOECacheUploader->SetUuid( aUuid );
@@ -115,22 +145,6 @@ void CSendController::SetupOEClients()
     m_pOECacheUploader->SetMaxCacheCount( nMaxCacheCount );
 }
 
-void CSendController::SendMetricsData(const MetricDataList &lstMetrics)
-{    
-    Q_ASSERT(m_pOEClient);
-    if( m_pOEClient )
-        m_pOEClient->SendMetrics( lstMetrics );
-}
-
-void CSendController::SendMessage(const QString &sMessage, EMessageType eType)
-{
-    Q_ASSERT(m_pOEClient);
-    if( !m_pOEClient->IsReady())
-        return;
-
-    Q_ASSERT(false);
-    //m_pOEClient->SendMessage( sMessage, eType );
-}
 
 NetworkAccessManagerWPtr CSendController::GetNetworkAccessManager()
 {
@@ -164,5 +178,6 @@ void CSendController::TurnOff()
 
 bool CSendController::IsReady() const
 {
+
     return m_bIsReady;
 }

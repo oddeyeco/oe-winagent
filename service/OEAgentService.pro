@@ -60,7 +60,10 @@ SOURCES += main.cpp \
     checkers/system_extended_metrics.cpp \
     checkers/advanced_network.cpp \
     performancecountersinfoprovider.cpp \
-    performancecounterinfodumper.cpp
+    performancecounterinfodumper.cpp \
+    checkers/utilitycheckers.cpp \
+    checkers/advanced_perfcounters_enabled.cpp \
+    checkers/vmware_stats.cpp
 
 include(../3rdparty/qtservice/src/qtservice.pri)
 
@@ -107,4 +110,7 @@ HEADERS += \
     checkers/system_extended_metrics.h \
     checkers/advanced_network.h \
     performancecountersinfoprovider.h \
-    performancecounterinfodumper.h
+    performancecounterinfodumper.h \
+    checkers/utilit_checkers.h \
+    checkers/advanced_perfcounters_enabled.h \
+    checkers/vmware_stats.h

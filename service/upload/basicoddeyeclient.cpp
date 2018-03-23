@@ -44,6 +44,16 @@ void CBasicOddEyeClient::SendSpecialMessage(const QString &sMetricName, const QS
     SendJsonData( QJsonDocument( oRootArray ));
 }
 
+void CBasicOddEyeClient::SendSpecialMessage(MetricSeverityDescriptorSPtr pDescriptor)
+{
+    if( !pDescriptor )
+        return;
+
+    QJsonArray oRootArray;
+    oRootArray.append( CreateErrorMessageJson( pDescriptor ) );
+    SendJsonData( QJsonDocument( oRootArray ));
+}
+
 void CBasicOddEyeClient::SetClusterName(const QString &sClusterName)
 {
     Q_ASSERT( !sClusterName.isEmpty() );

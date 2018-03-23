@@ -149,6 +149,12 @@ bool Logger::_prepare_logs_file()
         // logging disabled
         return false;
 
+    if( _logs_folder_path.isEmpty() )
+    {
+        // not initialized yet
+        return false;
+    }
+
     const auto current_datetime = QDateTime::currentDateTime();
     qint64 nActualSecondsLeft = _logs_file_open_datetime.secsTo( current_datetime );
 
