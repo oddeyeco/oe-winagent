@@ -40,8 +40,13 @@ CConfigSection CConfiguraion::GetRootSection()
     CConfigSection oRes( GetName() );
 
     QStringList lstSectionKeys = Base::childKeys();
-    for( auto& sKey : lstSectionKeys )
+    for( QString& sKey : lstSectionKeys )
     {
+        if( sKey.trimmed().startsWith("#"))
+        {
+            // this is comment
+            continue;
+        }
         oRes.insert( sKey, Base::value(sKey) );
     }
 
