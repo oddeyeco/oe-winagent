@@ -31,11 +31,12 @@ INIT_METRIC_CHECKER(SystemCpuStats, "Processor")
         AddPerformanceCounterCheckerEx( "cpu_dpc_time",           "\\Processor%1\\% DPC Time",                         EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerCoreEnabled, "Processor", "Core" );
 
         PerformanceCounterCheckersList lstProcInformationCheckers;
-        lstProcInformationCheckers.append( AddPerformanceCounterCheckerEx( "cpu_max_frequency",      "\\Processor Information%1\\% of Maximum Frequency", EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerCoreEnabled, "Processor Information", "Core" ) );
-        lstProcInformationCheckers.append( AddPerformanceCounterCheckerEx( "cpu_performance_limit",  "\\Processor Information%1\\% Performance Limit",    EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerCoreEnabled, "Processor Information", "Core" ) );
-        lstProcInformationCheckers.append( AddPerformanceCounterCheckerEx( "cpu_performance_time",   "\\Processor Information%1\\% Priority Time",        EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerCoreEnabled, "Processor Information", "Core" ) );
-        lstProcInformationCheckers.append( AddPerformanceCounterCheckerEx( "cpu_privileged_time",    "\\Processor Information%1\\% Privileged Time",      EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerCoreEnabled, "Processor Information", "Core" ) );
-        lstProcInformationCheckers.append( AddPerformanceCounterCheckerEx( "cpu_privileged_utility", "\\Processor Information%1\\% Privileged Utility",   EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerCoreEnabled, "Processor Information", "Core" ) );
+        //lstProcInformationCheckers.append( AddPerformanceCounterCheckerEx( "cpu_max_frequency",       "\\Processor Information%1\\% of Maximum Frequency", EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerCoreEnabled, "Processor Information", "Core" ) );
+        //lstProcInformationCheckers.append( AddPerformanceCounterCheckerEx( "cpu_processor_performance", "\\Processor Information%1\\% Processor Performance", EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerCoreEnabled, "Processor Information", "Core" ) );
+        lstProcInformationCheckers.append( AddPerformanceCounterCheckerEx( "cpu_performance_limit",     "\\Processor Information%1\\% Performance Limit",    EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerCoreEnabled, "Processor Information", "Core" ) );
+        lstProcInformationCheckers.append( AddPerformanceCounterCheckerEx( "cpu_performance_time",      "\\Processor Information%1\\% Priority Time",        EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerCoreEnabled, "Processor Information", "Core" ) );
+        lstProcInformationCheckers.append( AddPerformanceCounterCheckerEx( "cpu_privileged_time",       "\\Processor Information%1\\% Privileged Time",      EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerCoreEnabled, "Processor Information", "Core" ) );
+        lstProcInformationCheckers.append( AddPerformanceCounterCheckerEx( "cpu_privileged_utility",    "\\Processor Information%1\\% Privileged Utility",   EMetricDataType::Percent, "SYSTEM", 0, -1, -1, bPerCoreEnabled, "Processor Information", "Core" ) );
 
         // correcting instance names
         for( PerformanceCounterCheckerSPtr pPerfCounterChecker : lstProcInformationCheckers )

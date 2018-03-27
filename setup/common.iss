@@ -44,7 +44,7 @@ Source: "{#OddEyeDevDir}\{#CuiControllerRelDir}\OEConsolController.exe"; DestDir
 Source: "{#OddEyeDevDir}\{#ServiceRelDir}\OE-Agent.exe";                 DestDir: "{app}"; Flags: ignoreversion; DestName: {#MyAppServiceName}
          
 Source: "{#OddEyeDevDir}\{#BinDir}\platforms\*";  DestDir: "{app}\platforms"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "{#OddEyeDevDir}\{#BinDir}\conf\*";       DestDir: "{app}\conf"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#OddEyeDevDir}\{#BinDir}\conf\*";       DestDir: "{app}\conf"; Flags: onlyifdoesntexist recursesubdirs createallsubdirs
 Source: "{#OddEyeDevDir}\{#BinDir}\scripts_available\*";       DestDir: "{app}\scripts_available"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#OddEyeDevDir}\{#BinDir}\libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#OddEyeDevDir}\{#BinDir}\libssl32.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -65,10 +65,14 @@ Filename: "{app}\{#MyAppTerminalName}"; Parameters: -stop; Flags: runhidden;
 Filename: "{app}\{#MyAppServiceName}"; Parameters: -t; Flags: runhidden;
 Filename: "{app}\{#MyAppServiceName}"; Parameters: -u; Flags: runhidden; 
 
+[UninstallDelete]
+;This works only if it is installed in default location
+Type: filesandordirs; Name: "{app}\perf_counters_available"
+
 [Registry]
 ;current user only
 Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "OddEye Agent Control"; ValueData: "{app}\{#MyAppExeName}"; Flags: uninsclearvalue
-;Root: HKCU; Subkey: "Software\OddEyeAgent\"; ValueType: string; ValueName: "autostart"; ValueData: false; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\OddEyeAgent\"; ValueType: string; ValueName: "uuid"; ValueData: {code:GetSpecifiedUuid}
 
 [INI]
 Filename: "{app}\conf\conf.ini"; Section: "TSDB"; Key: "uuid"; String: {code:GetSpecifiedUuid}; 
@@ -133,7 +137,8 @@ end;
 
 procedure InitializeWizard;
 var  
-  LabelFolder: TLabel; 
+  LabelFolder: TLabel;
+  sRegUUid: String; 
     
 begin
   Wizardform.NextButton.Enabled := False;
@@ -161,6 +166,11 @@ begin
   FolderToInstall.OnChange := @MyEditChange;
 
   FolderToInstall.Text := GetCommandLineParam('/uuid');
+  if  FolderToInstall.Text = '' then
+  begin
+    RegQueryStringValue(HKEY_CURRENT_USER, 'Software\OddEyeAgent\','uuid', sRegUUid);
+    FolderToInstall.Text := sRegUUid;    
+  end;
 
   InstallHelpCheckBox.OnClick := @YourControlClick;
   InstallHelpCheckBox.Checked := True;

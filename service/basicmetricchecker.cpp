@@ -17,7 +17,7 @@ CBasicMetricChecker::CBasicMetricChecker(const QString &sMetricName,
       m_dSevereValue( dSevereValue ),
       m_sInstanceType( sInstanceType ),
       m_sInstanceName( sInstanceName ),
-      m_bWereLastValueHighOrSevery(true  /*Nafsyaki send OK at initial checking*/ /*false*/ )
+      m_bWereLastValueHighOrSevery(false  /*Nafsyaki send OK at initial checking*/ /*false*/ )
 {
     Q_ASSERT( !sMetricName.isEmpty() );
     Q_ASSERT( nReaction >= -3 && nReaction <=0);
