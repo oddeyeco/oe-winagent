@@ -66,13 +66,13 @@ public:
 
 private:
     // Content
-    QString         m_sName;
-    double          m_dAlertDurationHint;
-    QDateTime       m_oTime;
+    QString             m_sName;
+    double              m_dAlertDurationHint;
+    QDateTime           m_oTime;
     EMetricDataSeverity m_eSeverity;
-    QString         m_sMessage;
-    QString         m_sInstanceType;
-    QString         m_sInstanceName;
+    QString             m_sMessage;
+    QString             m_sInstanceType;
+    QString             m_sInstanceName;
 };
 
 using MetricSeverityDescriptorSPtr = std::shared_ptr<CMetricSeverityDescriptor>;

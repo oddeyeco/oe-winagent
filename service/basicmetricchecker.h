@@ -33,6 +33,7 @@ public:
     inline QString GetInstanceType() const;
     inline QString GetInstanceName() const;
     inline void SetInstanceName( QString const& sName );
+    inline void SetInstanceType(const QString &sType);
 
     inline void SetValueCheckerFunction( ValueCheckerFunc pFunc );
 
@@ -67,6 +68,7 @@ inline QString CBasicMetricChecker::GetMetricName()   const               { retu
 inline QString CBasicMetricChecker::GetInstanceType() const               { return m_sInstanceType; }
 inline QString CBasicMetricChecker::GetInstanceName() const               { return m_sInstanceName; }
 inline void    CBasicMetricChecker::SetInstanceName(const QString &sName) { m_sInstanceName = sName; }
+inline void    CBasicMetricChecker::SetInstanceType(const QString &sType) { m_sInstanceType = sType; }
 
 inline void CBasicMetricChecker::SetValueCheckerFunction(ValueCheckerFunc pFunc) { m_pValueCheckerFunc = pFunc; }
 

@@ -357,7 +357,7 @@ bool COEAgentControlServer::DumpAvailablePerformanceCounters(QLocalSocket *pRequ
         CServiceController::Instance().DumpPerformanceCountersInfo();
 
         QString sDumpFilePath = CPerformanceCounterInfoDumper::Instance().GetDumpFilePath();
-        QString sInfo = QString("\Dump file path: %1").arg( sDumpFilePath );
+        QString sInfo = QString("Dump file path: %1").arg( sDumpFilePath );
         NotifyToClient( pRequestedClientSock, CMessage( ENotificationEvent::CountersInfoDumped,
                                                         sCommand,
                                                         "Available performance counters info dumped",

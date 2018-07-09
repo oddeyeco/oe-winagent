@@ -29,7 +29,7 @@ public:                                                                     \
 static _filter_registrar_##_checker_class_ _obj_filter_##_checker_class_;                                \
 }
 
-#define DUMMY_COPY_CTOR(_class_) _class_(_class_ const& other) {Q_ASSERT(false);}
+#define DUMMY_COPY_CTOR(_class_) _class_(_class_ const& other) { Q_UNUSED(other); Q_ASSERT(false);}
 #define DECLARE_MERTIC_CHECKER( _class_ ) \
     public: DUMMY_COPY_CTOR(_class_) private:
 

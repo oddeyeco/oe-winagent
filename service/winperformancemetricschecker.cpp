@@ -13,18 +13,19 @@ CWinPerformanceMetricsChecker::CWinPerformanceMetricsChecker(QObject *pParent)
 {
 }
 
-PerformanceCounterCheckersList CWinPerformanceMetricsChecker::AddPerformanceCounterCheckerEx( const QString &sMetricName,
-                                                                                       const QString &sCounterPathOrWildcard,
-                                                                                       EMetricDataType eMetricDataType,
-                                                                                       const QString &sMetricType,
-                                                                                       int nReaction,
-                                                                                       double dHighValue,
-                                                                                       double dSevereValue,
-                                                                                       bool bCreateMultipleCheckersByInstanceNames,
-                                                                                       const QString &sInstanceObjectName,
-                                                                                       const QString &sInstanceType,
-                                                                                       ValueModifierFunc funcMetricModifier,
-                                                                                       QStringList lstAllowedInstanceNames )
+PerformanceCounterCheckersList CWinPerformanceMetricsChecker::AddPerformanceCounterCheckerEx(
+        const QString &sMetricName,
+        const QString &sCounterPathOrWildcard,
+        EMetricDataType eMetricDataType,
+        const QString &sMetricType,
+        int nReaction,
+        double dHighValue,
+        double dSevereValue,
+        bool bCreateMultipleCheckersByInstanceNames,
+        const QString &sInstanceObjectName,
+        const QString &sInstanceType,
+        ValueModifierFunc funcMetricModifier,
+        QStringList lstAllowedInstanceNames )
 {
     QList<PerformanceCounterCheckerSPtr> lstAddedCheckers;
 
