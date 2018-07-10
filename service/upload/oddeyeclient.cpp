@@ -22,29 +22,14 @@ void COddEyeClient::SendMetrics(const MetricDataList &lstMetrics)
         Q_ASSERT(false);
         return;
     }
-    auto oJsonData = ConvertMetricsToJSON( lstMetrics );
-    Base::SendJsonData( oJsonData );
-}
 
-QJsonDocument COddEyeClient::ConvertMetricsToJSON(const MetricDataList &lstMetrics)
-{
-    QJsonArray oRootArray;
-    for( MetricDataSPtr pCurrentMetric : lstMetrics)
-    {
-        if( !pCurrentMetric )
-            continue;
+    QJsonDocument oNormalMetricsJson;
+    QJsonDocument oSpecialMetricsJson;
 
-         oRootArray.append( Base::CreateMetricJson( pCurrentMetric ) );
+    ConvertMetricsToJSON( lstMetrics, oNormalMetricsJson, oSpecialMetricsJson );
 
-         // Check metric value severity
-         if( pCurrentMetric->HasSeverityDescriptor() )
-         {
-             // setnd error message
-             oRootArray.append( Base::CreateErrorMessageJson( pCurrentMetric->GetSeverityDescriptor()) );
-         }
-    }
-
-    return QJsonDocument( oRootArray );
+    Base::SendJsonData( oNormalMetricsJson );
+    Base::SendJsonData( oSpecialMetricsJson );
 }
 
 void COddEyeClient::HandleSendSuccedded(QNetworkReply *pReply, const QJsonDocument &oJsonData)
@@ -63,6 +48,32 @@ void COddEyeClient::HandleSendError(QNetworkReply *pReply, const QJsonDocument &
     CacheJsonData( oJsonData );
 
     //m_pNetworkAccessManager->Reset();
+}
+
+void COddEyeClient::ConvertMetricsToJSON(const MetricDataList &lstMetrics,
+                                         QJsonDocument &oNormalMetricsJson,
+                                         QJsonDocument &oSpecialMetricsJson)
+{
+    QJsonArray oNormalArray;
+    QJsonArray oSpecialArray;
+
+    for( MetricDataSPtr pCurrentMetric : lstMetrics)
+    {
+        if( !pCurrentMetric )
+            continue;
+
+         oNormalArray.append( Base::CreateMetricJson( pCurrentMetric ) );
+
+         // Check metric value severity
+         if( pCurrentMetric->HasSeverityDescriptor() )
+         {
+             // setnd error message
+             oSpecialArray.append( Base::CreateSpecialMessageJson( pCurrentMetric->GetSeverityDescriptor()) );
+         }
+    }
+
+    oNormalMetricsJson = QJsonDocument( oNormalArray );
+    oSpecialMetricsJson = QJsonDocument( oSpecialArray );
 }
 
 bool COddEyeClient::CacheJsonData(const QJsonDocument &oJsonDoc)

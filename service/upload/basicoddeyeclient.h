@@ -51,8 +51,8 @@ protected:
     virtual void HandleSendError(     QNetworkReply* pReply, QJsonDocument const& oJsonData) ;
 
     QJsonObject CreateMetricJson( MetricDataSPtr pSingleMetric );
-    QJsonObject CreateErrorMessageJson( MetricSeverityDescriptorSPtr pDescriptor );
-    QJsonObject CreateErrorMessageJson( QString const& sMessage, QString sMetricName, EMessageType eMessageType, QVariant vtMetricValue = QVariant(0) );
+    QJsonObject CreateSpecialMessageJson( MetricSeverityDescriptorSPtr pDescriptor );
+    QJsonObject CreateSpecialMessageJson( QString const& sMessage, QString sMetricName, EMessageType eMessageType, QVariant vtMetricValue = QVariant(0) );
 
 signals:
 

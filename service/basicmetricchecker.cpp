@@ -64,7 +64,7 @@ MetricDataSPtr CBasicMetricChecker::CheckMetric()
                                                                    QString::number(dValue),
                                                                    eSeverity == EMetricDataSeverity::High? "WARNING" : "ERROR"
                                                                  );
-        pMetric->SetSeverityDescriptor( GetMetricName(), eSeverity, 0, sErrorMsg );
+        pMetric->SetSeverityDescriptor( GetMetricName(), eSeverity, -2, sErrorMsg );
         m_bWereLastValueHighOrSevery = true;
     }
     else if( eSeverity == EMetricDataSeverity::Normal && m_bWereLastValueHighOrSevery )

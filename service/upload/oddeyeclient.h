@@ -22,7 +22,9 @@ protected:
     void HandleSendSuccedded( QNetworkReply* pReply, QJsonDocument const& oJsonData ) override;
     void HandleSendError(     QNetworkReply* pReply, QJsonDocument const& oJsonData) override;
 
-    QJsonDocument ConvertMetricsToJSON( MetricDataList const& lstMetrics );
+    void ConvertMetricsToJSON( MetricDataList const& lstMetrics,
+                               QJsonDocument& oNormalMetricsJson,
+                               QJsonDocument& oSpecialMetricsJson);
     bool CacheJsonData( QJsonDocument const& oJsonDoc );
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

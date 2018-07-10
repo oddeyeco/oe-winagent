@@ -20,6 +20,11 @@ MetricDataList CMetricsGroupChecker::CheckMetrics()
             auto pMetricData = pCurrentChecker->CheckMetric();
             lstMetrics.append(pMetricData);
         }
+        catch(COddEyeSelfCheckException const& oErr)
+        {
+
+            LOG_ERROR( oErr.GetMessage() );
+        }
         catch( std::exception const& oErr )
         {
             auto pBasicChecker = dynamic_cast<CBasicMetricChecker*>(pCurrentChecker.get());

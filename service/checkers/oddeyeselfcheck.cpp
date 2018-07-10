@@ -32,7 +32,7 @@ public:
                                              "health");
 
         QString sMsg = "{DURATION} without HearBeats from host";
-        pMetric->SetSeverityDescriptor( "HeartBeat", EMetricDataSeverity::Normal, 0, sMsg );
+        pMetric->SetSeverityDescriptor( "HeartBeat", EMetricDataSeverity::Normal, 2, sMsg );
 
         return pMetric;
     }

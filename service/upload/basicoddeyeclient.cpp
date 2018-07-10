@@ -40,7 +40,7 @@ void CBasicOddEyeClient::SendSpecialMessage(const QString &sMetricName, const QS
         return;
 
     QJsonArray oRootArray;
-    oRootArray.append( CreateErrorMessageJson( sMetricName, sMessage, eType ) );
+    oRootArray.append( CreateSpecialMessageJson( sMetricName, sMessage, eType ) );
     SendJsonData( QJsonDocument( oRootArray ));
 }
 
@@ -50,7 +50,7 @@ void CBasicOddEyeClient::SendSpecialMessage(MetricSeverityDescriptorSPtr pDescri
         return;
 
     QJsonArray oRootArray;
-    oRootArray.append( CreateErrorMessageJson( pDescriptor ) );
+    oRootArray.append( CreateSpecialMessageJson( pDescriptor ) );
     SendJsonData( QJsonDocument( oRootArray ));
 }
 
@@ -209,7 +209,7 @@ QJsonObject CBasicOddEyeClient::CreateMetricJson(MetricDataSPtr pSingleMetric)
 }
 
 
-QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(MetricSeverityDescriptorSPtr pDescriptor)
+QJsonObject CBasicOddEyeClient::CreateSpecialMessageJson(MetricSeverityDescriptorSPtr pDescriptor)
 {
     Q_ASSERT( pDescriptor );
     if( !pDescriptor )
@@ -218,7 +218,7 @@ QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(MetricSeverityDescriptorS
 
     QJsonObject oMetricJson;
     oMetricJson["metric"] = pDescriptor->GetMetricName();
-    oMetricJson["reaction"] = 0;
+    oMetricJson["reaction"] = (int) pDescriptor->GetAlertDurationHint();
     oMetricJson["timestamp"] = QString::number( pDescriptor->GetTime().toUTC().toTime_t() );
 
     QVariant vtValue;
@@ -263,7 +263,7 @@ QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(MetricSeverityDescriptorS
     return oMetricJson;
 }
 
-QJsonObject CBasicOddEyeClient::CreateErrorMessageJson(const QString &sMessage,
+QJsonObject CBasicOddEyeClient::CreateSpecialMessageJson(const QString &sMessage,
                                                        QString sMetricName,
                                                        EMessageType eMessageType,
                                                        QVariant vtMetricValue)
