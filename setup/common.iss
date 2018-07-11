@@ -1,5 +1,5 @@
 #define MyAppName "OddEye Agent"
-#define MyAppVersion "0.5"
+#define MyAppVersion "1.0.1"
 #define MyAppPublisher "OddEye, Inc."
 #define MyAppURL "https://www.oddeye.co/"
 

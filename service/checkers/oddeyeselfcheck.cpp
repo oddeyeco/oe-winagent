@@ -44,7 +44,7 @@ public:
         if( !pNetworkManager )
         {
             LOG_ERROR("Internal error: Network Access Manager is NULL");
-            throw CUnableCheckMetricException( "host_alive", "Network Access Manager is NULL" );
+            throw COddEyeSelfCheckException( "Network Access Manager is NULL" );
         }
 
         // Start timer
@@ -80,7 +80,7 @@ public:
             }
             else
             {
-                throw CUnableCheckMetricException( "host_alive", pReply->errorString());
+                throw COddEyeSelfCheckException(pReply->errorString());
             }
         }
         else
@@ -89,7 +89,7 @@ public:
            disconnect(pReply, SIGNAL(finished()), &loop, SLOT(quit()));
            pReply->abort();
 
-           throw CUnableCheckMetricException( "host_alive", "Time out!");
+           throw COddEyeSelfCheckException("Time out!");
         }
 
         qint64 nElapsedTime = oTimer.elapsed();

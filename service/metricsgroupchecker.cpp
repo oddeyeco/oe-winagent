@@ -1,6 +1,8 @@
 #include "metricsgroupchecker.h"
 #include "basicmetricchecker.h"
 
+#undef GetMessage
+
 CMetricsGroupChecker::CMetricsGroupChecker(QObject* pParent)
     : Base( pParent )
 {
@@ -22,8 +24,7 @@ MetricDataList CMetricsGroupChecker::CheckMetrics()
         }
         catch(COddEyeSelfCheckException const& oErr)
         {
-
-            LOG_ERROR( oErr.GetMessage() );
+            LOG_ERROR( oErr.GetMessage().toStdString() );
         }
         catch( std::exception const& oErr )
         {
