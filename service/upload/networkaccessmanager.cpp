@@ -82,5 +82,5 @@ void CNetworkAccessManager::Remove(QNetworkReply *pReply)
     QMutexLocker oLocker( &m_oMutex );
     disconnect( pReply, &QNetworkReply::finished, this, &CNetworkAccessManager::onReplyFinished );
     m_setReplies.remove( pReply );
-    //pReply->deleteLater();
+    pReply->deleteLater();
 }
