@@ -1,4 +1,4 @@
-#define MyAppName "OddEyeAgent"
+#define MyAppName "OddEye Agent"
 #define MyAppVersion "1.2"
 #define MyAppPublisher "OddEye, Inc."
 #define MyAppURL "https://www.oddeye.co/"
@@ -6,7 +6,7 @@
 #define MyAppExeName "oe-tray-menu.exe"
 #define MyAppServiceName "oe-agent-service.exe"
 #define MyAppTerminalName "oe-terminal.exe"
-#define DefaultDirName "OddEyeAgent"
+#define DefaultDirName "OddEye Agent"
 #define OddEyeDevDir "C:\Users\Admin\Documents\Projects\oddeye-agent"
 
 [Setup]

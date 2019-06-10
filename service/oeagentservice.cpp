@@ -6,7 +6,7 @@
 #include "agentinitializer.h"
 
 COEAgentService::COEAgentService(int argc, char **argv)
-    : Base( argc, argv, "OddEye Agent" )
+    : Base( argc, argv, "OddEyeAgent" )
 {
     setServiceDescription("Metric collection agent for OddEye");
     setStartupType( QtServiceController::AutoStartup );
