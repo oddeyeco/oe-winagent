@@ -1,13 +1,13 @@
-#define MyAppName "OddEye Agent"
-#define MyAppVersion "1.0.1"
+#define MyAppName "OddEyeAgent"
+#define MyAppVersion "1.2"
 #define MyAppPublisher "OddEye, Inc."
 #define MyAppURL "https://www.oddeye.co/"
 
 #define MyAppExeName "oe-tray-menu.exe"
-#define MyAppServiceName "agent-service.exe"
+#define MyAppServiceName "oe-agent-service.exe"
 #define MyAppTerminalName "oe-terminal.exe"
-#define OddEyeDirName "OddEye Agent"
-#define OddEyeDevDir "C:\Users\User\Documents\OE-Agent"
+#define DefaultDirName "OddEyeAgent"
+#define OddEyeDevDir "C:\Users\Admin\Documents\Projects\oddeye-agent"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
