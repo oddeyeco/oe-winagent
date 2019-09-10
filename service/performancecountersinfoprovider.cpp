@@ -283,7 +283,6 @@ DWORD GetNumberOfTextEntries(LPWSTR pwszSource)
     LONG status = ERROR_SUCCESS;
     HKEY hkey = NULL;
     DWORD dwSize = sizeof(DWORD);
-    LPWSTR pwszMessage = NULL;
 
     status = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
         L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Perflib",
@@ -675,7 +674,10 @@ PerformanceObjectsInfoList CPerformanceCountersInfoProvider::PrintObjectNames(DW
     PerformanceObjectsInfoList lstResult;
 
     PERF_INSTANCE_DEFINITION* pInstance = NULL;
+    Q_UNUSED(pInstance);
+
     DWORD dwIncrementSize = sizeof(WCHAR) * (MAX_FULL_INSTANCE_NAME_LEN + 1);
+    Q_UNUSED(dwIncrementSize);
     DWORD index = 0;
     DWORD dwSerialNo = 0;
 
@@ -824,4 +826,6 @@ cleanup:
 
     if (g_pObjects)
         FreePerfObjects(g_pObjects, dwNumberOfObjects);
+
+    return {};
 }

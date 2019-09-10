@@ -12,6 +12,7 @@ COddEyeCacheUploader::COddEyeCacheUploader(QObject *parent)
     //connect(m_pTimer, &QTimer::timeout, this, &COddEyeCacheUploader::onCheckAndUpload);
     bool bOK = connect(m_pTimer, SIGNAL(timeout()), this, SLOT(onCheckAndUpload()));
     Q_ASSERT(bOK);
+    Q_UNUSED(bOK);
 }
 
 void COddEyeCacheUploader::Start()
@@ -133,6 +134,7 @@ void COddEyeCacheUploader::DequeueHead()
 
 void COddEyeCacheUploader::HandleSendSuccedded(QNetworkReply *pReply, const QJsonDocument &oJsonData)
 {
+    Q_UNUSED(oJsonData);
     LOG_INFO( "Cached file uploaded: " + pReply->readAll() );
     DequeueHead();
     if( m_qUploadingFiles.isEmpty() )
@@ -141,6 +143,7 @@ void COddEyeCacheUploader::HandleSendSuccedded(QNetworkReply *pReply, const QJso
 
 void COddEyeCacheUploader::HandleSendError(QNetworkReply *pReply, const QJsonDocument &oJsonData)
 {
+    Q_UNUSED(oJsonData);
     LOG_ERROR( "Failed to uploaded file: " + pReply->errorString().toStdString() );
     LOG_INFO( QString("Chache uploading aborted! (%1 files left)").arg( m_qUploadingFiles.size() ) );
     m_qUploadingFiles.clear();

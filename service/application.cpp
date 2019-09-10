@@ -20,4 +20,5 @@ bool CApplication::notify(QObject* pObject, QEvent *pEvent)
     {
         LOG_ERROR( "Critical Error: Undefined exception!" );
     }
+    return false;
 }

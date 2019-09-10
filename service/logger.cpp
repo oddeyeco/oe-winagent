@@ -197,6 +197,7 @@ void Logger::_init_log_file(const QDateTime &oLogFileDateTime)
         QFile oOldestFile( sOldestFilePath );
         bool bOK = oOldestFile.remove();
         Q_ASSERT(bOK);
+        Q_UNUSED(bOK);
 
     }
 }

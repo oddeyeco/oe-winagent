@@ -56,10 +56,10 @@ void CConfigurationManager::LoadConfigurations()
     //
     //  Load enabled scripts config
     //
-    QDir oEnabledScriptsDir( s_szEnabledScriptsDirPath );
+    QDir oEnabledScriptsDir( GetAgentDirPath() + "/" + s_szEnabledScriptsDirPath );
     if( oEnabledScriptsDir.exists() )
     {
-        QStringList lstScriptsFileList = oEnabledScriptsDir.entryList(QStringList() << "checker_*.*");
+        QStringList lstScriptsFileList = oEnabledScriptsDir.entryList( {"check_*.*"}, QDir::Files);
         if( lstScriptsFileList.size() > 0 )
         {
             QStringList lstScriptsFileAbsoloutPaths;
