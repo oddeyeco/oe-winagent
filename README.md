@@ -52,7 +52,7 @@ We recommend to alter et least ```cluster_name = testcluster``` and ```host_grou
 It's also important to pay attention to ```check_period_seconds = 10``` and set value in accordance to your needs. 
 This parameter indicates sleep interval of agent between end of sending last metric and start collection of new ones.. 
 
-##CPU Monitoring
+### CPU Monitoring
 
 Location of config file is ```conf\system.ini```
 
@@ -67,7 +67,7 @@ Location of config file is ```conf\system.ini```
 Here you can configure, if you need to monitor each of your CPU cores separately, get detailed statistics or not.
 You can also enable or disable manually defined alerts and set desired thresholds, or disable this check by setting ```enabled``` to ```false```     
 
-##Memory Monitoring
+### Memory Monitoring
 
 Location of config file is ```conf\system.ini```
 
@@ -80,7 +80,7 @@ Location of config file is ```conf\system.ini```
 
 Provides information about servers's Memory usage.  
 
-##HDD Monitoring
+### HDD Monitoring
 
 Location of config file is ```conf\system.ini```
 
@@ -94,7 +94,7 @@ Location of config file is ```conf\system.ini```
 
 Provides information about disk space and IO utilization. Can be configured for individual disks as well as will static defined thresholds.  
 
-## Network and TCP 
+### Network and TCP 
 
 
     [Network Stats]
@@ -114,7 +114,7 @@ please copy paste its name from adapter settings as value for ```interfaces=``` 
 
 In this case  metrics related to only ```HP NC112i 1-port Ethernet Server Adapter``` adapter will be collected and reported. 
 
-## GPU Monitoring
+### GPU Monitoring
 
 If you have GPU, this will enable collection of performance counters of your GPU device   
 
@@ -140,7 +140,7 @@ If you have GPU, this will enable collection of performance counters of your GPU
 
 Please enable desired sections of metrics and restart the agent. 
 
-## System etc ... 
+### System etc ... 
 
 Following are additional performance counters for fine tuned monitoring of your Servers. 
 
@@ -153,7 +153,7 @@ Following are additional performance counters for fine tuned monitoring of your 
     [Security System-Wide Statistics]
     enabled = false 
 
-##Advanced Networking 
+### Advanced Networking 
 
 If you are running IIS, DNS, Samba, Terminal services you may be interested on monitoring these systems as well. 
 Please edit ```conf\advanced_network.ini```, enable needed counters and restart agent. 
@@ -173,7 +173,7 @@ Please edit ```conf\advanced_network.ini```, enable needed counters and restart 
     [Terminal Services]
     enabled = false
 
-##Hyper-V
+### Hyper-V
 
 OddEye Agent supports out of the box Hyper-V server monitoring. Following parameters in ```conf\hyper-v.ini``` are available. 
 
@@ -218,7 +218,7 @@ OddEye Agent supports out of the box Hyper-V server monitoring. Following parame
 
 With this you can monitor almost all aspect of **MS Hyper-V**, so if you are running **Hyper-V** just enable in config whatever counters group looks interesting and restart Agent. 
 
-##Heartbeats
+### Heartbeats
 
 Because of the push only nature of **OddEye** our systems needs to regularly receive heartbeats from client machines. 
 By getting this heartbeats **OddEye** servers knows if the client machine is up and running or it's offline, so **OddEye** can generate appropriate alert.  
@@ -227,7 +227,7 @@ Config file is ```conf/oddeye.ini``` check is enabled by default, but if you don
     [Self Check]
     enabled = True
 
-##MS SQL Server Monitoring
+### MS SQL Server Monitoring
 
 OddEye Agent can do advanced monitoring of Microsoft SQL server.
 Configuration file is  ```conf/sql_server.ini```. 
@@ -288,7 +288,7 @@ All SQL server configuration parameters are disabled by default so you should ca
     [Wait Statistics]
     enabled = false
 
-##Utility services. 
+### Utility services. 
 
 OddEye can monitor several utility services of MS Windows OS (Printer Queue, Thermal Zone, USB). 
 These performance collectors are disabled by default, if you have interest in monitoring it please edit ```conf/utility.ini``` and enable appropriate check. 
@@ -310,7 +310,7 @@ These performance collectors are disabled by default, if you have interest in mo
 ```printers = total``` parameter indicates that by default global print queue is monitored, but you can change it to all or set exact printer names which are interesting for monitoring.
  In USB section ```devices = all``` also  can be altered with particular USB device nam, so you can see metrics only for that particular device . 
 
-##VMWare
+### VMWare
 
 Most of well known and popular Windows server products reposts their performance counters to Windows.   
 **OddEye** windows agent use exactly same interface to collect any performance counter which is reported, 
@@ -329,7 +329,7 @@ Contains basic Memory, Disk and Network stats of VMWare.
     enabled = false
 
 
-##Advanced performance counters 
+### Advanced performance counters 
 
 As it's described above you can dump all available performance counters of running Windows OS and services to file and enable whichever counter is needed.
 To do this just  edit ```conf\advanced_perf_counters_enabled.ini```, copy-paste line containing desired counter and restart agent. 
