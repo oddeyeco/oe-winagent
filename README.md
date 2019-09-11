@@ -10,16 +10,16 @@ The easiest way to get OddEye agent up and running is to download compiled binar
 Agent installer will ask to input your OddEye UUID, everything else can be left with it's default values. 
 So before starting install procedure you need to login to [**OddEye**](https://app.oddeye.co), navigate to Personal - Profile and copy your UUID: 
 
-![UUID](../images/profile0.png)
+![UUID](https://www.oddeye.co/documentation/images/profile0.png)
 
 After installing Agent you will see OddEye logo next you system clock icon. Navigate your mouse to it and you will see estimated monthly cost of running current agent.
 
-![WinCost](../images/wincost.png)
+![WinCost](https://www.oddeye.co/documentation/images/wincost.png)
 
 Right click on Icon will give options to control the Agent Service as well open containing folders and dump list of available metrics for this system. 
 By default only "important" metrics are enabled, so please examine list of available metrics of current server to see if you need to enable additional ones.    
 
-![WinOptions](../images/winoptions.png)
+![WinOptions](https://www.oddeye.co/documentation/images/winoptions.png)
  
 If yo click on **Dump Available Performance Counters**, a CSV file with names of all available performance metrics will be created in ```C:\Program Files\OddEye Agent\perf_counters_available```  
 Each line contains friendly name and Performance metrics ID, You just need to copy-paste desired line to ```C:\Program Files\OddEye Agent\conf\advanced_per_counters_enabled.ini``` 
