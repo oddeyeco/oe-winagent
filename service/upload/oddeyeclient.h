@@ -26,6 +26,7 @@ protected:
                                QJsonDocument& oNormalMetricsJson,
                                QJsonDocument& oSpecialMetricsJson);
     bool CacheJsonData( QJsonDocument const& oJsonDoc );
+    bool IsValid( QJsonDocument const& oJsonDec ) const;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -23,13 +23,29 @@ void COddEyeClient::SendMetrics(const MetricDataList &lstMetrics)
         return;
     }
 
+    if( lstMetrics.isEmpty() )
+    {
+        LOG_WARNING( "Metrics data list is empty" );
+        Q_ASSERT(false);
+        return;
+    }
+
     QJsonDocument oNormalMetricsJson;
     QJsonDocument oSpecialMetricsJson;
 
     ConvertMetricsToJSON( lstMetrics, oNormalMetricsJson, oSpecialMetricsJson );
 
-    Base::SendJsonData( oNormalMetricsJson );
-    Base::SendJsonData( oSpecialMetricsJson );
+    // setnd normal metrics
+    if( IsValid( oNormalMetricsJson ) )
+        Base::SendJsonData( oNormalMetricsJson );
+    else
+        LOG_WARNING("Invalid json data of collected metrics");
+
+    // send special metrics
+    if( IsValid( oSpecialMetricsJson ) )
+        Base::SendJsonData( oSpecialMetricsJson );
+    else
+        LOG_WARNING("Invalid json data of collected special metrics");
 }
 
 void COddEyeClient::HandleSendSuccedded(QNetworkReply *pReply, const QJsonDocument &oJsonData)
@@ -126,6 +142,18 @@ bool COddEyeClient::CacheJsonData(const QJsonDocument &oJsonDoc)
     oJsonFile.close();
 
     LOG_INFO( "Metric data was cached." );
+    return true;
+}
+
+bool COddEyeClient::IsValid(const QJsonDocument &oJsonDec) const
+{
+    if( oJsonDec.isEmpty() )
+        return false;
+    if(oJsonDec.isArray() && oJsonDec.array().isEmpty() )
+        return false;
+    if( oJsonDec.isObject() && oJsonDec.object().isEmpty() )
+        return false;
+    // TODO: check existance of Required fields (e.g. "metric")
     return true;
 }
 
